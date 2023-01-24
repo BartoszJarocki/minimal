@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { DateTime, Settings } from "luxon";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
+import React from "react";
 import {
   SimpleMilimalistYearCalendar,
   SimpleMinimalistMonthCalendar,

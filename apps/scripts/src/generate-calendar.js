@@ -8,7 +8,7 @@ async function generateMonthlyCalendar({ browser, year, destDir, formats }) {
   const allMonthsPdfs = allMonths.map(async (month, i) => {
     const page = await browser.newPage();
     await page.goto(
-      `http://localhost:3000/calendar/print?type=month&year=${year}&month=${
+      `http://localhost:3000/print?type=month&year=${year}&month=${
         i + 1
       }&font=inter`,
       { waitUntil: "networkidle0" }
