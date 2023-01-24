@@ -7,21 +7,20 @@ async function generateMonthlyCalendar({ browser, year, destDir, formats }) {
   const allMonths = luxon.Info.months();
   const allMonthsPdfs = allMonths.map(async (month, i) => {
     const page = await browser.newPage();
-    await page.goto(
-      `http://localhost:3000/print?type=month&year=${year}&month=${
-        i + 1
-      }&font=inter`,
-      { waitUntil: "networkidle0" }
-    );
 
     for (const format of formats) {
+      await page.goto(
+        `http://localhost:3000/print?type=month&year=${year}&month=${
+          i + 1
+        }&font=inter&format=${format}-landscape`,
+        { waitUntil: "networkidle0" }
+      );
+
       const path = `${destDir}/${year}/month-calendar/${format}`;
       if (!fs.existsSync(path)) {
         fs.mkdirSync(path, { recursive: true });
       }
-
-      await page.evaluateHandle("document.fonts.ready");
-      await page.screenshot({ path: `${path}/${month}.png`, fullPage: true });
+      // await page.screenshot({ path: `${path}/${month}.png`, fullPage: true });
 
       // portrait
       await page.pdf({
@@ -53,10 +52,10 @@ async function generateYearlyCalendar({ browser, year, destDir, formats }) {
     }
 
     await page.goto(
-      `http://localhost:3000/calendar/print?type=year&year=${year}&font=inter&format=${format}`,
+      `http://localhost:3000/print?type=year&year=${year}&font=inter&format=${format}`,
       { waitUntil: "networkidle0" }
     );
-    await page.screenshot({ path: `${path}/calendar.png`, fullPage: true });
+    // await page.screenshot({ path: `${path}/calendar.png`, fullPage: true });
     // portrait
     await page.pdf({
       format,
@@ -66,13 +65,13 @@ async function generateYearlyCalendar({ browser, year, destDir, formats }) {
 
     // landscape
     await page.goto(
-      `http://localhost:3000/calendar/print?type=year&year=${year}&font=inter&format=${format}-landscape`,
+      `http://localhost:3000/print?type=year&year=${year}&font=inter&format=${format}-landscape`,
       { waitUntil: "networkidle0" }
     );
-    await page.screenshot({
-      path: `${path}/calendar-landscape.png`,
-      fullPage: true,
-    });
+    // await page.screenshot({
+    //   path: `${path}/calendar-landscape.png`,
+    //   fullPage: true,
+    // });
     await page.pdf({
       format,
       path: `${path}/calendar-landscape.pdf`,
@@ -109,7 +108,7 @@ async function printPDF() {
 
   const destDir = "./generated";
   const year = 2023;
-  const formats = ["A4", "A5"];
+  const formats = ["A4"];
 
   await generateMonthlyCalendar({ browser, year, destDir, formats });
   await generateYearlyCalendar({ browser, year, destDir, formats });
