@@ -106,7 +106,22 @@ export default function Calendar() {
                   {date.year} monthly calendar in A4 format
                 </SectionSubtitle>
                 <div className="paper-a4 bg-white shadow-2xl">
-                  <SimpleMinimalistMonthCalendar date={date} />
+                  <SimpleMinimalistMonthCalendar
+                    date={date}
+                    variant="portrait"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <SectionSubtitle>
+                  {date.year} monthly calendar in A4 landscape format
+                </SectionSubtitle>
+                <div className="paper-a4-landscape bg-white shadow-2xl">
+                  <SimpleMinimalistMonthCalendar
+                    date={date}
+                    variant="landscape"
+                  />
                 </div>
               </div>
 

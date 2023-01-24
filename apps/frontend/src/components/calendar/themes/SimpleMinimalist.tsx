@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { DateTime } from "luxon";
+import React from "react";
 import {
   DayCell,
   YearCalendar,
@@ -127,9 +128,7 @@ export const SimpleMilimalistYearCalendar = ({
 
 const MonthCalendarHeader = ({ children }: { children: React.ReactNode }) => {
   return (
-    <h1 className="text-[124px] font-bold leading-none tracking-tighter">
-      {children}
-    </h1>
+    <h1 className="font-bold leading-none tracking-tighter">{children}</h1>
   );
 };
 
@@ -141,20 +140,37 @@ const MonthCalendarDayCell = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const SimpleMinimalistMonthCalendar = ({ date }: { date: DateTime }) => {
+interface SimpleMilimalistMonthlyCalendarProps {
+  date: DateTime;
+  variant: "portrait" | "landscape";
+}
+
+export const SimpleMinimalistMonthCalendar = ({
+  date,
+  variant,
+}: SimpleMilimalistMonthlyCalendarProps) => {
+  const textSize = variant === "landscape" ? "text-[89px] " : "text-[144px] ";
+  const spacing = variant === "landscape" ? "my-2" : "my-16";
   return (
     <div className="flex h-full w-full flex-col p-8">
-      <div className="my-8 flex items-end justify-between px-8">
-        <div className="text-[124px] font-semibold leading-none tracking-tighter">
+      <div className={clsx("flex items-end justify-between px-8", spacing)}>
+        <div
+          className={clsx(
+            "font-semibold leading-none tracking-tighter",
+            textSize
+          )}
+        >
           {addLeadingZeros(date.month, 2)}
         </div>
-        <div>
-          <div className="text-end text-2xl opacity-50">{date.year}</div>
+        <div className={clsx(textSize)}>
+          <div className="text-end text-2xl leading-none opacity-50">
+            {date.year}
+          </div>
           <MonthCalendarHeader>{date.monthShort}.</MonthCalendarHeader>
         </div>
       </div>
 
-      <div className="flex-1 text-xl">
+      <div className={clsx("flex-1 text-xl")}>
         <MonthCalendar
           date={date}
           weekNames="short"

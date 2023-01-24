@@ -39,7 +39,13 @@ export default function Print() {
     }
 
     if (calendarType === "month") {
-      return <SimpleMinimalistMonthCalendar date={date} />;
+      if (format.includes("landscape")) {
+        return (
+          <SimpleMinimalistMonthCalendar date={date} variant="landscape" />
+        );
+      }
+
+      return <SimpleMinimalistMonthCalendar date={date} variant="portrait" />;
     }
   };
 
