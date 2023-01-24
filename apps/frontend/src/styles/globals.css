@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+#__next {
+  width: 100%;
+  height: 100%;
+}
+
+.paper-a3 {
+  width: 297mm;
+  height: 419mm;
+}
+
+.paper-a3-landscape {
+  width: 420mm;
+  height: 296mm;
+}
+
+.paper-a4 {
+  width: 210mm;
+  height: 296mm;
+}
+
+.paper-a4-landscape {
+  width: 297mm;
+  height: 209mm;
+}
+
+.paper-a5 {
+  width: 148mm;
+  height: 209mm;
+}
+
+.paper-a5-landscape {
+  width: 210mm;
+  height: 147mm;
+}
+
+.paper-letter {
+  width: 216mm;
+  height: 279mm;
+}
+
+.paper-letter-landscape {
+  width: 280mm;
+  height: 215mm;
+}
+
+.paper-legal {
+  width: 216mm;
+  height: 356mm;
+}
+
+.paper-legal-landscape {
+  width: 357mm;
+  height: 215mm;
+}
+
+/** Padding area **/
+.paper-padding-5mm {
+  padding: 5mm;
+}
+
+.paper-padding-10mm {
+  padding: 10mm;
+}
+
+.paper-padding-15mm {
+  padding: 15mm;
+}
+
+.paper-padding-20mm {
+  padding: 20mm;
+}
+
+.paper-padding-25mm {
+  padding: 25mm;
+}
