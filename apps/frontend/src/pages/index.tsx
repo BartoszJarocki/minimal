@@ -24,12 +24,7 @@ const SectionTitle = ({
   className?: string;
 }) => {
   return (
-    <h3
-      className={clsx(
-        "mb-4 text-left text-3xl font-semibold md:mb-6",
-        className
-      )}
-    >
+    <h3 className={clsx("mb-2 text-left text-3xl font-semibold", className)}>
       {children}
     </h3>
   );
@@ -99,10 +94,10 @@ export default function Calendar() {
           </section>
 
           <div className="px-4 pt-24 md:px-32">
-            <SectionTitle>Simple Minimalist</SectionTitle>
+            <SectionTitle>Minimal</SectionTitle>
             <SectionSubtitle>
-              Self print ready Minimalist Calendar available in A4 portrait and
-              landscape formats. Available in PDF.
+              Yearly and monthly, self print ready minimalist calendar available
+              in A4 portrait and landscape formats. PDF.
             </SectionSubtitle>
             <div className="h-12">
               <a
@@ -158,6 +153,57 @@ export default function Calendar() {
                     {date.year} year calendar in A4 landscape format
                   </SectionSubtitle>
                   <div className="paper-a4-landscape bg-white shadow-2xl">
+                    <SimpleMilimalistYearCalendar
+                      date={date}
+                      variant="landscape"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="relative flex h-[640px] gap-x-12 overflow-x-auto px-4 pb-4 md:px-32">
+              <div className="absolute inset-0 top-0 right-0 flex h-full -translate-x-1/4 -translate-y-1/4 scale-50 transform gap-x-24 overflow-visible px-8 md:px-60">
+                <div>
+                  <SectionSubtitle>
+                    {date.year} monthly calendar in A5 format
+                  </SectionSubtitle>
+                  <div className="paper-a5 bg-white shadow-2xl">
+                    <SimpleMinimalistMonthCalendar
+                      date={date}
+                      variant="portrait"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <SectionSubtitle>
+                    {date.year} monthly calendar in A4 landscape format
+                  </SectionSubtitle>
+                  <div className="paper-a5-landscape bg-white shadow-2xl">
+                    <SimpleMinimalistMonthCalendar
+                      date={date}
+                      variant="landscape"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <SectionSubtitle>
+                    {date.year} year calendar in A4 format
+                  </SectionSubtitle>
+                  <div className="paper-a5 bg-white shadow-2xl">
+                    <SimpleMilimalistYearCalendar
+                      date={date}
+                      variant="portrait"
+                    />
+                  </div>
+                </div>
+
+                <div className="pr-32">
+                  <SectionSubtitle>
+                    {date.year} year calendar in A4 landscape format
+                  </SectionSubtitle>
+                  <div className="paper-a5-landscape bg-white shadow-2xl">
                     <SimpleMilimalistYearCalendar
                       date={date}
                       variant="landscape"

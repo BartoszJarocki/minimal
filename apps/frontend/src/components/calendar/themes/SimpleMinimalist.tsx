@@ -132,14 +132,6 @@ const MonthCalendarHeader = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const MonthCalendarDayCell = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <DayCell className="flex items-center justify-center text-center font-semibold">
-      {children}
-    </DayCell>
-  );
-};
-
 interface SimpleMilimalistMonthlyCalendarProps {
   date: DateTime;
   variant: "portrait" | "landscape";
@@ -149,11 +141,33 @@ export const SimpleMinimalistMonthCalendar = ({
   date,
   variant,
 }: SimpleMilimalistMonthlyCalendarProps) => {
-  const textSize = variant === "landscape" ? "text-[89px] " : "text-[144px] ";
-  const spacing = variant === "landscape" ? "my-2" : "my-16";
+  const textSize = variant === "landscape" ? "text-[64px] " : "text-[144px] ";
+  const spacing = variant === "landscape" ? "my-2" : "my-4";
+
+  const MonthCalendarDayCell = ({
+    className,
+    children,
+  }: {
+    className?: string;
+    children: React.ReactNode;
+  }) => {
+    const styles =
+      variant === "landscape"
+        ? "items-end justify-end"
+        : "items-center justify-center";
+
+    return (
+      <DayCell
+        className={clsx("flex bg-white p-3 text-center", styles, className)}
+      >
+        {children}
+      </DayCell>
+    );
+  };
+
   return (
-    <div className="flex h-full w-full flex-col p-8">
-      <div className={clsx("flex items-end justify-between px-8", spacing)}>
+    <div className="flex h-full w-full flex-col p-12">
+      <div className={clsx("flex items-end justify-between", spacing)}>
         <div
           className={clsx(
             "font-semibold leading-none tracking-tighter",
@@ -170,10 +184,11 @@ export const SimpleMinimalistMonthCalendar = ({
         </div>
       </div>
 
-      <div className={clsx("flex-1 text-xl")}>
+      <div className={clsx("mt-2 text-xl")}>
         <MonthCalendar
+          className="gap-px bg-gray-100 p-px"
           date={date}
-          weekNames="short"
+          weekNames={"short"}
           dayAs={MonthCalendarDayCell}
         />
       </div>
