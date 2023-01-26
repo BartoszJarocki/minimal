@@ -5,6 +5,7 @@ import {
   ArrowLongLeftIcon,
   ArrowLongRightIcon,
 } from "@heroicons/react/24/outline";
+import Script from "next/script";
 
 import { NextSeo } from "next-seo";
 import { Fonts } from "../lib/fonts";
@@ -20,12 +21,12 @@ const SectionTitle = ({
   className,
 }: {
   children: React.ReactNode;
-  className: string;
+  className?: string;
 }) => {
   return (
     <h3
       className={clsx(
-        "mb-4 text-left text-4xl font-extrabold md:mb-6",
+        "mb-4 text-left text-3xl font-semibold md:mb-6",
         className
       )}
     >
@@ -36,7 +37,7 @@ const SectionTitle = ({
 
 const SectionSubtitle = ({ children }: { children: React.ReactNode }) => {
   return (
-    <h3 className="mb-4 text-left text-2xl opacity-80 md:mb-6">{children}</h3>
+    <h3 className="mb-4 text-left text-xl opacity-80 md:mb-6">{children}</h3>
   );
 };
 
@@ -59,6 +60,7 @@ export default function Calendar() {
           cardType: "summary_large_image",
         }}
       />
+      <Script src="https://gumroad.com/js/gumroad.js" />
 
       <div
         className={clsx(
@@ -86,7 +88,7 @@ export default function Calendar() {
             </button>
           </div>
         </nav>
-        <main className="md:space-y-18 min-h-0 space-y-12 py-12">
+        <main className="md:space-y-18 min-h-0 space-y-8 py-12">
           <section className="space-y-4 px-4 md:px-32">
             <h1 className="max-w-4xl text-4xl font-bold leading-none tracking-tighter md:text-8xl">
               Get beautiful minimalist calendars
@@ -96,12 +98,25 @@ export default function Calendar() {
             </h2>
           </section>
 
-          <SectionTitle className="px-4 pt-24 md:px-32">
-            Simple Minimalist
-          </SectionTitle>
+          <div className="px-4 pt-24 md:px-32">
+            <SectionTitle>Simple Minimalist</SectionTitle>
+            <SectionSubtitle>
+              Self print ready Minimalist Calendar available in A4 portrait and
+              landscape formats. Available in PDF.
+            </SectionSubtitle>
+            <div className="h-12">
+              <a
+                className="gumroad-button"
+                href="https://useminimal.gumroad.com/l/minimalist-calendar"
+              >
+                Buy for 1$ on
+              </a>
+            </div>
+          </div>
+
           <section>
-            <div className="relative mx-4 flex h-[640px] gap-x-12 overflow-x-auto pb-4 md:px-32">
-              <div className="absolute inset-0 top-0 right-0 flex h-full -translate-x-1/4 -translate-y-1/4 scale-50 transform gap-x-24 overflow-visible px-60">
+            <div className="relative flex h-[640px] gap-x-12 overflow-x-auto px-4 pb-4 md:px-32">
+              <div className="absolute inset-0 top-0 right-0 flex h-full -translate-x-1/4 -translate-y-1/4 scale-50 transform gap-x-24 overflow-visible px-8 md:px-60">
                 <div>
                   <SectionSubtitle>
                     {date.year} monthly calendar in A4 format
@@ -153,62 +168,64 @@ export default function Calendar() {
             </div>
           </section>
 
-          <SectionTitle className="px-4 pt-24 md:px-32">
-            Simple Minimalist
-          </SectionTitle>
-          <section>
-            <div className="relative mx-4 flex h-[640px] gap-x-12 overflow-x-auto pb-4 md:px-32">
-              <div className="absolute inset-0 top-0 right-0 flex h-full -translate-x-1/4 -translate-y-1/4 scale-50 transform gap-x-24 overflow-visible px-60">
-                <div>
-                  <SectionSubtitle>
-                    {date.year} monthly calendar in A4 format
-                  </SectionSubtitle>
-                  <div className="paper-a4 bg-white shadow-2xl">
-                    <SimpleMinimalistMonthCalendar
-                      date={date}
-                      variant="portrait"
-                    />
+          <div className="hidden">
+            <SectionTitle className="px-4 pt-24 md:px-32">
+              Simple Minimalist
+            </SectionTitle>
+            <section>
+              <div className="relative mx-4 flex h-[640px] gap-x-12 overflow-x-auto pb-4 md:px-32">
+                <div className="absolute inset-0 top-0 right-0 flex h-full -translate-x-1/4 -translate-y-1/4 scale-50 transform gap-x-24 overflow-visible px-60">
+                  <div>
+                    <SectionSubtitle>
+                      {date.year} monthly calendar in A4 format
+                    </SectionSubtitle>
+                    <div className="paper-a4 bg-white shadow-2xl">
+                      <SimpleMinimalistMonthCalendar
+                        date={date}
+                        variant="portrait"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <SectionSubtitle>
-                    {date.year} monthly calendar in A4 landscape format
-                  </SectionSubtitle>
-                  <div className="paper-a4-landscape bg-white shadow-2xl">
-                    <SimpleMinimalistMonthCalendar
-                      date={date}
-                      variant="landscape"
-                    />
+                  <div>
+                    <SectionSubtitle>
+                      {date.year} monthly calendar in A4 landscape format
+                    </SectionSubtitle>
+                    <div className="paper-a4-landscape bg-white shadow-2xl">
+                      <SimpleMinimalistMonthCalendar
+                        date={date}
+                        variant="landscape"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <SectionSubtitle>
-                    {date.year} year calendar in A4 format
-                  </SectionSubtitle>
-                  <div className="paper-a4 bg-white shadow-2xl">
-                    <SimpleMilimalistYearCalendar
-                      date={date}
-                      variant="portrait"
-                    />
+                  <div>
+                    <SectionSubtitle>
+                      {date.year} year calendar in A4 format
+                    </SectionSubtitle>
+                    <div className="paper-a4 bg-white shadow-2xl">
+                      <SimpleMilimalistYearCalendar
+                        date={date}
+                        variant="portrait"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="pr-32">
-                  <SectionSubtitle>
-                    {date.year} year calendar in A4 landscape format
-                  </SectionSubtitle>
-                  <div className="paper-a4-landscape bg-white shadow-2xl">
-                    <SimpleMilimalistYearCalendar
-                      date={date}
-                      variant="landscape"
-                    />
+                  <div className="pr-32">
+                    <SectionSubtitle>
+                      {date.year} year calendar in A4 landscape format
+                    </SectionSubtitle>
+                    <div className="paper-a4-landscape bg-white shadow-2xl">
+                      <SimpleMilimalistYearCalendar
+                        date={date}
+                        variant="landscape"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </main>
       </div>
     </>
