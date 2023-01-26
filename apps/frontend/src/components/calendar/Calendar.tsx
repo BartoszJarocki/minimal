@@ -8,16 +8,6 @@ export function addLeadingZeros(num: number, totalLength: number): string {
   return String(num).padStart(totalLength, "0");
 }
 
-export const CellAlignVariant = {
-  centered: "flex items-center justify-center",
-  "top-left": "flex items-start justify-start",
-  "top-right": "flex items-start justify-end",
-  "bottom-left": "flex items-end justify-start",
-  "bottom-right": "flex items-end justify-end",
-};
-
-export type DayCellAlignVariant = keyof typeof CellAlignVariant;
-
 export const DayCell = ({
   className,
   children,
@@ -96,8 +86,8 @@ export const MonthCalendar = ({
 
   return (
     <RootComponent className={clsx(className, "grid grid-cols-7")}>
-      {Info.weekdays(weekNames).map((day) => (
-        <CellComponent key={day} className="font-semibold">
+      {Info.weekdays(weekNames).map((day, i) => (
+        <CellComponent key={i} className="font-semibold">
           {day}
         </CellComponent>
       ))}

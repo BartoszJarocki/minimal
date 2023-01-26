@@ -13,6 +13,7 @@ import {
   SimpleMinimalistMonthCalendar,
   SimpleMilimalistYearCalendar,
 } from "../components/calendar/themes/SimpleMinimalist";
+import { Logo } from "../components/Logo";
 
 Settings.defaultLocale = "en-US";
 
@@ -85,6 +86,10 @@ export default function Calendar() {
         </nav>
         <main className="md:space-y-18 min-h-0 space-y-8 py-12">
           <section className="space-y-4 px-4 md:px-32">
+            <div className="flex items-center justify-start gap-x-6 pb-24">
+              <Logo className="h-24 w-24" />
+              <span className="hidden text-4xl font-bold">Use Minimal</span>
+            </div>
             <h1 className="max-w-4xl text-4xl font-bold leading-none tracking-tighter md:text-8xl">
               Get beautiful minimalist calendars
             </h1>
