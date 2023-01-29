@@ -149,14 +149,14 @@ export const SimpleMinimalistMonthCalendar = ({
     },
     a5: {
       portrait: {
-        root: "flex h-full w-full flex-col p-8",
+        root: "flex h-full w-full flex-col p-10",
         monthName: "text-[89px] font-semibold leading-none tracking-tighter",
         yearName: "text-xl leading-none tracking-tighter opacity-50 text-end",
         day: "flex bg-white p-1 text-center items-center justify-center",
         month: "gap-px bg-gray-100 p-px text-md",
       },
       landscape: {
-        root: "flex h-full w-full flex-col p-8",
+        root: "flex h-full w-full flex-col p-10",
         monthName: "text-[44px] font-semibold leading-none tracking-tighter",
         yearName: "text-lg leading-none tracking-tighter opacity-50 text-end",
         day: "flex bg-white p-2 text-center items-end justify-end",
