@@ -26,38 +26,42 @@ export const SimpleMilimalistYearCalendar = ({
   const stylesLookup = {
     a4: {
       portrait: {
+        root: "p-8",
         yearHeader:
-          "mb-8 text-right text-8xl font-bold leading-none tracking-tighter",
+          "mb-8 text-right text-7xl font-semibold leading-none tracking-tighter",
         monthHeader:
-          "flex items-center px-1 text-2xl font-bold leading-none tracking-tighter",
-        monthsGrid: "grid grid-cols-4 gap-4",
-        dayCell: "flex items-center justify-center text-center text-[10px]",
+          "flex items-center px-1 text-2xl font-semibold leading-none tracking-tighter",
+        monthsGrid: "grid grid-cols-3 gap-4",
+        dayCell: "flex items-center justify-center text-center text-[12px]",
       },
       landscape: {
+        root: "p-8",
         yearHeader:
-          "mb-8 text-right text-8xl font-bold leading-none tracking-tighter",
+          "mb-8 text-right text-7xl font-semibold leading-none tracking-tighter",
         monthHeader:
-          "flex items-center px-1 text-2xl font-bold leading-none tracking-tighter",
+          "flex items-center px-1 text-2xl font-semibold leading-none tracking-tighter",
         monthsGrid: "grid grid-cols-4 gap-4",
         dayCell: "flex items-center justify-center text-center text-[12px]",
       },
     },
     a5: {
       portrait: {
+        root: "p-6",
         yearHeader:
-          "mb-8 text-right text-4xl font-bold leading-none tracking-tighter",
+          "mb-8 text-right text-4xl font-semibold leading-none tracking-tighter",
         monthHeader:
-          "flex items-center px-1 text-lg font-bold leading-none tracking-tighter",
+          "flex items-center px-1 text-lg font-semibold leading-none tracking-tighter",
         monthsGrid: "grid grid-cols-3 gap-3",
-        dayCell: "flex items-center justify-center text-center text-[10px]",
+        dayCell: "flex items-center justify-center text-center text-[8px]",
       },
       landscape: {
+        root: "p-6",
         yearHeader:
-          "mb-8 text-right text-4xl font-bold leading-none tracking-tighter",
+          "mb-8 text-right text-4xl font-semibold leading-none tracking-tighter",
         monthHeader:
-          "flex items-center px-1 text-xl font-bold leading-none tracking-tighter",
+          "flex items-center px-1 text-xl font-semibold leading-none tracking-tighter",
         monthsGrid: "grid grid-cols-4 gap-3",
-        dayCell: "flex items-center justify-center text-center text-[10px]",
+        dayCell: "flex items-center justify-center text-center text-[8px]",
       },
     },
   } as const;
@@ -102,7 +106,7 @@ export const SimpleMilimalistYearCalendar = ({
 
   return (
     <YearCalendar
-      className={clsx("p-8", Fonts.inter.className)}
+      className={clsx(styles.root, Fonts.inter.className)}
       date={date}
       headerAs={YearCalendarHeader}
       monthHeaderAs={YearCalendarMonthHeader}
@@ -183,7 +187,9 @@ export const SimpleMinimalistMonthCalendar = ({
         <div className={styles.monthName}>{addLeadingZeros(date.month, 2)}</div>
         <div>
           <div className={styles.yearName}>{date.year}</div>
-          <h1 className={styles.monthName}>{date.monthShort}.</h1>
+          <h1 className={styles.monthName}>
+            {variant === "landscape" ? date.monthLong : date.monthShort}.
+          </h1>
         </div>
       </div>
 
