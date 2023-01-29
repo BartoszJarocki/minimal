@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { DateTime } from "luxon";
 import React from "react";
+import { Fonts } from "../../../lib/fonts";
 import {
   DayCell,
   YearCalendar,
@@ -14,29 +15,67 @@ import {
 interface SimpleMilimalistYearCalendarProps {
   date: DateTime;
   variant: "portrait" | "landscape";
+  size: "a4" | "a5";
 }
 
 export const SimpleMilimalistYearCalendar = ({
   date,
   variant,
+  size,
 }: SimpleMilimalistYearCalendarProps) => {
+  const stylesLookup = {
+    a4: {
+      portrait: {
+        yearHeader:
+          "mb-8 text-right text-8xl font-bold leading-none tracking-tighter",
+        monthHeader:
+          "flex items-center px-1 text-2xl font-bold leading-none tracking-tighter",
+        monthsGrid: "grid grid-cols-4 gap-4",
+        dayCell: "flex items-center justify-center text-center text-[10px]",
+      },
+      landscape: {
+        yearHeader:
+          "mb-8 text-right text-8xl font-bold leading-none tracking-tighter",
+        monthHeader:
+          "flex items-center px-1 text-2xl font-bold leading-none tracking-tighter",
+        monthsGrid: "grid grid-cols-4 gap-4",
+        dayCell: "flex items-center justify-center text-center text-[12px]",
+      },
+    },
+    a5: {
+      portrait: {
+        yearHeader:
+          "mb-8 text-right text-4xl font-bold leading-none tracking-tighter",
+        monthHeader:
+          "flex items-center px-1 text-lg font-bold leading-none tracking-tighter",
+        monthsGrid: "grid grid-cols-3 gap-3",
+        dayCell: "flex items-center justify-center text-center text-[10px]",
+      },
+      landscape: {
+        yearHeader:
+          "mb-8 text-right text-4xl font-bold leading-none tracking-tighter",
+        monthHeader:
+          "flex items-center px-1 text-xl font-bold leading-none tracking-tighter",
+        monthsGrid: "grid grid-cols-4 gap-3",
+        dayCell: "flex items-center justify-center text-center text-[10px]",
+      },
+    },
+  } as const;
+  const styles = stylesLookup[size][variant];
+
   const YearCalendarMonthsGrid = ({
     children,
   }: {
     children: React.ReactNode;
   }) => {
-    return <div className="grid grid-cols-4 gap-4">{children}</div>;
+    return <div className={styles.monthsGrid}>{children}</div>;
   };
 
   const YearCalendarHeader = ({ date }: { date: DateTime }) => {
-    return (
-      <h1 className="mb-8 text-right text-8xl font-bold leading-none tracking-tighter">
-        {date.year}
-      </h1>
-    );
+    return <h1 className={styles.yearHeader}>{date.year}</h1>;
   };
 
-  const YearCalendarDayCellLandscape = ({
+  const YearCalendarDayCell = ({
     className,
     children,
   }: {
@@ -44,87 +83,31 @@ export const SimpleMilimalistYearCalendar = ({
     children: React.ReactNode;
   }) => {
     return (
-      <DayCell
-        className={clsx(
-          "flex items-center justify-center text-center text-[12px]",
-          className
-        )}
-      >
-        {children}
-      </DayCell>
+      <DayCell className={clsx(styles.dayCell, className)}>{children}</DayCell>
     );
   };
 
-  const YearCalendarMonthHeaderPortrait = ({ date }: { date: DateTime }) => {
+  const YearCalendarMonthHeader = ({ date }: { date: DateTime }) => {
     return (
-      <div
-        className={clsx(
-          "flex items-center px-1 text-xl font-bold leading-none tracking-tighter md:text-2xl"
-        )}
-      >
+      <div className={styles.monthHeader}>
         <span className="mr-2 font-semibold">
           {addLeadingZeros(date.month, 2)}
         </span>
-        <span className="ml-auto">{date.monthShort}</span>
-      </div>
-    );
-  };
-
-  const YearCalendarMonthHeaderLandscape = ({ date }: { date: DateTime }) => {
-    return (
-      <div
-        className={clsx(
-          "flex items-center px-1 text-xl font-bold leading-none tracking-tighter md:text-2xl"
-        )}
-      >
-        <span className="mr-2 font-semibold">
-          {addLeadingZeros(date.month, 2)}
+        <span className="ml-auto">
+          {variant === "landscape" ? date.monthLong : date.monthShort}
         </span>
-        <span className="ml-auto inline">{date.monthLong}</span>
       </div>
     );
   };
-
-  const YearCalendarDayCellPortrait = ({
-    className,
-    children,
-  }: {
-    className?: string;
-    children: React.ReactNode;
-  }) => {
-    return (
-      <DayCell
-        className={clsx(
-          "flex items-center justify-center text-center text-[8px]",
-          className
-        )}
-      >
-        {children}
-      </DayCell>
-    );
-  };
-
-  if (variant === "landscape") {
-    return (
-      <YearCalendar
-        className="p-8"
-        date={date}
-        headerAs={YearCalendarHeader}
-        monthHeaderAs={YearCalendarMonthHeaderLandscape}
-        bodyAs={YearCalendarMonthsGrid}
-        dayAs={YearCalendarDayCellLandscape}
-      />
-    );
-  }
 
   return (
     <YearCalendar
-      className="p-8"
+      className={clsx("p-8", Fonts.inter.className)}
       date={date}
       headerAs={YearCalendarHeader}
-      monthHeaderAs={YearCalendarMonthHeaderPortrait}
+      monthHeaderAs={YearCalendarMonthHeader}
       bodyAs={YearCalendarMonthsGrid}
-      dayAs={YearCalendarDayCellPortrait}
+      dayAs={YearCalendarDayCell}
     />
   );
 };
@@ -195,7 +178,7 @@ export const SimpleMinimalistMonthCalendar = ({
   };
 
   return (
-    <div className={styles.root}>
+    <div className={clsx(styles.root, Fonts.inter.className)}>
       <div className={clsx("flex items-end justify-between", spacing)}>
         <div className={styles.monthName}>{addLeadingZeros(date.month, 2)}</div>
         <div>

@@ -12,7 +12,7 @@ async function generateMonthlyCalendar({ browser, year, destDir, formats }) {
       await page.goto(
         `http://localhost:3000/print?type=month&year=${year}&month=${
           i + 1
-        }&font=inter&format=${format}-landscape`,
+        }&format=${format}&variant=landscape`,
         { waitUntil: "networkidle0" }
       );
 
@@ -52,7 +52,7 @@ async function generateYearlyCalendar({ browser, year, destDir, formats }) {
     }
 
     await page.goto(
-      `http://localhost:3000/print?type=year&year=${year}&font=inter&format=${format}`,
+      `http://localhost:3000/print?type=year&year=${year}&format=${format}&variant=portrait`,
       { waitUntil: "networkidle0" }
     );
     // await page.screenshot({ path: `${path}/calendar.png`, fullPage: true });
@@ -65,7 +65,7 @@ async function generateYearlyCalendar({ browser, year, destDir, formats }) {
 
     // landscape
     await page.goto(
-      `http://localhost:3000/print?type=year&year=${year}&font=inter&format=${format}-landscape`,
+      `http://localhost:3000/print?type=year&year=${year}&format=${format}&variant=landscape`,
       { waitUntil: "networkidle0" }
     );
     // await page.screenshot({
@@ -84,7 +84,7 @@ async function generateYearlyCalendar({ browser, year, destDir, formats }) {
 async function debug() {
   const page = await browser.newPage();
   await page.goto(
-    `http://localhost:3000/calendar/print?type=year&year=${year}&font=inter&format=A4-landscape`,
+    `http://localhost:3000/calendar/print?type=year&year=${year}&format=a4&variant=landscape`,
     { waitUntil: "networkidle0" }
   );
 
@@ -108,7 +108,7 @@ async function printPDF() {
 
   const destDir = "./generated";
   const year = 2023;
-  const formats = ["A4"];
+  const formats = ["a4", "a5"];
 
   await generateMonthlyCalendar({ browser, year, destDir, formats });
   await generateYearlyCalendar({ browser, year, destDir, formats });

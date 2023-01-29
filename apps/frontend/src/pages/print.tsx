@@ -7,55 +7,49 @@ import {
   SimpleMilimalistYearCalendar,
   SimpleMinimalistMonthCalendar,
 } from "../components/calendar/themes/SimpleMinimalist";
-import { Font, Fonts } from "../lib/fonts";
 
 type CalendarType = "year" | "month";
 
 Settings.defaultLocale = "en-US";
 
-export const PaperFormatDimensions = {
-  full: "w-full h-full",
-  a4: "paper-a4",
-  "a4-landscape": "paper-a4-landscape",
-  a5: "paper-a5",
-  "a5-landscape": "paper-a5-landscape",
-};
+export type Format = "a4" | "a5";
+export type FormatVariant = "landscape" | "portrait";
+
+export const toClassName = (format: Format, variant: FormatVariant) =>
+  `paper-${format}-${variant}`;
 
 export default function Print() {
   const router = useRouter();
-  const { calendarType, month, year, font, format } = parseQueryParams(
+  const { calendarType, month, year, format, variant } = parseQueryParams(
     router.query
   );
   const date = DateTime.local().set({ month, year });
-  const selectedFont = Fonts[font!];
 
   const renderCalendar = () => {
     if (calendarType === "year") {
-      if (format.includes("landscape")) {
-        return <SimpleMilimalistYearCalendar date={date} variant="landscape" />;
-      }
-
-      return <SimpleMilimalistYearCalendar date={date} variant="portrait" />;
+      return (
+        <SimpleMilimalistYearCalendar
+          date={date}
+          variant={variant}
+          size={format}
+        />
+      );
     }
 
     if (calendarType === "month") {
-      if (format.includes("landscape")) {
-        return (
-          <SimpleMinimalistMonthCalendar date={date} variant="landscape" />
-        );
-      }
-
-      return <SimpleMinimalistMonthCalendar date={date} variant="portrait" />;
+      return (
+        <SimpleMinimalistMonthCalendar
+          date={date}
+          variant={variant}
+          size={format}
+        />
+      );
     }
   };
 
   return (
     <div
-      className={clsx(
-        selectedFont.className,
-        PaperFormatDimensions[format!],
-        "bg-white text-zinc-900"
-      )}
+      className={clsx(toClassName(format, variant), "bg-white text-zinc-900")}
     >
       {renderCalendar()}
     </div>
@@ -66,14 +60,14 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
   const calendarType = query.type as CalendarType;
   const month = query.month as number | undefined;
   const year = query.year as number | undefined;
-  const font = query.font as Font | undefined;
-  const format = query.format as keyof typeof PaperFormatDimensions | undefined;
+  const format = query.format as Format | undefined;
+  const variant = query.variant as FormatVariant | undefined;
 
   return {
     calendarType: calendarType || "year",
     month: month || 1,
     year: year || DateTime.local().year,
-    font: font || "inter",
-    format: format || "full",
+    format: format || "a4",
+    variant: variant || "portrait",
   };
 };

@@ -151,6 +151,7 @@ export default function Calendar() {
                     <SimpleMilimalistYearCalendar
                       date={date}
                       variant="portrait"
+                      size="a4"
                     />
                   </div>
                 </div>
@@ -163,6 +164,7 @@ export default function Calendar() {
                     <SimpleMilimalistYearCalendar
                       date={date}
                       variant="landscape"
+                      size="a4"
                     />
                   </div>
                 </div>
@@ -204,6 +206,7 @@ export default function Calendar() {
                     <SimpleMilimalistYearCalendar
                       date={date}
                       variant="portrait"
+                      size="a5"
                     />
                   </div>
                 </div>
@@ -216,6 +219,7 @@ export default function Calendar() {
                     <SimpleMilimalistYearCalendar
                       date={date}
                       variant="landscape"
+                      size="a5"
                     />
                   </div>
                 </div>
