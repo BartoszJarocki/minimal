@@ -9,6 +9,39 @@ import {
   addLeadingZeros,
 } from "../Calendar";
 
+const DotPattern = () => {
+  return (
+    <svg className="h-full w-full p-2">
+      <pattern
+        id="pattern-circles"
+        x="0"
+        y="0"
+        width="20"
+        height="20"
+        patternUnits="userSpaceOnUse"
+        patternContentUnits="userSpaceOnUse"
+      >
+        <circle
+          className="fill-zinc-400"
+          id="pattern-circle"
+          cx="10"
+          cy="10"
+          r="1"
+        ></circle>
+      </pattern>
+
+      <rect
+        id="rect"
+        x="0"
+        y="0"
+        width="100%"
+        height="100%"
+        fill="url(#pattern-circles)"
+      ></rect>
+    </svg>
+  );
+};
+
 // Year Calendar
 // -----------------------------------------------
 
@@ -136,15 +169,15 @@ export const SimpleMinimalistMonthCalendar = ({
         root: "flex h-full w-full flex-col p-12",
         monthName: "text-[144px] font-semibold leading-none tracking-tighter",
         yearName: "text-2xl leading-none tracking-tighter opacity-50 text-end",
-        day: "flex bg-white p-3 text-center items-center justify-center",
-        month: "gap-px bg-gray-100 p-px mt-2 text-xl",
+        day: "flex p-3 text-center items-center justify-center",
+        month: "mt-2 text-xl",
       },
       landscape: {
         root: "flex h-full w-full flex-col p-12",
         monthName: "text-[64px] font-semibold leading-none tracking-tighter",
         yearName: "text-2xl leading-none tracking-tighter opacity-50 text-end",
-        day: "flex bg-white p-3 text-center items-end justify-end",
-        month: "gap-px bg-gray-100 p-px mt-2 text-xl",
+        day: "flex p-3 text-center items-center justify-center",
+        month: "mt-2 text-xl",
       },
     },
     a5: {
@@ -152,22 +185,22 @@ export const SimpleMinimalistMonthCalendar = ({
         root: "flex h-full w-full flex-col p-10",
         monthName: "text-[89px] font-semibold leading-none tracking-tighter",
         yearName: "text-xl leading-none tracking-tighter opacity-50 text-end",
-        day: "flex bg-white p-1 text-center items-center justify-center",
-        month: "gap-px bg-gray-100 p-px text-md",
+        day: "flex p-1 text-center items-center justify-center",
+        month: "text-md",
       },
       landscape: {
         root: "flex h-full w-full flex-col p-10",
         monthName: "text-[44px] font-semibold leading-none tracking-tighter",
         yearName: "text-lg leading-none tracking-tighter opacity-50 text-end",
-        day: "flex bg-white p-2 text-center items-end justify-end",
-        month: "gap-px bg-gray-100 p-px text-md",
+        day: "flex p-2 text-center items-center justify-center",
+        month: "text-md",
       },
     },
   } as const;
 
   const styles = stylesLookup[size][variant];
 
-  const spacing = variant === "landscape" ? "my-2" : "my-4";
+  const spacing = variant === "landscape" ? "my-2 mx-8" : "my-4";
 
   const MonthCalendarDayCell = ({
     className,
@@ -199,6 +232,11 @@ export const SimpleMinimalistMonthCalendar = ({
         weekNames={"short"}
         dayAs={MonthCalendarDayCell}
       />
+      {variant === "portrait" && (
+        <div className="flex-1 opacity-[0.9999]">
+          <DotPattern />
+        </div>
+      )}
     </div>
   );
 };

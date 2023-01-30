@@ -7,34 +7,39 @@ async function generateMonthlyCalendar({ browser, year, destDir, formats }) {
   const allMonths = luxon.Info.months();
   const allMonthsPdfs = allMonths.map(async (month, i) => {
     const page = await browser.newPage();
+    const monthIndex = i + 1;
 
     for (const format of formats) {
-      await page.goto(
-        `http://localhost:3000/print?type=month&year=${year}&month=${
-          i + 1
-        }&format=${format}&variant=landscape`,
-        { waitUntil: "networkidle0" }
-      );
-
       const path = `${destDir}/${year}/month-calendar/${format}`;
       if (!fs.existsSync(path)) {
         fs.mkdirSync(path, { recursive: true });
       }
-      // await page.screenshot({ path: `${path}/${month}.png`, fullPage: true });
 
-      // portrait
-      await page.pdf({
-        format,
-        path: `${path}/${month}.pdf`,
-        pageRanges: "1-1",
-      });
+      await page.goto(
+        `http://localhost:3000/print?type=month&year=${year}&month=${monthIndex}&format=${format}&variant=landscape`,
+        { waitUntil: "networkidle0" }
+      );
 
       // landscape
       await page.pdf({
         format,
-        path: `${path}/${month}-landscape.pdf`,
+        path: `${path}/${monthIndex}-${month}-landscape.pdf`,
         landscape: true,
         pageRanges: "1-1",
+        printBackground: true,
+      });
+
+      await page.goto(
+        `http://localhost:3000/print?type=month&year=${year}&month=${monthIndex}&format=${format}&variant=portrait`,
+        { waitUntil: "networkidle0" }
+      );
+
+      // portrait
+      await page.pdf({
+        format,
+        path: `${path}/${monthIndex}-${month}.pdf`,
+        pageRanges: "1-1",
+        printBackground: true,
       });
     }
   });

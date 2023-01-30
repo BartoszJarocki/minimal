@@ -3,6 +3,7 @@ import { DateTime, Settings } from "luxon";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
+import { Format, FormatVariant } from "../components/calendar/Calendar";
 import {
   SimpleMilimalistYearCalendar,
   SimpleMinimalistMonthCalendar,
@@ -12,8 +13,6 @@ type CalendarType = "year" | "month";
 
 Settings.defaultLocale = "en-US";
 
-export type Format = "a4" | "a5";
-export type FormatVariant = "landscape" | "portrait";
 
 export const toClassName = (format: Format, variant: FormatVariant) =>
   `paper-${format}-${variant}`;

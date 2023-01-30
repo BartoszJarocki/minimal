@@ -8,6 +8,9 @@ export function addLeadingZeros(num: number, totalLength: number): string {
   return String(num).padStart(totalLength, "0");
 }
 
+export type Format = "a4" | "a5";
+export type FormatVariant = "landscape" | "portrait";
+
 export const DayCell = ({
   className,
   children,

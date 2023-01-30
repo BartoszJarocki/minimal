@@ -121,7 +121,7 @@ export default function Calendar() {
                   <SectionSubtitle>
                     {date.year} monthly calendar in A4 format
                   </SectionSubtitle>
-                  <div className="paper-a4 bg-white shadow-2xl">
+                  <div className="paper-a4-portrait bg-white shadow-2xl">
                     <SimpleMinimalistMonthCalendar
                       date={date}
                       variant="portrait"
@@ -147,7 +147,7 @@ export default function Calendar() {
                   <SectionSubtitle>
                     {date.year} year calendar in A4 format
                   </SectionSubtitle>
-                  <div className="paper-a4 bg-white shadow-2xl">
+                  <div className="paper-a4-portrait bg-white shadow-2xl">
                     <SimpleMilimalistYearCalendar
                       date={date}
                       variant="portrait"
@@ -176,7 +176,7 @@ export default function Calendar() {
                   <SectionSubtitle>
                     {date.year} monthly calendar in A5 format
                   </SectionSubtitle>
-                  <div className="paper-a5 bg-white shadow-2xl">
+                  <div className="paper-a5-portrait bg-white shadow-2xl">
                     <SimpleMinimalistMonthCalendar
                       date={date}
                       variant="portrait"
@@ -202,7 +202,7 @@ export default function Calendar() {
                   <SectionSubtitle>
                     {date.year} year calendar in A4 format
                   </SectionSubtitle>
-                  <div className="paper-a5 bg-white shadow-2xl">
+                  <div className="paper-a5-portrait bg-white shadow-2xl">
                     <SimpleMilimalistYearCalendar
                       date={date}
                       variant="portrait"
