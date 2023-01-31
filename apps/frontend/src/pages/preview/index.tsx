@@ -21,7 +21,7 @@ export default function Print() {
   const { calendarType, year, format, variant } = parseQueryParams(
     router.query
   );
-  const date = DateTime.local().set({ year });
+  const date = DateTime.now().set({ year });
 
   const renderCalendar = () => {
     if (calendarType === "year") {

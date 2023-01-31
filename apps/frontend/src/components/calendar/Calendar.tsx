@@ -39,6 +39,7 @@ interface MonthCalendarProps {
   }>;
   date: DateTime;
   weekNames: StringUnitLength;
+  locale?: string;
 }
 
 export const MonthCalendar = ({
@@ -47,6 +48,7 @@ export const MonthCalendar = ({
   dayAs = DayCell,
   date,
   weekNames,
+  locale = date.locale,
 }: MonthCalendarProps) => {
   const RootComponent = as;
   const CellComponent = dayAs;
@@ -89,7 +91,7 @@ export const MonthCalendar = ({
 
   return (
     <RootComponent className={clsx(className, "grid grid-cols-7")}>
-      {Info.weekdays(weekNames).map((day, i) => (
+      {Info.weekdays(weekNames, { locale }).map((day, i) => (
         <CellComponent key={i} className="font-semibold">
           {day}
         </CellComponent>

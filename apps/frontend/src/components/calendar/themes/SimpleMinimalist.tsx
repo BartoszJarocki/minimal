@@ -235,7 +235,7 @@ export const SimpleMinimalistMonthCalendar = ({
         <div>
           <div className={styles.yearName}>{date.year}</div>
           <h1 className={styles.monthName}>
-            {variant === "landscape" ? date.monthLong : date.monthShort}.
+            {variant === "landscape" ? date.monthLong : date.monthShort}
           </h1>
         </div>
       </div>
@@ -245,6 +245,7 @@ export const SimpleMinimalistMonthCalendar = ({
         date={date}
         weekNames={"short"}
         dayAs={MonthCalendarDayCell}
+        locale={date.locale}
       />
       {variant === "portrait" && (
         <div className="flex-1 opacity-[0.9999]">

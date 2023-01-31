@@ -9,8 +9,6 @@ import {
   SimpleMinimalistMonthCalendar,
 } from "../components/calendar/themes/SimpleMinimalist";
 
-Settings.defaultLocale = "en-US";
-
 type CalendarType = "year" | "month";
 type Theme = "simple-minimalist" | "classy";
 
@@ -30,30 +28,10 @@ export const toPrintClassName = (format: Format, variant: FormatVariant) =>
 
 export default function Print() {
   const router = useRouter();
-  const { type, month, year, format, variant } = parseQueryParams(router.query);
-  const date = DateTime.now().set({ month, year });
-
-  const renderCalendar = () => {
-    if (type === "year") {
-      return (
-        <SimpleMilimalistYearCalendar
-          date={date}
-          variant={variant}
-          size={format}
-        />
-      );
-    }
-
-    if (type === "month") {
-      return (
-        <SimpleMinimalistMonthCalendar
-          date={date}
-          variant={variant}
-          size={format}
-        />
-      );
-    }
-  };
+  const { theme, locale, type, month, year, format, variant } =
+    parseQueryParams(router.query);
+  const date = DateTime.now().setLocale(locale).set({ month, year });
+  const Calendar = ThemeLookup[type][theme];
 
   return (
     <div
@@ -62,12 +40,19 @@ export default function Print() {
         "bg-white text-zinc-900"
       )}
     >
-      {renderCalendar()}
+      <Calendar date={date} variant={variant} size={format} />
     </div>
   );
 }
 
+/**
+ * Example url: /print?theme=simple-minimalist&locale=en-US&type=year&month=1&year=2021&format=a4&variant=portrait
+ * @param query
+ * @returns
+ */
 export const parseQueryParams = (query: ParsedUrlQuery) => {
+  const theme = query.theme as Theme | undefined;
+  const locale = query.locale as string | undefined;
   const type = query.type as CalendarType;
   const month = query.month as number | undefined;
   const year = query.year as number | undefined;
@@ -75,9 +60,11 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
   const variant = query.variant as FormatVariant | undefined;
 
   return {
+    theme: theme || "simple-minimalist",
+    locale: locale || "en-US",
     type: type || "year",
     month: month || 1,
-    year: year || DateTime.local().year,
+    year: year || DateTime.now().year,
     format: format || "a4",
     variant: variant || "portrait",
   };
