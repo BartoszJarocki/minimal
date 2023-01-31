@@ -81,6 +81,8 @@ export default function Calendar() {
             <SectionSubtitle>
               Yearly and monthly, self print ready minimalist calendar available
               in A4 and A5 formats in both portrait and landscape. PDF.
+              Available in English, French, German, Italian, Spanish, Russian,
+              Portugese and Polish languages.
             </SectionSubtitle>
             <div className="h-12">
               <a

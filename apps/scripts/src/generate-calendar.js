@@ -25,7 +25,7 @@ async function generateMonthlyCalendar({
     for (const theme of themes) {
       for (const locale of locales) {
         for (const format of formats) {
-          const path = `${destDir}/${year}/month-calendar/${theme}/${locale}/${format}`;
+          const path = `${destDir}/${year}/${theme}/month-calendar/${locale}/${format}`;
           if (!fs.existsSync(path)) {
             fs.mkdirSync(path, { recursive: true });
           }
@@ -88,7 +88,7 @@ async function generateYearlyCalendar({
   for (const theme of themes) {
     for (const locale of locales) {
       for (const format of formats) {
-        const path = `${destDir}/${year}/year/${theme}/${locale}/${format}`;
+        const path = `${destDir}/${year}/${theme}/year/${locale}/${format}`;
         if (!fs.existsSync(path)) {
           fs.mkdirSync(path, { recursive: true });
         }
@@ -156,7 +156,6 @@ async function debug() {
 async function printPDF() {
   const browser = await puppeteer.launch({
     headless: true,
-    defaultViewport: null,
   });
 
   const destDir = "./generated";

@@ -15,7 +15,7 @@ const DotPattern = ({ size }: { size: "normal" | "dense" }) => {
   const xy = size === "normal" ? 10 : 5;
 
   return (
-    <svg className="h-full w-full p-2">
+    <svg className="h-full w-full object-cover">
       <pattern
         id="pattern-circles"
         x="0"
@@ -248,7 +248,7 @@ export const SimpleMinimalistMonthCalendar = ({
         locale={date.locale}
       />
       {variant === "portrait" && (
-        <div className="flex-1 opacity-[0.9999]">
+        <div className="flex-1 p-2 opacity-[0.9999]">
           <DotPattern size={size === "a4" ? "normal" : "dense"} />
         </div>
       )}
