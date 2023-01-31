@@ -38,7 +38,7 @@ const SectionSubtitle = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default function Calendar() {
-  const [date, setDate] = useState(DateTime.local());
+  const [date, setDate] = useState(DateTime.now());
   const font = Fonts["inter"];
 
   const url = "https://getyearprogress.com/calendar";

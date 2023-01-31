@@ -9,24 +9,28 @@ import {
   addLeadingZeros,
 } from "../Calendar";
 
-const DotPattern = () => {
+const DotPattern = ({ size }: { size: "normal" | "dense" }) => {
+  const dimensions = size === "normal" ? 20 : 10;
+  const radius = size === "normal" ? 1 : 0.5;
+  const xy = size === "normal" ? 10 : 5;
+
   return (
     <svg className="h-full w-full p-2">
       <pattern
         id="pattern-circles"
         x="0"
         y="0"
-        width="20"
-        height="20"
+        width={dimensions}
+        height={dimensions}
         patternUnits="userSpaceOnUse"
         patternContentUnits="userSpaceOnUse"
       >
         <circle
           className="fill-zinc-400"
           id="pattern-circle"
-          cx="10"
-          cy="10"
-          r="1"
+          cx={xy}
+          cy={xy}
+          r={radius}
         ></circle>
       </pattern>
 
@@ -59,7 +63,7 @@ export const SimpleMilimalistYearCalendar = ({
   const stylesLookup = {
     a4: {
       portrait: {
-        root: "p-8",
+        root: "p-8 flex flex-col",
         yearHeader:
           "mb-8 text-right text-7xl font-semibold leading-none tracking-tighter",
         monthHeader:
@@ -68,7 +72,7 @@ export const SimpleMilimalistYearCalendar = ({
         dayCell: "flex items-center justify-center text-center text-[12px]",
       },
       landscape: {
-        root: "p-8",
+        root: "p-8 flex flex-col",
         yearHeader:
           "mb-8 text-right text-7xl font-semibold leading-none tracking-tighter",
         monthHeader:
@@ -79,7 +83,7 @@ export const SimpleMilimalistYearCalendar = ({
     },
     a5: {
       portrait: {
-        root: "p-6",
+        root: "p-6 flex flex-col",
         yearHeader:
           "mb-8 text-right text-4xl font-semibold leading-none tracking-tighter",
         monthHeader:
@@ -88,7 +92,7 @@ export const SimpleMilimalistYearCalendar = ({
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
       landscape: {
-        root: "p-6",
+        root: "p-6 flex flex-col",
         yearHeader:
           "mb-8 text-right text-4xl font-semibold leading-none tracking-tighter",
         monthHeader:
@@ -145,6 +149,13 @@ export const SimpleMilimalistYearCalendar = ({
       monthHeaderAs={YearCalendarMonthHeader}
       bodyAs={YearCalendarMonthsGrid}
       dayAs={YearCalendarDayCell}
+      footerAs={() => {
+        return variant === "portrait" ? (
+          <div className="flex-1 opacity-[0.9999]">
+            <DotPattern size={size === "a4" ? "normal" : "dense"} />
+          </div>
+        ) : null;
+      }}
     />
   );
 };
@@ -170,14 +181,14 @@ export const SimpleMinimalistMonthCalendar = ({
         monthName: "text-[144px] font-semibold leading-none tracking-tighter",
         yearName: "text-2xl leading-none tracking-tighter opacity-50 text-end",
         day: "flex p-3 text-center items-center justify-center",
-        month: "mt-2 text-xl",
+        month: "py-6 text-xl",
       },
       landscape: {
         root: "flex h-full w-full flex-col p-12",
         monthName: "text-[64px] font-semibold leading-none tracking-tighter",
         yearName: "text-2xl leading-none tracking-tighter opacity-50 text-end",
         day: "flex p-3 text-center items-center justify-center",
-        month: "mt-2 text-xl",
+        month: "py-6 text-xl",
       },
     },
     a5: {
@@ -186,21 +197,19 @@ export const SimpleMinimalistMonthCalendar = ({
         monthName: "text-[89px] font-semibold leading-none tracking-tighter",
         yearName: "text-xl leading-none tracking-tighter opacity-50 text-end",
         day: "flex p-1 text-center items-center justify-center",
-        month: "text-md",
+        month: "py-2 text-md",
       },
       landscape: {
         root: "flex h-full w-full flex-col p-10",
         monthName: "text-[44px] font-semibold leading-none tracking-tighter",
         yearName: "text-lg leading-none tracking-tighter opacity-50 text-end",
         day: "flex p-2 text-center items-center justify-center",
-        month: "text-md",
+        month: "py-2 text-md",
       },
     },
   } as const;
 
   const styles = stylesLookup[size][variant];
-
-  const spacing = variant === "landscape" ? "my-2 mx-8" : "my-4";
 
   const MonthCalendarDayCell = ({
     className,
@@ -216,7 +225,12 @@ export const SimpleMinimalistMonthCalendar = ({
 
   return (
     <div className={clsx(styles.root, Fonts.inter.className)}>
-      <div className={clsx("flex items-end justify-between", spacing)}>
+      <div
+        className={clsx(
+          "flex items-end justify-between",
+          variant === "landscape" && "mx-8"
+        )}
+      >
         <div className={styles.monthName}>{addLeadingZeros(date.month, 2)}</div>
         <div>
           <div className={styles.yearName}>{date.year}</div>
@@ -234,7 +248,7 @@ export const SimpleMinimalistMonthCalendar = ({
       />
       {variant === "portrait" && (
         <div className="flex-1 opacity-[0.9999]">
-          <DotPattern />
+          <DotPattern size={size === "a4" ? "normal" : "dense"} />
         </div>
       )}
     </div>

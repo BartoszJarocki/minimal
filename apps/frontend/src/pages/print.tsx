@@ -13,19 +13,16 @@ type CalendarType = "year" | "month";
 
 Settings.defaultLocale = "en-US";
 
-
 export const toClassName = (format: Format, variant: FormatVariant) =>
   `paper-${format}-${variant}`;
 
 export default function Print() {
   const router = useRouter();
-  const { calendarType, month, year, format, variant } = parseQueryParams(
-    router.query
-  );
+  const { type, month, year, format, variant } = parseQueryParams(router.query);
   const date = DateTime.local().set({ month, year });
 
   const renderCalendar = () => {
-    if (calendarType === "year") {
+    if (type === "year") {
       return (
         <SimpleMilimalistYearCalendar
           date={date}
@@ -35,7 +32,7 @@ export default function Print() {
       );
     }
 
-    if (calendarType === "month") {
+    if (type === "month") {
       return (
         <SimpleMinimalistMonthCalendar
           date={date}
@@ -56,14 +53,14 @@ export default function Print() {
 }
 
 export const parseQueryParams = (query: ParsedUrlQuery) => {
-  const calendarType = query.type as CalendarType;
+  const type = query.type as CalendarType;
   const month = query.month as number | undefined;
   const year = query.year as number | undefined;
   const format = query.format as Format | undefined;
   const variant = query.variant as FormatVariant | undefined;
 
   return {
-    calendarType: calendarType || "year",
+    type: type || "year",
     month: month || 1,
     year: year || DateTime.local().year,
     format: format || "a4",

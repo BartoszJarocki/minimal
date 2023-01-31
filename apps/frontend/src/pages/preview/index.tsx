@@ -43,13 +43,13 @@ export default function Print() {
 
     if (calendarType === "month") {
       return (
-        <div className="flex h-full w-full flex-row flex-wrap gap-10 p-10">
+        <div className="flex h-full min-w-0 flex-row gap-10 p-4">
           {Info.months().map((_, index) => (
             <div
               key={index}
               className={clsx(
                 toClassName(format, variant),
-                "overflow-hidden bg-white text-zinc-900 shadow-xl"
+                "flex-shrink-0 overflow-hidden bg-white text-zinc-900 shadow-xl"
               )}
             >
               <SimpleMinimalistMonthCalendar
