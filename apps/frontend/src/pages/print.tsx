@@ -9,17 +9,29 @@ import {
   SimpleMinimalistMonthCalendar,
 } from "../components/calendar/themes/SimpleMinimalist";
 
-type CalendarType = "year" | "month";
-
 Settings.defaultLocale = "en-US";
 
-export const toClassName = (format: Format, variant: FormatVariant) =>
+type CalendarType = "year" | "month";
+type Theme = "simple-minimalist" | "classy";
+
+const ThemeLookup: Record<CalendarType, Record<Theme, any>> = {
+  year: {
+    "simple-minimalist": SimpleMilimalistYearCalendar,
+    classy: null,
+  },
+  month: {
+    "simple-minimalist": SimpleMinimalistMonthCalendar,
+    classy: null,
+  },
+};
+
+export const toPrintClassName = (format: Format, variant: FormatVariant) =>
   `paper-${format}-${variant}`;
 
 export default function Print() {
   const router = useRouter();
   const { type, month, year, format, variant } = parseQueryParams(router.query);
-  const date = DateTime.local().set({ month, year });
+  const date = DateTime.now().set({ month, year });
 
   const renderCalendar = () => {
     if (type === "year") {
@@ -45,7 +57,10 @@ export default function Print() {
 
   return (
     <div
-      className={clsx(toClassName(format, variant), "bg-white text-zinc-900")}
+      className={clsx(
+        toPrintClassName(format, variant),
+        "bg-white text-zinc-900"
+      )}
     >
       {renderCalendar()}
     </div>
