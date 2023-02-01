@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { DateTime, Settings } from "luxon";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Script from "next/script";
 
 import { NextSeo } from "next-seo";
@@ -29,19 +29,42 @@ const SectionTitle = ({
 
 const SectionSubtitle = ({ children }: { children: React.ReactNode }) => {
   return (
-    <h3 className="mb-4 max-w-2xl text-left text-xl opacity-80 md:mb-6">
+    <h3 className="mb-4 max-w-2xl text-left text-lg opacity-80 md:mb-6">
       {children}
     </h3>
   );
 };
 
+const InlineButton = ({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) => {
+  return (
+    <button
+      className="inline text-zinc-700 underline hover:text-zinc-900"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+
 export default function Calendar() {
+  const [locale, setLocale] = useState("en-US");
   const [date, setDate] = useState(DateTime.now());
+
   const font = Fonts["inter"];
 
   const url = "https://getyearprogress.com/calendar";
   const title = `${date.toFormat("yyyy")} Minimalist Calendars`;
   const description = `Fre Minimalistic calendars for ${date.toFormat("MMMM")}`;
+
+  useEffect(() => {
+    setDate(date.setLocale(locale));
+  }, [locale, date]);
 
   return (
     <>
@@ -81,8 +104,39 @@ export default function Calendar() {
             <SectionSubtitle>
               Yearly and monthly, self print ready minimalist calendar available
               in A4 and A5 formats in both portrait and landscape. PDF.
-              Available in English, French, German, Italian, Spanish, Russian,
-              Portugese and Polish languages.
+              Available in{" "}
+              <InlineButton onClick={() => setLocale("en-US")}>
+                English
+              </InlineButton>
+              ,{" "}
+              <InlineButton onClick={() => setLocale("fr-FR")}>
+                French
+              </InlineButton>
+              ,{" "}
+              <InlineButton onClick={() => setLocale("de-DE")}>
+                German
+              </InlineButton>
+              ,{" "}
+              <InlineButton onClick={() => setLocale("it-IT")}>
+                Italian
+              </InlineButton>
+              ,{" "}
+              <InlineButton onClick={() => setLocale("es-ES")}>
+                Spanish
+              </InlineButton>
+              ,{" "}
+              <InlineButton onClick={() => setLocale("ru-RU")}>
+                Russian
+              </InlineButton>
+              ,{" "}
+              <InlineButton onClick={() => setLocale("pt-BR")}>
+                Portugese
+              </InlineButton>{" "}
+              and{" "}
+              <InlineButton onClick={() => setLocale("pl-PL")}>
+                Polish
+              </InlineButton>{" "}
+              languages.
             </SectionSubtitle>
             <div className="h-12">
               <a
