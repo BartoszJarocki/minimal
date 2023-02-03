@@ -170,6 +170,7 @@ async function printPDF() {
     "pt-BR",
     "pl-PL",
     "ru-RU",
+    "ja-JP",
   ];
   const formats = ["a4", "a5"];
 

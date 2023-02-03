@@ -62,8 +62,12 @@ export default function Calendar() {
   const title = `${date.toFormat("yyyy")} Minimalist Calendars`;
   const description = `Fre Minimalistic calendars for ${date.toFormat("MMMM")}`;
 
+  console.log("update");
+
   useEffect(() => {
-    setDate(date.setLocale(locale));
+    if (locale !== date.locale) {
+      setDate(date.setLocale(locale));
+    }
   }, [locale, date]);
 
   return (
@@ -82,11 +86,11 @@ export default function Calendar() {
       <div
         className={clsx(
           font.className,
-          "min-h-screen w-screen bg-zinc-50 pt-24 text-dark"
+          "min-h-screen w-screen overflow-x-hidden bg-zinc-50 pt-24 text-dark"
         )}
       >
-        <main className="md:space-y-18 min-h-0 space-y-8 py-12 px-4 md:px-32">
-          <section className="space-y-4">
+        <main className="md:space-y-18 min-h-0 space-y-8 py-12">
+          <section className="space-y-4 px-4 md:px-32">
             <div className="flex items-center justify-start gap-x-6 pb-24">
               <Logo className="h-24 w-24" />
               <span className="hidden text-4xl font-bold">Use Minimal</span>
@@ -99,7 +103,7 @@ export default function Calendar() {
             </h2>
           </section>
 
-          <div className="pt-24">
+          <div className="px-4 pt-24 md:px-32">
             <SectionTitle>Minimal</SectionTitle>
             <SectionSubtitle>
               Yearly and monthly, self print ready minimalist calendar available
@@ -147,8 +151,8 @@ export default function Calendar() {
               </a>
             </div>
           </div>
-          <section>
-            <div className="relative flex h-[360px] gap-x-12">
+          <section className="px-4 md:px-32">
+            <div className="relative flex h-[360px] gap-x-12 overflow-x-auto">
               <div className="absolute inset-0 top-0 right-0 flex h-full translate-x-[-35%] translate-y-[-35%] scale-[30%] transform gap-x-24">
                 <div>
                   <div className="paper-a4-portrait overflow-visible bg-white shadow-2xl">
