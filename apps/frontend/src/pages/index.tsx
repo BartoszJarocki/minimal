@@ -152,8 +152,8 @@ export default function Calendar() {
             </div>
           </div>
           <section className="px-4 md:px-32">
-            <div className="relative flex h-[360px] gap-x-12 overflow-x-auto">
-              <div className="absolute inset-0 top-0 right-0 flex h-full translate-x-[-35%] translate-y-[-35%] scale-[30%] transform gap-x-24">
+            <div className="flex h-[360px] gap-x-12 overflow-x-auto">
+              <div className="inset-0 top-0 right-0 flex h-full origin-top-left scale-[30%] gap-x-24">
                 <div>
                   <div className="paper-a4-portrait overflow-visible bg-white shadow-2xl">
                     <SimpleMinimalistMonthCalendar

@@ -9,10 +9,10 @@ import {
   SimpleMinimalistMonthCalendar,
 } from "../components/calendar/themes/SimpleMinimalist";
 
-type CalendarType = "year" | "month";
-type Theme = "simple-minimalist" | "classy";
+export type CalendarType = "year" | "month";
+export type Theme = "simple-minimalist" | "classy";
 
-const ThemeLookup: Record<CalendarType, Record<Theme, any>> = {
+export const ThemeLookup: Record<CalendarType, Record<Theme, any>> = {
   year: {
     "simple-minimalist": SimpleMilimalistYearCalendar,
     classy: null,

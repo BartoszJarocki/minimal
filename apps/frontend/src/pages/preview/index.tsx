@@ -4,55 +4,77 @@ import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import { Format, FormatVariant } from "../../components/calendar/Calendar";
-import {
-  SimpleMilimalistYearCalendar,
-  SimpleMinimalistMonthCalendar,
-} from "../../components/calendar/themes/SimpleMinimalist";
+import { Theme, ThemeLookup, toPrintClassName } from "../print";
 
-type CalendarType = "year" | "month";
+const locales = [
+  "en-US",
+  "fr-FR",
+  "de-DE",
+  "es-ES",
+  "it-IT",
+  "pt-BR",
+  "pl-PL",
+  "ru-RU",
+  "ja-JP",
+];
 
-Settings.defaultLocale = "en-US";
+const LocaleLookup: Record<string, string> = {
+  "en-US": "English",
+  "fr-FR": "Français",
+  "de-DE": "Deutsch",
+  "es-ES": "Español",
+  "it-IT": "Italiano",
+  "pt-BR": "Português",
+  "pl-PL": "Polski",
+  "ru-RU": "Русский",
+  "ja-JP": "日本語",
+};
 
-export const toClassName = (format: Format, variant: FormatVariant) =>
-  `paper-${format}-${variant}`;
-
-export default function Print() {
+export default function Preview() {
   const router = useRouter();
-  const { calendarType, year, format, variant } = parseQueryParams(
+  const { theme, locale, year, format, variant } = parseQueryParams(
     router.query
   );
-  const date = DateTime.now().set({ year });
+  const date = DateTime.now().setLocale(locale).set({ year });
+  const YearCalendar = ThemeLookup["year"][theme];
+  const MonthCalendar = ThemeLookup["month"][theme];
 
-  const renderCalendar = () => {
-    if (calendarType === "year") {
-      return (
-        <div
-          className={clsx(
-            toClassName(format, variant),
-            "bg-white text-zinc-900"
-          )}
-        >
-          <SimpleMilimalistYearCalendar
-            date={date}
-            variant={variant}
-            size={format}
-          />
+  return (
+    <div className="space-y-4 bg-zinc-50 p-2 text-dark">
+      <h1 className="px-2 py-4 pt-2 text-5xl font-semibold leading-none tracking-tighter">
+        {year} {LocaleLookup[locale]}
+      </h1>
+
+      <div>
+        <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
+          Year calendar
+        </h2>
+        <div className="h-[280px]">
+          <div
+            className={clsx(
+              toPrintClassName(format, variant),
+              "origin-top-left scale-[25%] bg-white text-zinc-900 shadow-xl"
+            )}
+          >
+            <YearCalendar date={date} variant={variant} size={format} />
+          </div>
         </div>
-      );
-    }
+      </div>
 
-    if (calendarType === "month") {
-      return (
-        <div className="flex h-full min-w-0 flex-row gap-10 p-4">
+      <div>
+        <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
+          Monthly calendar
+        </h2>
+        <div className="grid w-max origin-top-left scale-[25%] grid-cols-4 gap-8">
           {Info.months().map((_, index) => (
             <div
               key={index}
               className={clsx(
-                toClassName(format, variant),
+                toPrintClassName(format, variant),
                 "flex-shrink-0 overflow-hidden bg-white text-zinc-900 shadow-xl"
               )}
             >
-              <SimpleMinimalistMonthCalendar
+              <MonthCalendar
                 date={date.set({ month: index + 1 })}
                 variant={variant}
                 size={format}
@@ -60,22 +82,31 @@ export default function Print() {
             </div>
           ))}
         </div>
-      );
-    }
-  };
-
-  return renderCalendar();
+      </div>
+    </div>
+  );
 }
 
+/**
+ * Example url: /preview?theme=simple-minimalist&locale=en-US&type=year&month=1&year=2021&format=a4&variant=portrait
+ * 1. Month Portrait: http://localhost:3000/preview?theme=simple-minimalist&locale=en-US&&year=2022&format=a4&variant=portrait
+ * 2. Month Landscape: http://localhost:3000/preview?theme=simple-minimalist&locale=en-US&year=2022&format=a4&variant=landscape
+ * 3. Year Portrait: http://localhost:3000/preview?theme=simple-minimalist&locale=en-US&year=2022&format=a4&variant=portrait
+ * 4. Year Landscape: http://localhost:3000/preview?theme=simple-minimalist&locale=en-US&&year=2022&format=a4&variant=landscape
+ * @param query
+ * @returns
+ */
 export const parseQueryParams = (query: ParsedUrlQuery) => {
-  const calendarType = query.type as CalendarType;
+  const theme = query.theme as Theme | undefined;
+  const locale = query.locale as string | undefined;
   const year = query.year as number | undefined;
   const format = query.format as Format | undefined;
   const variant = query.variant as FormatVariant | undefined;
 
   return {
-    calendarType: calendarType || "year",
-    year: year || DateTime.local().year,
+    theme: theme || "simple-minimalist",
+    locale: locale || "en-US",
+    year: year || DateTime.now().year,
     format: format || "a4",
     variant: variant || "portrait",
   };
