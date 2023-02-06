@@ -63,18 +63,20 @@ export const SimpleMilimalistYearCalendar = ({
   const stylesLookup = {
     a4: {
       portrait: {
-        root: "p-8 flex flex-col",
+        root: "flex items-end p-4 text-dark",
+        yearRoot: "p-8 basis-[73%]",
         yearHeader:
-          "mb-8 text-right text-7xl font-semibold leading-none tracking-tighter",
+          "text-vertical-rl mb-8 ml-auto basis-[27%] translate-x-14 rotate-180 self-end text-end text-[144px] font-semibold leading-none tracking-tighter",
         monthHeader:
           "flex items-center px-1 text-2xl font-semibold leading-none tracking-tighter",
         monthsGrid: "grid grid-cols-2 gap-4",
         dayCell: "flex items-center justify-center text-center text-[12px]",
       },
       landscape: {
-        root: "p-8 flex flex-col",
+        root: "flex flex-col p-14 text-dark",
+        yearRoot: "",
         yearHeader:
-          "mb-8 text-right text-7xl font-semibold leading-none tracking-tighter",
+          "mb-8 ml-auto self-end text-end text-[96px] font-semibold leading-none tracking-tighter",
         monthHeader:
           "flex items-center px-1 text-2xl font-semibold leading-none tracking-tighter",
         monthsGrid: "grid grid-cols-4 gap-4",
@@ -83,21 +85,23 @@ export const SimpleMilimalistYearCalendar = ({
     },
     a5: {
       portrait: {
-        root: "p-6 flex flex-col",
+        root: "flex items-end p-4 text-dark",
+        yearRoot: "p-6 basis-[71%]",
         yearHeader:
-          "mb-8 text-right text-4xl font-semibold leading-none tracking-tighter",
+          "text-vertical-rl mb-4 ml-auto basis-[29%] translate-x-14 rotate-180 self-end text-end text-[96px] font-semibold leading-none tracking-tighter",
         monthHeader:
           "flex items-center px-1 text-lg font-semibold leading-none tracking-tighter",
         monthsGrid: "grid grid-cols-2 gap-3",
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
       landscape: {
-        root: "p-6 flex flex-col",
+        root: "flex flex-col p-8 text-dark",
+        yearRoot: "",
         yearHeader:
-          "mb-8 text-right text-4xl font-semibold leading-none tracking-tighter",
+          "mb-8 ml-auto self-end text-end text-[64px] font-semibold leading-none tracking-tighter",
         monthHeader:
           "flex items-center px-1 text-xl font-semibold leading-none tracking-tighter",
-        monthsGrid: "grid grid-cols-2 gap-3",
+        monthsGrid: "grid grid-cols-4 gap-4",
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
     },
@@ -142,12 +146,10 @@ export const SimpleMilimalistYearCalendar = ({
   };
 
   return (
-    <div className="flex items-end p-4 text-dark">
-      <div className="text-vertical-rl mb-8 ml-auto basis-[27%] translate-x-14 rotate-180 self-end text-end text-[144px] font-semibold leading-none tracking-tighter">
-        {date.year}
-      </div>
+    <div className={styles.root}>
+      <YearCalendarHeader date={date} />
       <YearCalendar
-        className={clsx(styles.root, Fonts.inter.className, "basis-[73%]")}
+        className={clsx(styles.yearRoot, Fonts.inter.className)}
         date={date}
         monthHeaderAs={YearCalendarMonthHeader}
         bodyAs={YearCalendarMonthsGrid}
