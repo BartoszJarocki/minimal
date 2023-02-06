@@ -11,6 +11,10 @@ import {
 
 export type CalendarType = "year" | "month";
 export type Theme = "simple-minimalist" | "classy";
+export const ThemeNames: Record<Theme, string> = {
+  "simple-minimalist": "Simple Minimalist",
+  classy: "Classy",
+};
 
 export const ThemeLookup: Record<CalendarType, Record<Theme, any>> = {
   year: {

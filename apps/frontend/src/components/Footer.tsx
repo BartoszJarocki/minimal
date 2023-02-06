@@ -1,18 +1,13 @@
 import { Logo } from "./Logo";
 import Balancer from "react-wrap-balancer";
 import Link from "next/link";
+import { SupportedYears } from "../pages/calendars/preview/[year]/[theme]";
 
 const navigation = {
-  calendars: [
-    { name: "2023 Calendar", href: "/calendars/2023" },
-    { name: "2024 Calendar", href: "/calendars/2024" },
-    { name: "2025 Calendar", href: "/calendars/2025" },
-    { name: "2026 Calendar", href: "/calendars/2026" },
-    { name: "2027 Calendar", href: "/calendars/2027" },
-    { name: "2028 Calendar", href: "/calendars/2028" },
-    { name: "2029 Calendar", href: "/calendars/2029" },
-    { name: "2030 Calendar", href: "/calendars/2030" },
-  ],
+  calendars: SupportedYears.map((year) => ({
+    name: `${year} Calendar PDF`,
+    href: `/calendars/preview/${year}`,
+  })),
   habitTrackers: [{ name: "Work in progress", href: "#" }],
   planners: [{ name: "Work in progress", href: "#" }],
   legal: [
@@ -99,7 +94,7 @@ export const Footer = () => {
               ))}
             </div>
           </div>
-          <div className="invisible mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+          <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
                 <h3 className="text-sm font-semibold leading-6 text-gray-900">

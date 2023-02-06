@@ -54,7 +54,9 @@ export const MonthCalendar = ({
   const CellComponent = dayAs;
 
   const createEmptyCell = (day: DateTime) => (
-    <CellComponent key={`empty-${day.day}`}>
+    <CellComponent
+      key={`inactive-locale:${locale}-month:${date.month}-${day.day}`}
+    >
       <span className="opacity-25">{day.day}</span>
     </CellComponent>
   );
@@ -73,7 +75,7 @@ export const MonthCalendar = ({
   let daysInMonth: JSX.Element[] = [];
   for (let day = 1; day <= date.daysInMonth; day++) {
     daysInMonth.push(
-      <CellComponent key={day}>
+      <CellComponent key={`locale:${locale}-month:${date.month}-day:${day}`}>
         {date.set({ day }).day}
         <span className="absolute left-0 top-0 m-0.5 hidden h-1 w-1 rounded-full border md:m-1"></span>
       </CellComponent>
@@ -92,7 +94,10 @@ export const MonthCalendar = ({
   return (
     <RootComponent className={clsx(className, "grid grid-cols-7")}>
       {Info.weekdays(weekNames, { locale }).map((day, i) => (
-        <CellComponent key={i} className="font-semibold">
+        <CellComponent
+          key={`locale:${locale}-month:${date.month}-day:${i}`}
+          className="font-semibold"
+        >
           {day}
         </CellComponent>
       ))}
@@ -125,7 +130,7 @@ export const YearCalendar = ({
   const DayCell = dayAs;
   const Footer = footerAs;
   const MonthHeader = monthHeaderAs;
-  const months = Info.months();
+  const months = Info.months("long", { locale: date.locale });
 
   return (
     <section
@@ -138,7 +143,7 @@ export const YearCalendar = ({
           const monthDate = date.set({ month: i + 1 });
 
           return (
-            <div key={i}>
+            <div key={`year-cal-locale:${date.locale}-month:${i}`}>
               <MonthHeader date={monthDate} />
               <section className="mt-1 md:mt-2">
                 <MonthCalendar

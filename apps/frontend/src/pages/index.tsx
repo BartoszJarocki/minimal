@@ -12,6 +12,7 @@ import {
 import { Logo } from "../components/Logo";
 import { Footer } from "../components/Footer";
 import { Container } from "../components/Container";
+import { LocaleLookup } from "../lib/locales";
 
 const SectionTitle = ({
   children,
@@ -29,7 +30,7 @@ const SectionTitle = ({
 
 const SectionSubtitle = ({ children }: { children: React.ReactNode }) => {
   return (
-    <h3 className="mb-4 max-w-2xl text-left text-lg opacity-80 md:mb-6">
+    <h3 className="mb-4 max-w-4xl text-left text-lg opacity-80 md:mb-6">
       {children}
     </h3>
   );
@@ -53,7 +54,7 @@ const InlineButton = ({
 };
 
 export default function Calendar() {
-  const [locale, setLocale] = useState("en-US");
+  const [locale, setLocale] = useState("en");
   const [date, setDate] = useState(DateTime.now());
 
   const url = "https://useminimal.com/";
@@ -62,13 +63,16 @@ export default function Calendar() {
     "MMMM"
   )}`;
 
-  console.log("update");
-
   useEffect(() => {
     if (locale !== date.locale) {
       setDate(date.setLocale(locale));
     }
   }, [locale, date]);
+
+  const joinComponents = (
+    accumulator: React.ReactNode[],
+    current: React.ReactNode
+  ) => [...accumulator, accumulator.length ? ", " : "", current];
 
   return (
     <>
@@ -107,39 +111,21 @@ export default function Calendar() {
                 <Balancer>
                   Yearly and monthly, self print ready minimalist calendar
                   available in A4 and A5 formats in both portrait and landscape.
-                  PDF. Available in{" "}
-                  <InlineButton onClick={() => setLocale("en-US")}>
-                    English
-                  </InlineButton>
-                  ,{" "}
-                  <InlineButton onClick={() => setLocale("fr-FR")}>
-                    French
-                  </InlineButton>
-                  ,{" "}
-                  <InlineButton onClick={() => setLocale("de-DE")}>
-                    German
-                  </InlineButton>
-                  ,{" "}
-                  <InlineButton onClick={() => setLocale("it-IT")}>
-                    Italian
-                  </InlineButton>
-                  ,{" "}
-                  <InlineButton onClick={() => setLocale("es-ES")}>
-                    Spanish
-                  </InlineButton>
-                  ,{" "}
-                  <InlineButton onClick={() => setLocale("ru-RU")}>
-                    Russian
-                  </InlineButton>
-                  ,{" "}
-                  <InlineButton onClick={() => setLocale("pt-BR")}>
-                    Portugese
-                  </InlineButton>{" "}
-                  and{" "}
-                  <InlineButton onClick={() => setLocale("pl-PL")}>
-                    Polish
-                  </InlineButton>{" "}
-                  languages.
+                  PDF.
+                </Balancer>
+
+                <Balancer as="div" className="mt-2">
+                  Available languages:{" "}
+                  {Object.keys(LocaleLookup)
+                    .map((locale) => (
+                      <InlineButton
+                        key={locale}
+                        onClick={() => setLocale(locale)}
+                      >
+                        {LocaleLookup[locale]}
+                      </InlineButton>
+                    ))
+                    .reduce(joinComponents, [])}
                 </Balancer>
               </SectionSubtitle>
               <div className="h-12">
