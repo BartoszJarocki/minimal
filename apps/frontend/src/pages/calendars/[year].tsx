@@ -1,17 +1,17 @@
 import { DateTime } from "luxon";
+import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
-import { useRouter } from "next/router";
 import Script from "next/script";
 import { useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { Container } from "../../components/Container";
-import { LocaleLookup } from "../preview";
 
-const Calendar = () => {
-  const router = useRouter();
-  const year = router.query.year as string;
+interface Props {
+  year: string;
+}
 
-  const [date, setDate] = useState(
+const Calendar = ({ year }: Props) => {
+  const [date] = useState(
     DateTime.now().set({ year: parseInt(year) })
   );
 
@@ -49,6 +49,16 @@ const Calendar = () => {
       </Container>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+  const year = context.params!.year as string;
+
+  return {
+    props: {
+      year,
+    },
+  };
 };
 
 export default Calendar;
