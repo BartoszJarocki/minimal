@@ -68,7 +68,7 @@ export const SimpleMilimalistYearCalendar = ({
           "mb-8 text-right text-7xl font-semibold leading-none tracking-tighter",
         monthHeader:
           "flex items-center px-1 text-2xl font-semibold leading-none tracking-tighter",
-        monthsGrid: "grid grid-cols-3 gap-4",
+        monthsGrid: "grid grid-cols-2 gap-4",
         dayCell: "flex items-center justify-center text-center text-[12px]",
       },
       landscape: {
@@ -88,7 +88,7 @@ export const SimpleMilimalistYearCalendar = ({
           "mb-8 text-right text-4xl font-semibold leading-none tracking-tighter",
         monthHeader:
           "flex items-center px-1 text-lg font-semibold leading-none tracking-tighter",
-        monthsGrid: "grid grid-cols-3 gap-3",
+        monthsGrid: "grid grid-cols-2 gap-3",
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
       landscape: {
@@ -97,7 +97,7 @@ export const SimpleMilimalistYearCalendar = ({
           "mb-8 text-right text-4xl font-semibold leading-none tracking-tighter",
         monthHeader:
           "flex items-center px-1 text-xl font-semibold leading-none tracking-tighter",
-        monthsGrid: "grid grid-cols-4 gap-3",
+        monthsGrid: "grid grid-cols-2 gap-3",
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
     },
@@ -142,21 +142,18 @@ export const SimpleMilimalistYearCalendar = ({
   };
 
   return (
-    <YearCalendar
-      className={clsx(styles.root, Fonts.inter.className)}
-      date={date}
-      headerAs={YearCalendarHeader}
-      monthHeaderAs={YearCalendarMonthHeader}
-      bodyAs={YearCalendarMonthsGrid}
-      dayAs={YearCalendarDayCell}
-      footerAs={() => {
-        return variant === "portrait" ? (
-          <div className="flex-1 opacity-[0.9999]">
-            <DotPattern size={size === "a4" ? "normal" : "dense"} />
-          </div>
-        ) : null;
-      }}
-    />
+    <div className="flex items-end p-4 text-dark">
+      <div className="text-vertical-rl mb-8 ml-auto basis-[27%] translate-x-14 rotate-180 self-end text-end text-[144px] font-semibold leading-none tracking-tighter">
+        {date.year}
+      </div>
+      <YearCalendar
+        className={clsx(styles.root, Fonts.inter.className, "basis-[73%]")}
+        date={date}
+        monthHeaderAs={YearCalendarMonthHeader}
+        bodyAs={YearCalendarMonthsGrid}
+        dayAs={YearCalendarDayCell}
+      />
+    </div>
   );
 };
 

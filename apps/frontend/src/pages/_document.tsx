@@ -26,7 +26,7 @@ export default function Document() {
         <meta name="theme-color" content="#ffffff" />
         <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
-      <body>
+      <body className="bg-zinc-50 text-dark">
         <Main />
         <NextScript />
       </body>

@@ -1,17 +1,17 @@
 import clsx from "clsx";
-import { DateTime, Settings } from "luxon";
+import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 import Script from "next/script";
+import Balancer from "react-wrap-balancer";
 
 import { NextSeo } from "next-seo";
-import { Fonts } from "../lib/fonts";
 import {
   SimpleMinimalistMonthCalendar,
   SimpleMilimalistYearCalendar,
 } from "../components/calendar/themes/SimpleMinimalist";
 import { Logo } from "../components/Logo";
-
-Settings.defaultLocale = "en";
+import { Footer } from "../components/Footer";
+import { Container } from "../components/Container";
 
 const SectionTitle = ({
   children,
@@ -56,11 +56,11 @@ export default function Calendar() {
   const [locale, setLocale] = useState("en-US");
   const [date, setDate] = useState(DateTime.now());
 
-  const font = Fonts["inter"];
-
-  const url = "https://getyearprogress.com/calendar";
+  const url = "https://useminimal.com/";
   const title = `${date.toFormat("yyyy")} Minimalist Calendars`;
-  const description = `Fre Minimalistic calendars for ${date.toFormat("MMMM")}`;
+  const description = `Self print minimalistic calendars for ${date.toFormat(
+    "MMMM"
+  )}`;
 
   console.log("update");
 
@@ -77,117 +77,109 @@ export default function Calendar() {
         description={description}
         canonical={url}
         twitter={{
-          handle: "@GetYearProgress",
+          handle: "@UseMinimal",
           cardType: "summary_large_image",
         }}
       />
       <Script src="https://gumroad.com/js/gumroad.js" />
 
-      <div
-        className={clsx(
-          font.className,
-          "min-h-screen w-screen overflow-x-hidden bg-zinc-50 pt-24 text-dark"
-        )}
-      >
-        <main className="md:space-y-18 min-h-0 space-y-8 py-12">
-          <section className="space-y-4 px-4 md:px-32">
-            <div className="flex items-center justify-start gap-x-6 pb-24">
+      <Container>
+        <main className="md:space-y-18 min-h-0 space-y-8">
+          <section className="space-y-4 px-4 md:px-8">
+            <div className="flex items-center justify-start gap-x-6 pb-12">
               <Logo className="h-24 w-24" />
               <span className="hidden text-4xl font-bold">Use Minimal</span>
             </div>
-            <h1 className="max-w-4xl text-4xl font-bold leading-none tracking-tighter md:text-8xl">
-              Get beautiful minimalist calendars
+            <h1 className="max-w-xl text-4xl font-bold leading-none tracking-tighter md:text-6xl">
+              <Balancer>Get beautiful minimalist calendars</Balancer>
             </h1>
             <h2 className="text-2xl text-zinc-700 md:text-2xl">
-              Customize, download, and self print your own minimalist calendar
+              <Balancer>
+                Customize, download, and self print your own minimalist calendar
+              </Balancer>
             </h2>
           </section>
 
-          <div className="px-4 pt-24 md:px-32">
-            <SectionTitle>Minimal</SectionTitle>
-            <SectionSubtitle>
-              Yearly and monthly, self print ready minimalist calendar available
-              in A4 and A5 formats in both portrait and landscape. PDF.
-              Available in{" "}
-              <InlineButton onClick={() => setLocale("en-US")}>
-                English
-              </InlineButton>
-              ,{" "}
-              <InlineButton onClick={() => setLocale("fr-FR")}>
-                French
-              </InlineButton>
-              ,{" "}
-              <InlineButton onClick={() => setLocale("de-DE")}>
-                German
-              </InlineButton>
-              ,{" "}
-              <InlineButton onClick={() => setLocale("it-IT")}>
-                Italian
-              </InlineButton>
-              ,{" "}
-              <InlineButton onClick={() => setLocale("es-ES")}>
-                Spanish
-              </InlineButton>
-              ,{" "}
-              <InlineButton onClick={() => setLocale("ru-RU")}>
-                Russian
-              </InlineButton>
-              ,{" "}
-              <InlineButton onClick={() => setLocale("pt-BR")}>
-                Portugese
-              </InlineButton>{" "}
-              and{" "}
-              <InlineButton onClick={() => setLocale("pl-PL")}>
-                Polish
-              </InlineButton>{" "}
-              languages.
-            </SectionSubtitle>
-            <div className="h-12">
-              <a
-                className="gumroad-button"
-                href="https://useminimal.gumroad.com/l/minimalist-calendar"
-              >
-                Buy for 1$ on
-              </a>
+          <section className="py-12 md:py-24">
+            <div className="px-4 md:px-8">
+              <SectionTitle>Minimal</SectionTitle>
+              <SectionSubtitle>
+                <Balancer>
+                  Yearly and monthly, self print ready minimalist calendar
+                  available in A4 and A5 formats in both portrait and landscape.
+                  PDF. Available in{" "}
+                  <InlineButton onClick={() => setLocale("en-US")}>
+                    English
+                  </InlineButton>
+                  ,{" "}
+                  <InlineButton onClick={() => setLocale("fr-FR")}>
+                    French
+                  </InlineButton>
+                  ,{" "}
+                  <InlineButton onClick={() => setLocale("de-DE")}>
+                    German
+                  </InlineButton>
+                  ,{" "}
+                  <InlineButton onClick={() => setLocale("it-IT")}>
+                    Italian
+                  </InlineButton>
+                  ,{" "}
+                  <InlineButton onClick={() => setLocale("es-ES")}>
+                    Spanish
+                  </InlineButton>
+                  ,{" "}
+                  <InlineButton onClick={() => setLocale("ru-RU")}>
+                    Russian
+                  </InlineButton>
+                  ,{" "}
+                  <InlineButton onClick={() => setLocale("pt-BR")}>
+                    Portugese
+                  </InlineButton>{" "}
+                  and{" "}
+                  <InlineButton onClick={() => setLocale("pl-PL")}>
+                    Polish
+                  </InlineButton>{" "}
+                  languages.
+                </Balancer>
+              </SectionSubtitle>
+              <div className="h-12">
+                <a
+                  className="gumroad-button"
+                  href="https://useminimal.gumroad.com/l/minimalist-calendar"
+                >
+                  Buy for 1$ on
+                </a>
+              </div>
             </div>
-          </div>
-          <section className="px-4 md:px-32">
-            <div className="flex h-[360px] gap-x-12 overflow-x-auto">
-              <div className="inset-0 top-0 right-0 flex h-full origin-top-left scale-[30%] gap-x-24">
-                <div>
-                  <div className="paper-a4-portrait overflow-visible bg-white shadow-2xl">
-                    <SimpleMinimalistMonthCalendar
-                      date={date}
-                      variant="portrait"
-                      size="a4"
-                    />
+            <div className="mt-8 overflow-x-auto px-4 md:px-8">
+              <div className="flex h-[360px] gap-x-12">
+                <div className="inset-0 top-0 right-0 flex h-full origin-top-left scale-[30%] gap-x-24">
+                  <div>
+                    <div className="paper-a4-portrait bg-white shadow-2xl">
+                      <SimpleMinimalistMonthCalendar
+                        date={date}
+                        variant="portrait"
+                        size="a4"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <div className="paper-a4-portrait overflow-visible bg-white shadow-2xl">
-                    <SimpleMilimalistYearCalendar
-                      date={date}
-                      variant="portrait"
-                      size="a4"
-                    />
+                  <div>
+                    <div className="paper-a4-portrait bg-white shadow-2xl">
+                      <SimpleMilimalistYearCalendar
+                        date={date}
+                        variant="portrait"
+                        size="a4"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </section>
         </main>
-        <footer className="px-4 text-base md:px-32">
-          <div className="mt-36 py-12 md:flex md:items-center md:justify-between">
-            <div className="flex justify-center space-x-6 md:order-2"></div>
-            <div className="mt-8 md:order-1 md:mt-0">
-              <p className="text-center leading-5 text-gray-500">
-                &copy; {date.year} Use Minimal. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
-      </div>
+        <Footer />
+      </Container>
     </>
   );
 }

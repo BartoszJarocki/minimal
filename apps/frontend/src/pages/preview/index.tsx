@@ -18,7 +18,7 @@ const locales = [
   "ja-JP",
 ];
 
-const LocaleLookup: Record<string, string> = {
+export const LocaleLookup: Record<string, string> = {
   "en-US": "English",
   "fr-FR": "Français",
   "de-DE": "Deutsch",
@@ -42,12 +42,12 @@ export default function Preview() {
   return (
     <div className="space-y-4 bg-zinc-50 p-2 text-dark">
       <h1 className="px-2 py-4 pt-2 text-5xl font-semibold leading-none tracking-tighter">
-        {year} {LocaleLookup[locale]}
+        {LocaleLookup[locale]}
       </h1>
 
       <div>
         <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
-          Year calendar
+          Yearly
         </h2>
         <div className="h-[280px]">
           <div
@@ -63,15 +63,15 @@ export default function Preview() {
 
       <div>
         <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
-          Monthly calendar
+          Monthly
         </h2>
-        <div className="grid w-max origin-top-left scale-[25%] grid-cols-4 gap-8">
+        <div className="grid h-[900px] w-max origin-top-left scale-[25%] grid-cols-4 gap-8">
           {Info.months().map((_, index) => (
             <div
               key={index}
               className={clsx(
                 toPrintClassName(format, variant),
-                "flex-shrink-0 overflow-hidden bg-white text-zinc-900 shadow-xl"
+                "flex-shrink-0 overflow-hidden bg-white text-zinc-900 shadow-2xl"
               )}
             >
               <MonthCalendar

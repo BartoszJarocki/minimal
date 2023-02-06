@@ -84,3 +84,7 @@ body {
 .paper-padding-25mm {
   padding: 25mm;
 }
+
+.text-vertical-rl {
+  writing-mode: vertical-rl;
+}
