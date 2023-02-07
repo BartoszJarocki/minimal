@@ -95,7 +95,7 @@ export default function Calendar() {
             </h1>
             <h2 className="text-2xl text-zinc-700 md:text-2xl">
               <Balancer>
-                Customize, download, and self print your own minimalist calendar
+                Self print ready minimalist calendars available in A4 and A5 formats
               </Balancer>
             </h2>
           </section>
@@ -110,7 +110,7 @@ export default function Calendar() {
                   PDF.
                 </Balancer>
 
-                <Balancer as="div" className="mt-2">
+                <Balancer as="div" className="mt-2 text-sm">
                   Available languages:{" "}
                   {Object.keys(LocaleLookup)
                     .map((locale) => (
@@ -129,7 +129,7 @@ export default function Calendar() {
                   className="gumroad-button"
                   href="https://useminimal.gumroad.com/l/minimalist-calendar"
                 >
-                  Buy for 1$ on
+                  Buy for 2$ on
                 </a>
               </div>
             </div>

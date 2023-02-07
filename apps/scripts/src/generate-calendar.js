@@ -18,14 +18,16 @@ async function generateMonthlyCalendar({
   const type = "month";
   // generate all year month calendar
   const allMonths = luxon.Info.months();
+  const localeCodes = Object.keys(locales);
+
   const allMonthsPdfs = allMonths.map(async (month, i) => {
     const page = await browser.newPage();
     const monthIndex = i + 1;
 
     for (const theme of themes) {
-      for (const locale of locales) {
+      for (const locale of localeCodes) {
         for (const format of formats) {
-          const path = `${destDir}/${year}/${theme}/month-calendar/${locale}/${format}`;
+          const path = `${destDir}/${year}/${theme}/month-calendar/${locales[locale]}/${format}`;
           if (!fs.existsSync(path)) {
             fs.mkdirSync(path, { recursive: true });
           }
@@ -84,11 +86,12 @@ async function generateYearlyCalendar({
 }) {
   const type = "year";
   const page = await browser.newPage();
+  const localeCodes = Object.keys(locales);
 
   for (const theme of themes) {
-    for (const locale of locales) {
+    for (const locale of localeCodes) {
       for (const format of formats) {
-        const path = `${destDir}/${year}/${theme}/year/${locale}/${format}`;
+        const path = `${destDir}/${year}/${theme}/year/${locales[locale]}/${format}`;
         if (!fs.existsSync(path)) {
           fs.mkdirSync(path, { recursive: true });
         }
@@ -161,17 +164,36 @@ async function printPDF() {
   const destDir = "./generated";
   const year = 2023;
   const themes = ["simple-minimalist"];
-  const locales = [
-    "en-US",
-    "fr-FR",
-    "de-DE",
-    "es-ES",
-    "it-IT",
-    "pt-BR",
-    "pl-PL",
-    "ru-RU",
-    "ja-JP",
-  ];
+  const locales = {
+    en: "English", // English is the default language
+    fr: "Français", // French
+    de: "Deutsch", // German
+    es: "Español", // Spanish
+    it: "Italiano", // Italian
+    pt: "Português", // Portuguese
+    pl: "Polski", // Polish
+    lv: "Latviešu", // Latvian
+    lt: "Lietuvių", // Lithuanian
+    nn: "Norsk", // Norwegian
+    cs: "Čeština", // Czech
+    uk: "Українська", // Ukrainian
+    hr: "Hrvatski", // Croatian
+    sk: "Slovenčina", // Slovak
+    sl: "Slovenščina", // Slovenian
+    th: "ไทย", // Thai
+    da: "Dansk", // Danish
+    nl: "Nederlands", // Dutch
+    fi: "Suomi", // Finnish
+    is: "Íslenska", // Icelandic
+    el: "Ελληνικά", // Greek
+    tr: "Türkçe", // Turkish
+    ru: "Русский", // Russian
+    kz: "Қазақша", // Kazakh
+    ko: "한국어", // Korean
+    ja: "日本語", // Japanese
+    hi: "हिन्दी", // Hindi
+  };
+
   const formats = ["a4", "a5"];
 
   await generateMonthlyCalendar({

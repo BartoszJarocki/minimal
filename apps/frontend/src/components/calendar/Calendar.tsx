@@ -33,7 +33,6 @@ export const LocaleLookup: Record<string, string> = {
   nl: "Nederlands", // Dutch
   fi: "Suomi", // Finnish
   is: "Íslenska", // Icelandic
-  et: "Eesti", // Estonian
   el: "Ελληνικά", // Greek
   tr: "Türkçe", // Turkish
   ru: "Русский", // Russian

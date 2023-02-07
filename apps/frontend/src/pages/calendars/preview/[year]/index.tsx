@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
