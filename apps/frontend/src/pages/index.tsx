@@ -12,7 +12,8 @@ import {
 import { Logo } from "../components/Logo";
 import { Footer } from "../components/Footer";
 import { Container } from "../components/Container";
-import { LocaleLookup } from "../lib/locales";
+import { joinComponents } from "../lib/utils";
+import { LocaleLookup } from "../components/calendar/Calendar";
 
 const SectionTitle = ({
   children,
@@ -68,11 +69,6 @@ export default function Calendar() {
       setDate(date.setLocale(locale));
     }
   }, [locale, date]);
-
-  const joinComponents = (
-    accumulator: React.ReactNode[],
-    current: React.ReactNode
-  ) => [...accumulator, accumulator.length ? ", " : "", current];
 
   return (
     <>

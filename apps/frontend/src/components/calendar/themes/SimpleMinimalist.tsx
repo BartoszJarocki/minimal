@@ -7,6 +7,8 @@ import {
   YearCalendar,
   MonthCalendar,
   addLeadingZeros,
+  FormatVariant,
+  Format,
 } from "../Calendar";
 
 const DotPattern = ({ size }: { size: "normal" | "dense" }) => {
@@ -51,8 +53,8 @@ const DotPattern = ({ size }: { size: "normal" | "dense" }) => {
 
 interface SimpleMilimalistYearCalendarProps {
   date: DateTime;
-  variant: "portrait" | "landscape";
-  size: "a4" | "a5";
+  variant: FormatVariant;
+  size: Format;
 }
 
 export const SimpleMilimalistYearCalendar = ({
@@ -164,8 +166,8 @@ export const SimpleMilimalistYearCalendar = ({
 
 interface SimpleMilimalistMonthlyCalendarProps {
   date: DateTime;
-  variant: "portrait" | "landscape";
-  size: "a4" | "a5";
+  variant: FormatVariant;
+  size: Format;
 }
 
 export const SimpleMinimalistMonthCalendar = ({

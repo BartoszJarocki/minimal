@@ -8,6 +8,41 @@ export function addLeadingZeros(num: number, totalLength: number): string {
   return String(num).padStart(totalLength, "0");
 }
 
+export const SupportedYears = [
+  2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033,
+];
+
+export const LocaleLookup: Record<string, string> = {
+  en: "English", // English is the default language
+  fr: "Français", // French
+  de: "Deutsch", // German
+  es: "Español", // Spanish
+  it: "Italiano", // Italian
+  pt: "Português", // Portuguese
+  pl: "Polski", // Polish
+  lv: "Latviešu", // Latvian
+  lt: "Lietuvių", // Lithuanian
+  nn: "Norsk", // Norwegian
+  cs: "Čeština", // Czech
+  uk: "Українська", // Ukrainian
+  hr: "Hrvatski", // Croatian
+  sk: "Slovenčina", // Slovak
+  sl: "Slovenščina", // Slovenian
+  th: "ไทย", // Thai
+  da: "Dansk", // Danish
+  nl: "Nederlands", // Dutch
+  fi: "Suomi", // Finnish
+  is: "Íslenska", // Icelandic
+  et: "Eesti", // Estonian
+  el: "Ελληνικά", // Greek
+  tr: "Türkçe", // Turkish
+  ru: "Русский", // Russian
+  kz: "Қазақша", // Kazakh
+  ko: "한국어", // Korean
+  ja: "日本語", // Japanese
+  hi: "हिन्दी", // Hindi
+};
+
 export type Format = "a4" | "a5";
 export type FormatVariant = "landscape" | "portrait";
 

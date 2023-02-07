@@ -6,9 +6,9 @@ import React from "react";
 import {
   Format,
   FormatVariant,
+  LocaleLookup,
 } from "../../../../../components/calendar/Calendar";
 import { Container } from "../../../../../components/Container";
-import { LocaleLookup } from "../../../../../lib/locales";
 import { Theme, ThemeLookup, toPrintClassName } from "../../../../print";
 
 interface Props {

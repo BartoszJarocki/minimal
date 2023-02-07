@@ -1,13 +1,16 @@
 import { Logo } from "./Logo";
 import Balancer from "react-wrap-balancer";
 import Link from "next/link";
-import { SupportedYears } from "../pages/calendars/preview/[year]/[theme]";
+import { joinComponents } from "../lib/utils";
+import { SupportedYears } from "./calendar/Calendar";
 
 const navigation = {
-  calendars: SupportedYears.map((year) => ({
-    name: `${year} Calendar PDF`,
-    href: `/calendars/preview/${year}`,
-  })),
+  calendars: [
+    {
+      name: `Minimalist`,
+      href: `/calendars/preview/${new Date().getFullYear()}/simple-minimalist/`,
+    },
+  ],
   habitTrackers: [{ name: "Work in progress", href: "#" }],
   planners: [{ name: "Work in progress", href: "#" }],
   legal: [
@@ -51,15 +54,11 @@ const navigation = {
       ),
     },
     {
-      name: "GitHub",
+      name: "Pinterest",
       href: "#",
       icon: (props: React.SVGProps<SVGSVGElement>) => (
         <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-          <path
-            fillRule="evenodd"
-            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-            clipRule="evenodd"
-          />
+          <path d="M9.04,21.54C10,21.83 10.97,22 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2A10,10 0 0,0 2,12C2,16.25 4.67,19.9 8.44,21.34C8.35,20.56 8.26,19.27 8.44,18.38L9.59,13.44C9.59,13.44 9.3,12.86 9.3,11.94C9.3,10.56 10.16,9.53 11.14,9.53C12,9.53 12.4,10.16 12.4,10.97C12.4,11.83 11.83,13.06 11.54,14.24C11.37,15.22 12.06,16.08 13.06,16.08C14.84,16.08 16.22,14.18 16.22,11.5C16.22,9.1 14.5,7.46 12.03,7.46C9.21,7.46 7.55,9.56 7.55,11.77C7.55,12.63 7.83,13.5 8.29,14.07C8.38,14.13 8.38,14.21 8.35,14.36L8.06,15.45C8.06,15.62 7.95,15.68 7.78,15.56C6.5,15 5.76,13.18 5.76,11.71C5.76,8.55 8,5.68 12.32,5.68C15.76,5.68 18.44,8.15 18.44,11.43C18.44,14.87 16.31,17.63 13.26,17.63C12.29,17.63 11.34,17.11 11,16.5L10.33,18.87C10.1,19.73 9.47,20.88 9.04,21.57V21.54Z" />
         </svg>
       ),
     },
@@ -86,7 +85,7 @@ export const Footer = () => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-gray-400 hover:text-gray-500"
+                  className="text-dark/75 hover:text-dark"
                 >
                   <span className="sr-only">{item.name}</span>
                   <item.icon className="h-6 w-6" aria-hidden="true" />
@@ -169,10 +168,23 @@ export const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="mt-16 border-t border-gray-900/10 pt-8 sm:mt-20 lg:mt-24">
+
+        <div className="mt-8 border-t border-b border-gray-900/10 py-8 sm:mt-20 lg:mt-24">
           <p className="text-xs leading-5 text-gray-500">
             &copy; {new Date().getFullYear()} Use Minimal. All rights reserved.
           </p>
+        </div>
+
+        <div className="max-w-3xl py-8 text-xs text-dark/40">
+          {SupportedYears.map((year) => (
+            <Link
+              key={year}
+              className=" underline"
+              href={`/calendars/preview/${year}`}
+            >
+              {year} Calendar PDF
+            </Link>
+          )).reduce(joinComponents, [])}
         </div>
       </div>
     </footer>

@@ -3,13 +3,9 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
+import { LocaleLookup } from "../../../../../components/calendar/Calendar";
 import { Container } from "../../../../../components/Container";
-import { LocaleLookup } from "../../../../../lib/locales";
 import { Theme } from "../../../../print";
-
-export const SupportedYears = [
-  2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033,
-];
 
 interface Props {
   theme: Theme;
