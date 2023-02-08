@@ -36,9 +36,7 @@ export default function CalendarPreview({
   const title = `${now.toFormat("yyyy")} ${
     selectedLocale.englishName
   } calendar PDF - ${theme}`;
-  const description = `Self print ${
-    selectedLocale.englishName
-  } minimalist calendar ${now.toFormat("MMMM")}`;
+  const description = `Self print PDF ${selectedLocale.englishName} minimalist calendar`;
 
   return (
     <>

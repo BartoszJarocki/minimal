@@ -17,7 +17,9 @@ export default function Preview({ theme, year }: Props) {
   const date = DateTime.now().set({ year });
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}`;
   const title = `${date.toFormat("yyyy")} ${theme} calendar PDF`;
-  const description = `Self print minimalist calendar ${date.toFormat("MMMM")}`;
+  const description = `Self print minimalist calendar available in ${
+    SupportedLocales.length
+  } languages for ${date.toFormat("LLLL")}`;
 
   return (
     <>
@@ -42,17 +44,52 @@ export default function Preview({ theme, year }: Props) {
 
       <Container>
         <div className="divide space-y-1">
-          {SupportedLocales.map((locale) => {
-            return (
-              <Link
+          <h1 className="py-4 pt-2 text-5xl font-semibold leading-none tracking-tighter">
+            {title}
+          </h1>
+          <h2 className="mb-4 max-w-4xl text-left text-lg opacity-80 md:mb-6">
+            {description}
+          </h2>
+
+          <ul
+            role="list"
+            className="grid grid-cols-1 gap-6 overflow-visible px-4 py-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6"
+          >
+            {SupportedLocales.map((locale) => (
+              <li
                 key={locale.code}
-                href={`/calendars/preview/${year}/${theme}/${locale.code}`}
-                className="block underline"
+                className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow"
               >
-                {year} {locale.englishName} calendar PDF
-              </Link>
-            );
-          })}
+                <div className="flex flex-1 flex-col p-8">
+                  <div className="mx-auto h-10 w-10">{locale.emoji}</div>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">
+                    {locale.englishName}
+                  </h3>
+                  <dl className="mt-1 flex flex-grow flex-col justify-between">
+                    <dt className="sr-only">Role</dt>
+                    <dd className="mt-3">
+                      <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                        {locale.name}
+                      </span>
+                    </dd>
+                  </dl>
+                </div>
+                <div>
+                  <div className="-mt-px flex divide-x divide-gray-200">
+                    <div className="-ml-px flex w-0 flex-1">
+                      <Link
+                        key={locale.code}
+                        href={`/calendars/preview/${year}/${theme}/${locale.code}`}
+                        className="relative inline-flex w-0 flex-1 items-center justify-center rounded-br-lg border border-transparent py-4 text-sm font-medium text-gray-700 hover:text-gray-500"
+                      >
+                        <span>Preview</span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </Container>
     </>
