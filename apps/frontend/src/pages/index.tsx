@@ -60,9 +60,7 @@ export default function Calendar() {
 
   const url = "https://useminimal.com";
   const title = `${date.toFormat("yyyy")} Minimalist Calendars`;
-  const description = `Self print minimalist calendars for ${date.toFormat(
-    "MMMM"
-  )}`;
+  const description = `Self print ready minimalist calendars`;
 
   useEffect(() => {
     if (locale !== date.locale) {
@@ -77,6 +75,8 @@ export default function Calendar() {
         description={description}
         canonical={url}
         openGraph={{
+          title,
+          description,
           images: [
             {
               url: `${url}/api/open-graph?title=${title}&description=${description}`,
