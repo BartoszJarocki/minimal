@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
+import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
@@ -11,22 +12,50 @@ interface Props {
 }
 
 export default function Preview({ year }: Props) {
-  return (v
-    <Container>
-      <div className="divide space-y-1">
-        {Object.entries(ThemeNames).map(([key, themeName]) => {
-          return (
-            <Link
-              key={key}
-              href={`/calendars/preview/${year}/${key}/`}
-              className="block underline"
-            >
-              {year} {themeName} calendar PDF
-            </Link>
-          );
-        })}
-      </div>
-    </Container>
+  const date = DateTime.now().set({ year });
+  const url = `https://useminimal.com/calendars/preview/${year}`;
+  const title = `${date.toFormat("yyyy")} Calendars`;
+  const description = `Self print minimalist calendars for ${date.toFormat(
+    "MMMM"
+  )}`;
+
+  return (
+    <>
+      <NextSeo
+        title={title}
+        description={description}
+        canonical={url}
+        openGraph={{
+          images: [
+            {
+              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              width: 1200,
+              height: 630,
+            },
+          ],
+        }}
+        twitter={{
+          handle: "@UseMinimal",
+          cardType: "summary_large_image",
+        }}
+      />
+
+      <Container>
+        <div className="divide space-y-1">
+          {Object.entries(ThemeNames).map(([key, themeName]) => {
+            return (
+              <Link
+                key={key}
+                href={`/calendars/preview/${year}/${key}/`}
+                className="block underline"
+              >
+                {year} {themeName} calendar PDF
+              </Link>
+            );
+          })}
+        </div>
+      </Container>
+    </>
   );
 }
 

@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { DateTime, Info, Settings } from "luxon";
 import { GetServerSideProps } from "next";
+import { NextSeo } from "next-seo";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import {
@@ -30,53 +31,81 @@ export default function CalendarPreview({
   const MonthCalendar = ThemeLookup["month"][theme];
   const now = DateTime.now().setLocale(locale).set({ year });
 
-  return (
-    <Container>
-      <div className="space-y-4 bg-zinc-50 p-2 text-dark">
-        <h1 className="px-2 py-4 pt-2 text-5xl font-semibold leading-none tracking-tighter">
-          {year} {LocaleLookup[locale]} calendar
-        </h1>
+  const url = `https://useminimal.com/calendars/preview/${year}/${theme}/${locale}`;
+  const title = `${now.toFormat("yyyy")} ${theme} calendar PDF - ${
+    LocaleLookup[locale]
+  }`;
+  const description = `Self print minimalist calendar ${now.toFormat(
+    "MMMM"
+  )} in ${LocaleLookup[locale]} language`;
 
-        <div>
-          <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
-            Yearly
-          </h2>
-          <div className="h-[280px]">
-            <div
-              className={clsx(
-                toPrintClassName(format, variant),
-                "origin-top-left scale-[25%] bg-white text-zinc-900 shadow-xl"
-              )}
-            >
-              <YearCalendar date={now} variant={variant} size={format} />
+  return (
+    <>
+      <NextSeo
+        title={title}
+        description={description}
+        canonical={url}
+        openGraph={{
+          images: [
+            {
+              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              width: 1200,
+              height: 630,
+            },
+          ],
+        }}
+        twitter={{
+          handle: "@UseMinimal",
+          cardType: "summary_large_image",
+        }}
+      />
+      <Container>
+        <div className="space-y-4 bg-zinc-50 p-2 text-dark">
+          <h1 className="px-2 py-4 pt-2 text-5xl font-semibold leading-none tracking-tighter">
+            {year} {LocaleLookup[locale]} calendar
+          </h1>
+
+          <div>
+            <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
+              Yearly
+            </h2>
+            <div className="h-[280px]">
+              <div
+                className={clsx(
+                  toPrintClassName(format, variant),
+                  "origin-top-left scale-[25%] bg-white text-zinc-900 shadow-xl"
+                )}
+              >
+                <YearCalendar date={now} variant={variant} size={format} />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
+              Monthly
+            </h2>
+            <div className="grid h-[900px] w-max origin-top-left scale-[25%] grid-cols-4 gap-8">
+              {Info.months().map((_, index) => (
+                <div
+                  key={`month-${index}`}
+                  className={clsx(
+                    toPrintClassName(format, variant),
+                    "flex-shrink-0 overflow-hidden bg-white text-zinc-900 shadow-2xl"
+                  )}
+                >
+                  <MonthCalendar
+                    date={now.set({ month: index + 1 })}
+                    variant={variant}
+                    size={format}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
-
-        <div>
-          <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
-            Monthly
-          </h2>
-          <div className="grid h-[900px] w-max origin-top-left scale-[25%] grid-cols-4 gap-8">
-            {Info.months().map((_, index) => (
-              <div
-                key={`month-${index}`}
-                className={clsx(
-                  toPrintClassName(format, variant),
-                  "flex-shrink-0 overflow-hidden bg-white text-zinc-900 shadow-2xl"
-                )}
-              >
-                <MonthCalendar
-                  date={now.set({ month: index + 1 })}
-                  variant={variant}
-                  size={format}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 }
 
