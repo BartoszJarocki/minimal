@@ -12,35 +12,44 @@ export const SupportedYears = [
   2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033,
 ];
 
-export const LocaleLookup: Record<string, string> = {
-  en: "English", // English is the default language
-  fr: "Français", // French
-  de: "Deutsch", // German
-  es: "Español", // Spanish
-  it: "Italiano", // Italian
-  pt: "Português", // Portuguese
-  pl: "Polski", // Polish
-  lv: "Latviešu", // Latvian
-  lt: "Lietuvių", // Lithuanian
-  nn: "Norsk", // Norwegian
-  cs: "Čeština", // Czech
-  uk: "Українська", // Ukrainian
-  hr: "Hrvatski", // Croatian
-  sk: "Slovenčina", // Slovak
-  sl: "Slovenščina", // Slovenian
-  th: "ไทย", // Thai
-  da: "Dansk", // Danish
-  nl: "Nederlands", // Dutch
-  fi: "Suomi", // Finnish
-  is: "Íslenska", // Icelandic
-  el: "Ελληνικά", // Greek
-  tr: "Türkçe", // Turkish
-  ru: "Русский", // Russian
-  kz: "Қазақша", // Kazakh
-  ko: "한국어", // Korean
-  ja: "日本語", // Japanese
-  hi: "हिन्दी", // Hindi
+type Locale = {
+  code: string;
+  name: string;
+  englishName: string;
 };
+
+export const SupportedLocales: Locale[] = [
+  { code: "en", name: "English", englishName: "English" },
+  { code: "fr", name: "Français", englishName: "French" },
+  { code: "de", name: "Deutsch", englishName: "German" },
+  { code: "es", name: "Español", englishName: "Spanish" },
+  { code: "it", name: "Italiano", englishName: "Italian" },
+  { code: "pt", name: "Português", englishName: "Portuguese" },
+  { code: "pl", name: "Polski", englishName: "Polish" },
+  { code: "lv", name: "Latviešu", englishName: "Latvian" },
+  { code: "lt", name: "Lietuvių", englishName: "Lithuanian" },
+  { code: "nn", name: "Norsk", englishName: "Norwegian" },
+  { code: "cs", name: "Čeština", englishName: "Czech" },
+  { code: "uk", name: "Українська", englishName: "Ukrainian" },
+  { code: "hr", name: "Hrvatski", englishName: "Croatian" },
+  { code: "sk", name: "Slovenčina", englishName: "Slovak" },
+  { code: "sl", name: "Slovenščina", englishName: "Slovenian" },
+  { code: "th", name: "ไทย", englishName: "Thai" },
+  { code: "da", name: "Dansk", englishName: "Danish" },
+  { code: "nl", name: "Nederlands", englishName: "Dutch" },
+  { code: "fi", name: "Suomi", englishName: "Finnish" },
+  { code: "is", name: "Íslenska", englishName: "Icelandic" },
+  { code: "hu", name: "Magyar", englishName: "Hungarian" },
+  { code: "ro", name: "Română", englishName: "Romanian" },
+  { code: "sv", name: "Svenska", englishName: "Swedish" },
+  { code: "tr", name: "Türkçe", englishName: "Turkish" },
+  { code: "ru", name: "Русский", englishName: "Russian" },
+  { code: "kz", name: "Қазақша", englishName: "Kazakh" },
+  { code: "ko", name: "한국어", englishName: "Korean" },
+  { code: "ja", name: "日本語", englishName: "Japanese" },
+  { code: "hi", name: "हिन्दी", englishName: "Hindi" },
+  { code: "el", name: "Ελληνικά", englishName: "Greek" },
+];
 
 export type Format = "a4" | "a5";
 export type FormatVariant = "landscape" | "portrait";

@@ -7,7 +7,7 @@ import React from "react";
 import {
   Format,
   FormatVariant,
-  LocaleLookup,
+  SupportedLocales,
 } from "../../../../../components/calendar/Calendar";
 import { Container } from "../../../../../components/Container";
 import { Theme, ThemeLookup, toPrintClassName } from "../../../../print";
@@ -30,14 +30,15 @@ export default function CalendarPreview({
   const YearCalendar = ThemeLookup["year"][theme];
   const MonthCalendar = ThemeLookup["month"][theme];
   const now = DateTime.now().setLocale(locale).set({ year });
+  const selectedLocale = SupportedLocales.find((l) => l.code === locale)!;
 
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}/${locale}`;
-  const title = `${now.toFormat("yyyy")} ${theme} calendar PDF - ${
-    LocaleLookup[locale]
-  }`;
-  const description = `Self print minimalist calendar ${now.toFormat(
-    "MMMM"
-  )} in ${LocaleLookup[locale]} language`;
+  const title = `${now.toFormat("yyyy")} ${
+    selectedLocale.englishName
+  } calendar PDF - ${theme}`;
+  const description = `Self print ${
+    selectedLocale.englishName
+  } minimalist calendar ${now.toFormat("MMMM")}`;
 
   return (
     <>
@@ -62,7 +63,7 @@ export default function CalendarPreview({
       <Container>
         <div className="space-y-4 bg-zinc-50 p-2 text-dark">
           <h1 className="px-2 py-4 pt-2 text-5xl font-semibold leading-none tracking-tighter">
-            {year} {LocaleLookup[locale]} calendar
+            {year} {selectedLocale.englishName} calendar
           </h1>
 
           <div>

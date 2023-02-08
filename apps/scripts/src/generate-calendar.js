@@ -156,6 +156,34 @@ async function debug() {
   });
 }
 
+async function generateCalendarPreviews({
+  browser,
+  year,
+  destDir,
+  themes,
+  locales,
+}) {
+  const page = await browser.newPage();
+  const localeCodes = Object.keys(locales);
+
+  for (const theme of themes) {
+    for (const locale of localeCodes) {
+      const path = `${destDir}/previews/${year}/${theme}/${locale}`;
+      if (!fs.existsSync(path)) {
+        fs.mkdirSync(path, { recursive: true });
+      }
+
+      const url = `http://localhost:3000/calendars/preview/${year}/${theme}/${locale}`;
+
+      await page.goto(url, { waitUntil: "networkidle0" });
+      await page.screenshot({
+        path: `${path}/preview.png`,
+        fullPage: true,
+      });
+    }
+  }
+}
+
 async function printPDF() {
   const browser = await puppeteer.launch({
     headless: true,
@@ -212,6 +240,13 @@ async function printPDF() {
     locales,
     formats,
   });
+  await generateCalendarPreviews({
+    browser,
+    year,
+    destDir,
+    themes,
+    locales,
+  })
 
   //await debug();
 

@@ -13,7 +13,7 @@ import { Logo } from "../components/Logo";
 import { Footer } from "../components/Footer";
 import { Container } from "../components/Container";
 import { joinComponents } from "../lib/utils";
-import { LocaleLookup } from "../components/calendar/Calendar";
+import { SupportedLocales } from "../components/calendar/Calendar";
 
 const SectionTitle = ({
   children,
@@ -31,9 +31,9 @@ const SectionTitle = ({
 
 const SectionSubtitle = ({ children }: { children: React.ReactNode }) => {
   return (
-    <h3 className="mb-4 max-w-4xl text-left text-lg opacity-80 md:mb-6">
+    <h4 className="mb-4 max-w-4xl text-left text-lg opacity-80 md:mb-6">
       {children}
-    </h3>
+    </h4>
   );
 };
 
@@ -122,16 +122,14 @@ export default function Calendar() {
 
                 <Balancer as="div" className="mt-2 text-sm">
                   Available languages:{" "}
-                  {Object.keys(LocaleLookup)
-                    .map((locale) => (
-                      <InlineButton
-                        key={locale}
-                        onClick={() => setLocale(locale)}
-                      >
-                        {LocaleLookup[locale]}
-                      </InlineButton>
-                    ))
-                    .reduce(joinComponents, [])}
+                  {SupportedLocales.map((locale) => (
+                    <InlineButton
+                      key={locale.code}
+                      onClick={() => setLocale(locale.code)}
+                    >
+                      {locale.englishName}
+                    </InlineButton>
+                  )).reduce(joinComponents, [])}
                 </Balancer>
               </SectionSubtitle>
               <div className="h-12">
