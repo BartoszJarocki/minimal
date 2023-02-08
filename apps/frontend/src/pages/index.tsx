@@ -58,9 +58,9 @@ export default function Calendar() {
   const [locale, setLocale] = useState("en");
   const [date, setDate] = useState(DateTime.now());
 
-  const url = "https://useminimal.com/";
+  const url = "https://useminimal.com";
   const title = `${date.toFormat("yyyy")} Minimalist Calendars`;
-  const description = `Self print minimalistic calendars for ${date.toFormat(
+  const description = `Self print minimalist calendars for ${date.toFormat(
     "MMMM"
   )}`;
 
@@ -76,6 +76,15 @@ export default function Calendar() {
         title={title}
         description={description}
         canonical={url}
+        openGraph={{
+          images: [
+            {
+              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              width: 1200,
+              height: 630,
+            },
+          ],
+        }}
         twitter={{
           handle: "@UseMinimal",
           cardType: "summary_large_image",
@@ -95,7 +104,8 @@ export default function Calendar() {
             </h1>
             <h2 className="text-2xl text-zinc-700 md:text-2xl">
               <Balancer>
-                Self print ready minimalist calendars available in A4 and A5 formats
+                Self print ready minimalist calendars available in A4 and A5
+                formats
               </Balancer>
             </h2>
           </section>
