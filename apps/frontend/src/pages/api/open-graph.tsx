@@ -1,7 +1,6 @@
 import { ImageResponse } from "@vercel/og";
 import { DateTime } from "luxon";
 import { NextRequest } from "next/server";
-import { Logo } from "../../components/Logo";
 
 export const config = {
   runtime: "edge",
@@ -13,21 +12,11 @@ const black = fetch(
 const bold = fetch(
   new URL("../../assets/Inter-Bold.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
-const extraBold = fetch(
-  new URL("../../assets/Inter-ExtraBold.ttf", import.meta.url)
-).then((res) => res.arrayBuffer());
-const regular = fetch(
-  new URL("../../assets/Inter-Regular.ttf", import.meta.url)
-).then((res) => res.arrayBuffer());
-const semibold = fetch(
-  new URL("../../assets/Inter-SemiBold.ttf", import.meta.url)
-).then((res) => res.arrayBuffer());
 
 type ImageType = "calendar" | "page";
 
 export default async function OpenGraphImageHandler(req: NextRequest) {
-  const [InterRegular, InterSemiBold, InterBold, InterExtraBold, InterBlack] =
-    await Promise.all([regular, semibold, bold, extraBold, black]);
+  const [InterBold, InterBlack] = await Promise.all([bold, black]);
 
   const { searchParams } = req.nextUrl;
   const type = searchParams.get("type") as ImageType;
@@ -56,23 +45,8 @@ export default async function OpenGraphImageHandler(req: NextRequest) {
         fonts: [
           {
             name: "Inter",
-            data: InterRegular,
-            weight: 400,
-          },
-          {
-            name: "Inter",
-            data: InterSemiBold,
-            weight: 600,
-          },
-          {
-            name: "Inter",
             data: InterBold,
             weight: 700,
-          },
-          {
-            name: "Inter",
-            data: InterExtraBold,
-            weight: 800,
           },
           {
             name: "Inter",
@@ -124,23 +98,8 @@ export default async function OpenGraphImageHandler(req: NextRequest) {
       fonts: [
         {
           name: "Inter",
-          data: InterRegular,
-          weight: 400,
-        },
-        {
-          name: "Inter",
-          data: InterSemiBold,
-          weight: 600,
-        },
-        {
-          name: "Inter",
           data: InterBold,
           weight: 700,
-        },
-        {
-          name: "Inter",
-          data: InterExtraBold,
-          weight: 800,
         },
         {
           name: "Inter",
