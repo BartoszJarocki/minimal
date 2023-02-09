@@ -24,7 +24,7 @@ export default function Preview({ theme, year }: Props) {
   const title = `${date.toFormat("yyyy")} ${
     ThemeNameLookup[theme]
   } calendar PDF`;
-  const description = `Self print minimalist calendar available in ${SupportedLocales.length} languages.`;
+  const description = `Self print ${ThemeNameLookup[theme]} calendar available in ${SupportedLocales.length} languages.`;
 
   return (
     <>
@@ -53,30 +53,32 @@ export default function Preview({ theme, year }: Props) {
             <H1>{title}</H1>
 
             <P>
-              Introducing the ultimate {date.toFormat("yyyy")} minimalist
+              Introducing the ultimate {date.toFormat("yyyy")}{" "}
+              {ThemeNameLookup[theme]}
               calendar - the perfect solution for organizing your daily schedule
               and keeping track of important dates. With a sleek and stylish
               design, this calendar will add a touch of sophistication to any
               office or home space.
               <br />
               <br />
-              This {date.toFormat("yyyy")} minimalist calendar is available for
-              purchase and download as a high-quality PDF, making it easy to
-              access and print on any device. Each month is carefully designed
-              with minimalism in mind, providing just enough information without
-              overwhelming the user.
+              This {date.toFormat("yyyy")} {ThemeNameLookup[theme]} calendar is
+              available for purchase and download as a high-quality PDF, making
+              it easy to access and print on any device. Each month is carefully
+              designed with minimalism in mind, providing just enough
+              information without overwhelming the user.
               <br />
               <br />
-              The {date.toFormat("yyyy")} calendar is perfect for anyone looking
-              to simplify their life and streamline their daily tasks. With
-              space to write down appointments, birthdays, and other important
-              dates, this calendar will help you stay on top of your schedule
-              and never miss an important event again.
+              The {date.toFormat("yyyy")} {ThemeNameLookup[theme]} calendar is
+              perfect for anyone looking to simplify their life and streamline
+              their daily tasks. With space to write down appointments,
+              birthdays, and other important dates, this calendar will help you
+              stay on top of your schedule and never miss an important event
+              again.
               <br />
               <br />
-              Get your hands on the {date.toFormat("yyyy")} minimalist calendar
-              today and take the first step towards a more organized and
-              stress-free life.
+              Get your hands on the {date.toFormat("yyyy")}{" "}
+              {ThemeNameLookup[theme]} calendar today and take the first step
+              towards a more organized and stress-free life.
             </P>
 
             <P className="text-sm">
