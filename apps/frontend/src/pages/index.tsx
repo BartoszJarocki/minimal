@@ -55,7 +55,7 @@ export default function Landing() {
       <Container>
         <main>
           <div className="md:space-y-18 min-h-0 space-y-8">
-            <section className="max-w-2xl space-y-4 px-4 md:px-8">
+            <section className="max-w-2xl space-y-4">
               <div className="flex items-center justify-start gap-x-6 pb-12">
                 <Logo className="h-24 w-24" />
                 <span className="hidden text-4xl font-bold">Use Minimal</span>
@@ -68,7 +68,7 @@ export default function Landing() {
             </section>
 
             <section className="max-w-3xl py-12 md:py-24">
-              <div className="space-y-4 px-4 md:px-8">
+              <div className="space-y-4">
                 <H2>Minimal</H2>
                 <P>
                   Yearly and monthly, self print ready minimalist calendar
@@ -76,7 +76,7 @@ export default function Landing() {
                   PDF.
                 </P>
 
-                <P className="text-sm">
+                <P className="max-w-2xl text-sm">
                   Available languages:{" "}
                   {SupportedLocales.map((locale) => (
                     <InlineButton
@@ -90,7 +90,7 @@ export default function Landing() {
                   )).reduce(joinComponents, [])}
                 </P>
 
-                <div className="h-12">
+                <div className="h-12 w-auto">
                   <a
                     className="gumroad-button"
                     href="https://useminimal.gumroad.com/l/minimalist-calendar"
@@ -99,7 +99,7 @@ export default function Landing() {
                   </a>
                 </div>
               </div>
-              <div className="mt-8 overflow-x-auto px-4 md:px-8">
+              <div className="mt-8 overflow-x-auto px-2">
                 <div className="flex h-[360px] gap-x-12">
                   <div className="inset-0 top-0 right-0 flex h-full origin-top-left scale-[30%] gap-x-24">
                     <div className="paper-a4-portrait bg-white shadow-2xl">
