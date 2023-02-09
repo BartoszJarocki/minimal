@@ -66,7 +66,7 @@ const navigation = {
 export const Footer = () => {
   return (
     <footer className="border-t" aria-labelledby="footer-heading">
-      <div className="px-4 pb-8 pt-16 sm:pt-24 md:px-8 lg:pt-32">
+      <div className="px-4 pb-16 pt-16 md:px-8">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8">
             <Logo className="h-7 w-auto" />
@@ -172,7 +172,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-b border-gray-900/10 py-8 sm:mt-20 lg:mt-24">
+        <div className="mt-16 border-t border-b border-gray-900/10 py-8">
           <p className="text-xs leading-5 text-gray-500">
             &copy; {new Date().getFullYear()} Use Minimal. All rights reserved.
           </p>
