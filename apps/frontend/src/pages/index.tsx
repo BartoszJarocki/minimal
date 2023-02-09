@@ -15,7 +15,7 @@ import { Container } from "../components/Container";
 import { joinComponents } from "../lib/utils";
 import { SupportedLocales } from "../components/calendar/Calendar";
 
-const SectionTitle = ({
+export const H1 = ({
   children,
   className,
 }: {
@@ -23,17 +23,42 @@ const SectionTitle = ({
   className?: string;
 }) => {
   return (
-    <h3 className={clsx("mb-2 text-left text-3xl font-semibold", className)}>
+    <h1
+      className={clsx(
+        "text-4xl font-bold leading-none tracking-tighter md:text-6xl",
+        className
+      )}
+    >
       {children}
-    </h3>
+    </h1>
   );
 };
 
-const SectionSubtitle = ({ children }: { children: React.ReactNode }) => {
+const H2 = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
   return (
-    <h4 className="mb-4 max-w-4xl text-left text-lg opacity-80 md:mb-6">
+    <h2 className={clsx("text-left text-3xl font-semibold", className)}>
       {children}
-    </h4>
+    </h2>
+  );
+};
+
+const P = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <p className={clsx("text-left text-lg opacity-80", className)}>
+      {children}
+    </p>
   );
 };
 
@@ -93,34 +118,30 @@ export default function Calendar() {
       <Script src="https://gumroad.com/js/gumroad.js" />
 
       <Container>
-        <main className="md:space-y-18 min-h-0 space-y-8">
-          <section className="space-y-4 px-4 md:px-8">
-            <div className="flex items-center justify-start gap-x-6 pb-12">
-              <Logo className="h-24 w-24" />
-              <span className="hidden text-4xl font-bold">Use Minimal</span>
-            </div>
-            <h1 className="max-w-xl text-4xl font-bold leading-none tracking-tighter md:text-6xl">
-              <Balancer>Get beautiful minimalist calendars</Balancer>
-            </h1>
-            <h2 className="text-2xl text-zinc-700 md:text-2xl">
-              <Balancer>
+        <main>
+          <div className="md:space-y-18 min-h-0 space-y-8">
+            <section className="max-w-2xl space-y-4 px-4 md:px-8">
+              <div className="flex items-center justify-start gap-x-6 pb-12">
+                <Logo className="h-24 w-24" />
+                <span className="hidden text-4xl font-bold">Use Minimal</span>
+              </div>
+              <H1>Get beautiful minimalist calendars</H1>
+              <P className="text-2xl">
                 Self print ready minimalist calendars available in A4 and A5
                 formats
-              </Balancer>
-            </h2>
-          </section>
+              </P>
+            </section>
 
-          <section className="py-12 md:py-24">
-            <div className="px-4 md:px-8">
-              <SectionTitle>Minimal</SectionTitle>
-              <SectionSubtitle>
-                <Balancer>
+            <section className="max-w-3xl py-12 md:py-24">
+              <div className="space-y-4 px-4 md:px-8">
+                <H2>Minimal</H2>
+                <P>
                   Yearly and monthly, self print ready minimalist calendar
                   available in A4 and A5 formats in both portrait and landscape.
                   PDF.
-                </Balancer>
+                </P>
 
-                <Balancer as="div" className="mt-2 text-sm">
+                <P className="text-sm">
                   Available languages:{" "}
                   {SupportedLocales.map((locale) => (
                     <InlineButton
@@ -130,21 +151,20 @@ export default function Calendar() {
                       {locale.englishName}
                     </InlineButton>
                   )).reduce(joinComponents, [])}
-                </Balancer>
-              </SectionSubtitle>
-              <div className="h-12">
-                <a
-                  className="gumroad-button"
-                  href="https://useminimal.gumroad.com/l/minimalist-calendar"
-                >
-                  Buy for 2$ on
-                </a>
+                </P>
+
+                <div className="h-12">
+                  <a
+                    className="gumroad-button"
+                    href="https://useminimal.gumroad.com/l/minimalist-calendar"
+                  >
+                    Buy for 2$ on
+                  </a>
+                </div>
               </div>
-            </div>
-            <div className="mt-8 overflow-x-auto px-4 md:px-8">
-              <div className="flex h-[360px] gap-x-12">
-                <div className="inset-0 top-0 right-0 flex h-full origin-top-left scale-[30%] gap-x-24">
-                  <div>
+              <div className="mt-8 overflow-x-auto px-4 md:px-8">
+                <div className="flex h-[360px] gap-x-12">
+                  <div className="inset-0 top-0 right-0 flex h-full origin-top-left scale-[30%] gap-x-24">
                     <div className="paper-a4-portrait bg-white shadow-2xl">
                       <SimpleMinimalistMonthCalendar
                         date={date}
@@ -152,9 +172,7 @@ export default function Calendar() {
                         size="a4"
                       />
                     </div>
-                  </div>
 
-                  <div>
                     <div className="paper-a4-portrait bg-white shadow-2xl">
                       <SimpleMilimalistYearCalendar
                         date={date}
@@ -165,8 +183,8 @@ export default function Calendar() {
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </div>
         </main>
         <Footer />
       </Container>

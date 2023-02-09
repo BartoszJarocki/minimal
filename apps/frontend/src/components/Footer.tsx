@@ -69,18 +69,15 @@ const navigation = {
 export const Footer = () => {
   return (
     <footer className="border-t" aria-labelledby="footer-heading">
-      <h2 id="footer-heading" className="sr-only">
-        Footer
-      </h2>
       <div className="px-4 pb-8 pt-16 sm:pt-24 md:px-8 lg:pt-32">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8">
             <Logo className="h-7 w-auto" />
-            <p className="text-sm leading-6 text-gray-600">
+            <h2 className="text-sm leading-6 text-gray-600">
               <Balancer>
                 Making the world more productive one day at a time.
               </Balancer>
-            </p>
+            </h2>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (
                 <a
