@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { DateTime, Info, Settings } from "luxon";
 import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
+import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import {
@@ -10,7 +11,17 @@ import {
   SupportedLocales,
 } from "../../../../../components/calendar/Calendar";
 import { Container } from "../../../../../components/Container";
-import { Theme, ThemeLookup, toPrintClassName } from "../../../../print";
+import { Footer } from "../../../../../components/Footer";
+import { H1 } from "../../../../../components/H1";
+import { H2 } from "../../../../../components/H2";
+import { P } from "../../../../../components/P";
+import { joinComponents } from "../../../../../lib/utils";
+import {
+  Theme,
+  ThemeLookup,
+  ThemeNameLookup,
+  toPrintClassName,
+} from "../../../../print";
 
 interface Props {
   locale: string;
@@ -29,14 +40,15 @@ export default function CalendarPreview({
 }: Props) {
   const YearCalendar = ThemeLookup["year"][theme];
   const MonthCalendar = ThemeLookup["month"][theme];
-  const now = DateTime.now().setLocale(locale).set({ year });
+  const date = DateTime.now().setLocale(locale).set({ year });
   const selectedLocale = SupportedLocales.find((l) => l.code === locale)!;
 
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}/${locale}`;
-  const title = `${now.toFormat("yyyy")} ${
-    selectedLocale.englishName
-  } calendar PDF - ${theme}`;
-  const description = `Self print PDF ${selectedLocale.englishName} minimalist calendar`;
+
+  const title = `${date.toFormat("yyyy")} ${selectedLocale.englishName} ${
+    ThemeNameLookup[theme]
+  } calendar PDF`;
+  const description = `Self print ${selectedLocale.englishName} minimalist calendar available in ${SupportedLocales.length} languages.`;
 
   return (
     <>
@@ -59,32 +71,71 @@ export default function CalendarPreview({
         }}
       />
       <Container>
-        <div className="space-y-4 bg-zinc-50 p-2 text-dark">
-          <h1 className="px-2 py-4 pt-2 text-5xl font-semibold leading-none tracking-tighter">
-            {year} {selectedLocale.englishName} calendar
-          </h1>
+        <main className="pb-24">
+          <section className="max-w-2xl space-y-6">
+            <H1>{title}</H1>
 
-          <div>
-            <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
-              Yearly
-            </h2>
-            <div className="h-[280px]">
+            <P>
+              Introducing the ultimate {date.toFormat("yyyy")}{" "}
+              {selectedLocale.englishName} minimalist calendar - the perfect
+              solution for organizing your daily schedule and keeping track of
+              important dates. With a sleek and stylish design, this calendar
+              will add a touch of sophistication to any office or home space.
+              <br />
+              <br />
+              This {date.toFormat("yyyy")} {selectedLocale.englishName}{" "}
+              minimalist calendar is available for purchase and download as a
+              high-quality PDF, making it easy to access and print on any
+              device. Each month is carefully designed with minimalism in mind,
+              providing just enough information without overwhelming the user.
+              <br />
+              <br />
+              The {date.toFormat("yyyy")} {selectedLocale.englishName}{" "}
+              minimalist calendar is perfect for anyone looking to simplify
+              their life and streamline their daily tasks. With space to write
+              down appointments, birthdays, and other important dates, this
+              calendar will help you stay on top of your schedule and never miss
+              an important event again.
+              <br />
+              <br />
+              Get your hands on the {date.toFormat("yyyy")}{" "}
+              {selectedLocale.englishName} minimalist calendar today and take
+              the first step towards a more organized and stress-free life.
+            </P>
+
+            <P className="text-sm">
+              Supported languages:{" "}
+              {SupportedLocales.map((locale) => (
+                <Link
+                  href={`/calendars/preview/${year}/${theme}/${locale.code}`}
+                  key={locale.code}
+                  className="underline"
+                >
+                  {locale.englishName}
+                </Link>
+              )).reduce(joinComponents, [])}
+            </P>
+          </section>
+
+          <section className="mt-12 px-2">
+            <H2>Yearly</H2>
+
+            <div className="mt-4 h-[280px]">
               <div
                 className={clsx(
                   toPrintClassName(format, variant),
                   "origin-top-left scale-[25%] bg-white text-zinc-900 shadow-xl"
                 )}
               >
-                <YearCalendar date={now} variant={variant} size={format} />
+                <YearCalendar date={date} variant={variant} size={format} />
               </div>
             </div>
-          </div>
+          </section>
 
-          <div>
-            <h2 className="px-2 py-4 pt-2 text-3xl font-semibold leading-none tracking-tighter">
-              Monthly
-            </h2>
-            <div className="grid h-[900px] w-max origin-top-left scale-[25%] grid-cols-4 gap-8">
+          <section className="mt-12 px-2">
+            <H2>Monthly</H2>
+
+            <div className="mt-4 grid h-[900px] w-max origin-top-left scale-[25%] grid-cols-4 gap-8">
               {Info.months().map((_, index) => (
                 <div
                   key={`month-${index}`}
@@ -94,15 +145,16 @@ export default function CalendarPreview({
                   )}
                 >
                   <MonthCalendar
-                    date={now.set({ month: index + 1 })}
+                    date={date.set({ month: index + 1 })}
                     variant={variant}
                     size={format}
                   />
                 </div>
               ))}
             </div>
-          </div>
-        </div>
+          </section>
+        </main>
+        <Footer />
       </Container>
     </>
   );

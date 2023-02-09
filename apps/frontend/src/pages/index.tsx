@@ -1,5 +1,4 @@
-import clsx from "clsx";
-import { DateTime } from "luxon";
+import { DateTime, Settings } from "luxon";
 import React, { useEffect, useState } from "react";
 import Script from "next/script";
 import Balancer from "react-wrap-balancer";
@@ -15,83 +14,19 @@ import { Container } from "../components/Container";
 import { joinComponents } from "../lib/utils";
 import { SupportedLocales } from "../components/calendar/Calendar";
 
-export const H1 = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <h1
-      className={clsx(
-        "text-4xl font-bold leading-none tracking-tighter md:text-6xl",
-        className
-      )}
-    >
-      {children}
-    </h1>
-  );
-};
+import { P } from "../components/P";
+import { H2 } from "../components/H2";
+import { InlineButton } from "../components/InlineButton";
+import { H1 } from "../components/H1";
 
-const H2 = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <h2 className={clsx("text-left text-3xl font-semibold", className)}>
-      {children}
-    </h2>
-  );
-};
+Settings.defaultLocale = "en-US";
 
-const P = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
-  return (
-    <p className={clsx("text-left text-lg opacity-80", className)}>
-      {children}
-    </p>
-  );
-};
-
-const InlineButton = ({
-  children,
-  onClick,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-}) => {
-  return (
-    <button
-      className="inline text-zinc-700 underline hover:text-zinc-900"
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-};
-
-export default function Calendar() {
-  const [locale, setLocale] = useState("en");
+export default function Landing() {
   const [date, setDate] = useState(DateTime.now());
 
   const url = "https://useminimal.com";
   const title = `${date.toFormat("yyyy")} Minimalist Calendars`;
   const description = `Self print ready minimalist calendars`;
-
-  useEffect(() => {
-    if (locale !== date.locale) {
-      setDate(date.setLocale(locale));
-    }
-  }, [locale, date]);
 
   return (
     <>
@@ -146,7 +81,9 @@ export default function Calendar() {
                   {SupportedLocales.map((locale) => (
                     <InlineButton
                       key={locale.code}
-                      onClick={() => setLocale(locale.code)}
+                      onClick={() => {
+                        setDate(date.setLocale(locale.code));
+                      }}
                     >
                       {locale.englishName}
                     </InlineButton>
