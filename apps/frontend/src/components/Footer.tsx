@@ -14,10 +14,7 @@ const navigation = {
   ],
   habitTrackers: [{ name: "Work in progress", href: null }],
   planners: [{ name: "Work in progress", href: null }],
-  legal: [
-    { name: "Privacy", href: "#" },
-    { name: "Terms", href: "#" },
-  ],
+  legal: [{ name: "Terms Of Service", href: "/terms" }],
   social: [
     {
       name: "Facebook",

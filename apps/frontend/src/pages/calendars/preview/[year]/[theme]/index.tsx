@@ -54,11 +54,10 @@ export default function Preview({ theme, year }: Props) {
 
             <P>
               Introducing the ultimate {date.toFormat("yyyy")}{" "}
-              {ThemeNameLookup[theme]}
-              calendar - the perfect solution for organizing your daily schedule
-              and keeping track of important dates. With a sleek and stylish
-              design, this calendar will add a touch of sophistication to any
-              office or home space.
+              {ThemeNameLookup[theme]} calendar - the perfect solution for
+              organizing your daily schedule and keeping track of important
+              dates. With a sleek and stylish design, this calendar will add a
+              touch of sophistication to any office or home space.
               <br />
               <br />
               This {date.toFormat("yyyy")} {ThemeNameLookup[theme]} calendar is
