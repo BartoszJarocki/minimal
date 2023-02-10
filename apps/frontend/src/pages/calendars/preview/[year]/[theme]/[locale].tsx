@@ -74,7 +74,9 @@ export default function CalendarPreview({
       <Container>
         <main className="pb-24">
           <section className="max-w-2xl space-y-6">
-            <H1><Balancer>{title}</Balancer></H1>
+            <H1>
+              <Balancer>{title}</Balancer>
+            </H1>
 
             <P>
               Introducing the ultimate {date.toFormat("yyyy")}{" "}
@@ -188,7 +190,7 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
 
   return {
     locale: locale || "en",
-    theme: theme || "simple-minimalist",
+    theme: theme || "minimalist",
     year: year || DateTime.now().year,
     format: format || "a4",
     variant: variant || "portrait",

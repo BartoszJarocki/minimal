@@ -148,6 +148,6 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
 
   return {
     year: year || DateTime.now().year,
-    theme: theme || "simple-minimalist",
+    theme: theme || "minimalist",
   };
 };

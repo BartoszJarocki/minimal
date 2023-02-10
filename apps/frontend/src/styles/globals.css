@@ -88,3 +88,18 @@ body {
 .text-vertical-rl {
   writing-mode: vertical-rl;
 }
+
+.perspective {
+  transform: perspective(900px) rotateY(25deg) scale(0.9) rotateX(10deg);
+  transition: 0.6s ease all;
+}
+
+.perspective:hover {
+  transform: perspective(800px) rotateY(0deg) rotateX(0deg) scale(1);
+  opacity: 1;
+}
+
+.elegant-shadow {
+  box-shadow: 1px 1px 0 1px #f9f9fb, -1px 0 28px 0 rgba(34, 33, 81, 0.01),
+    28px 28px 28px 0 rgba(34, 33, 81, 0.25);
+}

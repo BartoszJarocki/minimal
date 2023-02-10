@@ -6,6 +6,7 @@
     "generate": "node ./src/generate-calendar.js"
   },
   "dependencies": {
+    "adm-zip": "^0.5.10",
     "luxon": "^3.2.1",
     "puppeteer": "^19.5.2"
   },
