@@ -178,7 +178,10 @@ export const Footer = () => {
           </p>
         </div>
 
-        <div className="max-w-3xl py-8 text-xs text-dark/40">
+        <section className="max-w-3xl py-8 text-xs text-dark/40">
+
+          <h4 className="py-1">Next years calendars</h4>
+
           {SupportedYears.map((year) => (
             <Link
               key={year}
@@ -188,7 +191,7 @@ export const Footer = () => {
               {year} Calendar PDF
             </Link>
           )).reduce(joinComponents, [])}
-        </div>
+        </section>
       </div>
     </footer>
   );
