@@ -60,7 +60,9 @@ export default function Landing() {
                 <Logo className="h-24 w-24" />
                 <span className="hidden text-4xl font-bold">Use Minimal</span>
               </div>
-              <H1>Get beautiful minimalist calendars</H1>
+              <H1>
+                <Balancer>Get beautiful minimalist calendars</Balancer>
+              </H1>
               <P className="text-2xl">
                 Self print ready minimalist calendars available in A4 and A5
                 formats

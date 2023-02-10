@@ -5,6 +5,7 @@ import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
+import Balancer from "react-wrap-balancer";
 import { SupportedLocales } from "../../../../../components/calendar/Calendar";
 import { Container } from "../../../../../components/Container";
 import { Footer } from "../../../../../components/Footer";
@@ -50,7 +51,9 @@ export default function Preview({ theme, year }: Props) {
       <Container>
         <main className="pb-24">
           <section className="max-w-2xl space-y-6">
-            <H1>{title}</H1>
+            <H1>
+              <Balancer>{title}</Balancer>
+            </H1>
 
             <P>
               Introducing the ultimate {date.toFormat("yyyy")}{" "}
