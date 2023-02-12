@@ -19,10 +19,7 @@ const debugURL = async (url) => {
   });
 };
 
-const createZipArchive = ({
-  folderPathToZip,
-  outputFilePath: zippedFilePath,
-}) => {
+const createZipArchive = ({ folderPathToZip, zippedFilePath }) => {
   const zip = new AdmZip();
   zip.addLocalFolder(folderPathToZip);
   zip.writeZip(zippedFilePath);
@@ -213,11 +210,14 @@ async function generateProducts() {
     headless: true,
   };
   const browser = await puppeteer.launch(browserOptions);
-  // iterate over all years, themes, locales, formats
+  //iterate over all years, themes, locales, formats
   for (const theme of themes) {
     for (const locale of locales) {
       for (const year of years) {
         for (const format of formats) {
+          console.log(
+            `Generating ${year} ${locale.englishName} ${theme} calendar in ${format} format`
+          );
           await generateMonthlyCalendar({
             browser,
             destDir,
@@ -233,12 +233,25 @@ async function generateProducts() {
             destDir,
             theme,
             locale,
-            formats,
+            format,
           });
+
+          console.log(`Done.`);
         }
       }
     }
   }
+
+  // zip all themes inside of the locale folder
+  for (const locale of locales) {
+    for (const theme of themes) {
+      const folderPathToZip = `${destDir}/${locale.englishName}/${theme}`;
+      const zippedFilePath = `${destDir}/${locale.englishName}/${theme}.zip`;
+
+      createZipArchive({ folderPathToZip, zippedFilePath });
+    }
+  }
+
   await browser.close();
 
   // await generateCalendarPreviews({

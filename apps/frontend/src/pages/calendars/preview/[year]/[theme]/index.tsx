@@ -25,7 +25,7 @@ export default function Preview({ theme, year }: Props) {
   const title = `${date.toFormat("yyyy")} ${
     ThemeNameLookup[theme]
   } calendar PDF`;
-  const description = `Self print ${ThemeNameLookup[theme]} calendar available in ${SupportedLocales.length} languages.`;
+  const description = `Beautiful, self print ready ${ThemeNameLookup[theme]} calendar. Available in ${SupportedLocales.length} languages.`;
 
   return (
     <>
@@ -34,6 +34,10 @@ export default function Preview({ theme, year }: Props) {
         description={description}
         canonical={url}
         openGraph={{
+          siteName: "Use Minimal",
+          title,
+          description,
+          url,
           images: [
             {
               url: `${url}/api/open-graph?title=${title}&description=${description}`,

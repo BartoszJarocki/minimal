@@ -19,10 +19,10 @@ interface Props {
 export default function Preview({ year }: Props) {
   const date = DateTime.now().set({ year });
   const url = `https://useminimal.com/calendars/preview/${year}`;
-  const title = `${date.toFormat("yyyy")} Calendars`;
-  const description = `Self print minimalist calendars for ${date.toFormat(
-    "MMMM"
-  )}`;
+  const title = `Use Minimal - ${date.toFormat("yyyy")} Minimalist Calendars`;
+  const description = `Beautiful, self print ready minimalist calendars for ${date.toFormat(
+    "yyyy"
+  )}. Available in ${SupportedLocales.length} languages.`;
 
   return (
     <>
@@ -31,6 +31,10 @@ export default function Preview({ year }: Props) {
         description={description}
         canonical={url}
         openGraph={{
+          siteName: "Use Minimal",
+          title,
+          description,
+          url,
           images: [
             {
               url: `${url}/api/open-graph?title=${title}&description=${description}`,

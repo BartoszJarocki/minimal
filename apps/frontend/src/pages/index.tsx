@@ -25,8 +25,8 @@ export default function Landing() {
   const [date, setDate] = useState(DateTime.now());
 
   const url = "https://useminimal.com";
-  const title = `${date.toFormat("yyyy")} Minimalist Calendars`;
-  const description = `Self print ready minimalist calendars`;
+  const title = `Use Minimal - Minimalist Calendars, Habit Trackers and Planners`;
+  const description = `Use Minimal is a collection of beautiful, self print ready minimalist calendars, habit trackers and planners. Available in ${SupportedLocales.length} languages.`;
 
   return (
     <>
@@ -35,8 +35,10 @@ export default function Landing() {
         description={description}
         canonical={url}
         openGraph={{
+          siteName: "Use Minimal",
           title,
           description,
+          url,
           images: [
             {
               url: `${url}/api/open-graph?title=${title}&description=${description}`,

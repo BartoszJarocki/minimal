@@ -43,13 +43,11 @@ export default function CalendarPreview({
   const MonthCalendar = ThemeLookup["month"][theme];
   const date = DateTime.now().setLocale(locale).set({ year });
   const selectedLocale = SupportedLocales.find((l) => l.code === locale)!;
-
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}/${locale}`;
-
   const title = `${date.toFormat("yyyy")} ${selectedLocale.englishName} ${
     ThemeNameLookup[theme]
   } calendar PDF`;
-  const description = `Self print ${selectedLocale.englishName} minimalist calendar available in ${SupportedLocales.length} languages.`;
+  const description = `Beautiful, self print ready ${selectedLocale.englishName} ${ThemeNameLookup[theme]} calendar. Available in ${SupportedLocales.length} languages.`;
 
   return (
     <>
@@ -58,6 +56,10 @@ export default function CalendarPreview({
         description={description}
         canonical={url}
         openGraph={{
+          siteName: "Use Minimal",
+          title,
+          description,
+          url,
           images: [
             {
               url: `${url}/api/open-graph?title=${title}&description=${description}`,

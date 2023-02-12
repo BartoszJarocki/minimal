@@ -1,9 +1,37 @@
+import { NextSeo } from "next-seo";
+import { SupportedLocales } from "../components/calendar/Calendar";
 import { Container } from "../components/Container";
 import { H1 } from "../components/H1";
 
 const Terms = () => {
+  const url = "https://useminimal.com";
+  const title = `Use Minimal - Terms of Service`;
+  const description = `Terms of Service for Use Minimal`;
+
   return (
     <Container>
+      <NextSeo
+        title={title}
+        description={description}
+        canonical={url}
+        openGraph={{
+          siteName: "Use Minimal",
+          title,
+          description,
+          url,
+          images: [
+            {
+              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              width: 1200,
+              height: 630,
+            },
+          ],
+        }}
+        twitter={{
+          handle: "@UseMinimal",
+          cardType: "summary_large_image",
+        }}
+      />
       <main className="pb-24">
         <section className="prose w-full break-words">
           <H1>Terms of Service</H1>

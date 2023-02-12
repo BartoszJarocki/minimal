@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { DateTime, Settings } from "luxon";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
@@ -41,6 +42,7 @@ export default function Print() {
         "bg-white text-zinc-900"
       )}
     >
+      <NextSeo nofollow noindex />
       <Calendar date={date} variant={variant} size={format} />
     </div>
   );
