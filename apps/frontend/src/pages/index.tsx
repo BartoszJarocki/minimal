@@ -1,5 +1,5 @@
 import { DateTime, Settings } from "luxon";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Script from "next/script";
 import Balancer from "react-wrap-balancer";
 

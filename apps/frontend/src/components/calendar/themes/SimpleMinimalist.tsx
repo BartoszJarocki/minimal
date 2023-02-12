@@ -119,7 +119,7 @@ export const SimpleMilimalistYearCalendar = ({
   };
 
   const YearCalendarHeader = ({ date }: { date: DateTime }) => {
-    return <h1 className={styles.yearHeader}>{date.year}</h1>;
+    return <div className={styles.yearHeader}>{date.year}</div>;
   };
 
   const YearCalendarDayCell = ({
@@ -235,9 +235,9 @@ export const SimpleMinimalistMonthCalendar = ({
         <div className={styles.monthName}>{addLeadingZeros(date.month, 2)}</div>
         <div>
           <div className={styles.yearName}>{date.year}</div>
-          <h1 className={styles.monthName}>
+          <div className={styles.monthName}>
             {variant === "landscape" ? date.monthLong : date.monthShort}
-          </h1>
+          </div>
         </div>
       </div>
 

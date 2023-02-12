@@ -8,7 +8,7 @@ export const Container = ({ children }: React.PropsWithChildren) => {
     <div
       className={clsx(
         font.className,
-        "mx-auto min-h-screen max-w-7xl overflow-x-hidden py-24 px-2"
+        "mx-auto min-h-screen max-w-5xl overflow-x-hidden py-24 px-2"
       )}
     >
       {children}
