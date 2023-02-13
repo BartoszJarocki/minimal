@@ -9,6 +9,7 @@ import { Container } from "../../../../components/Container";
 import { Footer } from "../../../../components/Footer";
 import { H1 } from "../../../../components/H1";
 import { P } from "../../../../components/P";
+import { SSR_CACHE_CONFIG } from "../../../../lib/config";
 import { joinComponents } from "../../../../lib/utils";
 import { ThemeNameLookup } from "../../../print";
 
@@ -86,6 +87,8 @@ export default function Preview({ year }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
+  context.res.setHeader('Cache-Control', SSR_CACHE_CONFIG);
+
   return {
     props: {
       ...parseQueryParams(context.query),
