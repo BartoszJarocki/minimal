@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 
 export default function Document() {
   return (
@@ -25,6 +26,11 @@ export default function Document() {
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="shortcut icon" href="/favicon.ico" />
+
+        <Script
+          src="https://gumroad.com/js/gumroad.js"
+          strategy="beforeInteractive"
+        />
       </Head>
       <body className="h-full w-full text-dark">
         <Main />

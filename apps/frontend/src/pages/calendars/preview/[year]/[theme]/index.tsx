@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import Balancer from "react-wrap-balancer";
+import { BuyButton } from "../../../../../components/BuyButton";
 import { SupportedLocales } from "../../../../../components/calendar/Calendar";
 import { Container } from "../../../../../components/Container";
 import { Footer } from "../../../../../components/Footer";
@@ -100,6 +101,8 @@ export default function Preview({ theme, year }: Props) {
                 </Link>
               )).reduce(joinComponents, [])}
             </P>
+
+            <BuyButton />
           </section>
 
           <section className="mt-8 max-w-2xl px-1">

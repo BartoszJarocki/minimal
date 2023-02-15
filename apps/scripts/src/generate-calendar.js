@@ -246,7 +246,7 @@ async function generateProducts() {
   for (const locale of locales) {
     for (const theme of themes) {
       const folderPathToZip = `${destDir}/${locale.englishName}/${theme}`;
-      const zippedFilePath = `${destDir}/${locale.englishName}/${theme}.zip`;
+      const zippedFilePath = `${destDir}/${locale.englishName}/${locale.englishName}-${theme}.zip`;
 
       createZipArchive({ folderPathToZip, zippedFilePath });
     }

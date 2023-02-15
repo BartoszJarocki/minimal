@@ -14,7 +14,10 @@ const navigation = {
   ],
   habitTrackers: [{ name: "Work in progress", href: null }],
   planners: [{ name: "Work in progress", href: null }],
-  legal: [{ name: "Terms Of Service", href: "/terms" }],
+  legal: [
+    { name: "Terms Of Service", href: "/terms" },
+    { name: "Gumroad Store", href: "https://useminimal.gumroad.com" },
+  ],
   social: [
     {
       name: "Facebook",
@@ -115,12 +118,12 @@ export const Footer = () => {
                   {navigation.habitTrackers.map((item) => (
                     <li key={item.name}>
                       {item.href ? (
-                        <a
+                        <Link
                           href={item.href}
                           className="text-sm leading-6 text-gray-600 hover:text-gray-900"
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       ) : (
                         <Badge>{item.name}</Badge>
                       )}
@@ -138,12 +141,12 @@ export const Footer = () => {
                   {navigation.planners.map((item) => (
                     <li key={item.name}>
                       {item.href ? (
-                        <a
+                        <Link
                           href={item.href}
                           className="text-sm leading-6 text-gray-600 hover:text-gray-900"
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       ) : (
                         <Badge>{item.name}</Badge>
                       )}
@@ -153,7 +156,7 @@ export const Footer = () => {
               </div>
               <div className="mt-10 md:mt-0">
                 <h3 className="text-sm font-semibold leading-6 text-gray-900">
-                  Legal
+                  Misc
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
                   {navigation.legal.map((item) => (

@@ -18,6 +18,7 @@ import { P } from "../components/P";
 import { H2 } from "../components/H2";
 import { InlineButton } from "../components/InlineButton";
 import { H1 } from "../components/H1";
+import { BuyButton } from "../components/BuyButton";
 
 Settings.defaultLocale = "en-US";
 
@@ -25,8 +26,8 @@ export default function Landing() {
   const [date, setDate] = useState(DateTime.now());
 
   const url = "https://useminimal.com";
-  const title = `Use Minimal - Minimalist Calendars, Habit Trackers and Planners`;
-  const description = `Use Minimal is a collection of beautiful, self print ready minimalist calendars, habit trackers and planners. Available in ${SupportedLocales.length} languages.`;
+  const title = `Minimalist Calendars, Habit Trackers and Planners`;
+  const description = `Collection of beautiful, self print ready minimalist calendars, habit trackers and planners. Available in ${SupportedLocales.length} languages.`;
 
   return (
     <>
@@ -52,7 +53,6 @@ export default function Landing() {
           cardType: "summary_large_image",
         }}
       />
-      <Script src="https://gumroad.com/js/gumroad.js" />
 
       <Container>
         <main>
@@ -63,12 +63,9 @@ export default function Landing() {
                 <span className="hidden text-4xl font-bold">Use Minimal</span>
               </div>
               <H1>
-                <Balancer>Get beautiful minimalist calendars</Balancer>
+                <Balancer>{title}</Balancer>
               </H1>
-              <P className="text-2xl">
-                Self print ready minimalist calendars available in A4 and A5
-                formats
-              </P>
+              <P className="text-2xl">{description}</P>
             </section>
 
             <section className="max-w-3xl py-12 md:py-24">
@@ -94,14 +91,7 @@ export default function Landing() {
                   )).reduce(joinComponents, [])}
                 </P>
 
-                <div className="h-12 w-auto">
-                  <a
-                    className="gumroad-button"
-                    href="https://useminimal.gumroad.com/l/minimalist-calendar"
-                  >
-                    Buy for 2$ on
-                  </a>
-                </div>
+                <BuyButton />
               </div>
               <div className="mt-8 overflow-x-auto px-2">
                 <div className="flex h-[360px] gap-x-12">

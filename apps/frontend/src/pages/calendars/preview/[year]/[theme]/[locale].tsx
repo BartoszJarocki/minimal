@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import Balancer from "react-wrap-balancer";
+import { BuyButton } from "../../../../../components/BuyButton";
 import {
   Format,
   FormatVariant,
@@ -124,6 +125,8 @@ export default function CalendarPreview({
                 </Link>
               )).reduce(joinComponents, [])}
             </P>
+
+            <BuyButton />
           </section>
 
           <section className="mt-12 px-2">
