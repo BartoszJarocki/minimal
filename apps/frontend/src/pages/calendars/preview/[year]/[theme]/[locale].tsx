@@ -126,6 +126,11 @@ export default function CalendarPreview({
               )).reduce(joinComponents, [])}
             </P>
 
+            <P className="text-sm">
+              Download format: Zipped set of PDFs (A4 and A5 sizes in both
+              portrait and landscape orientations)
+            </P>
+
             <BuyButton />
           </section>
 
