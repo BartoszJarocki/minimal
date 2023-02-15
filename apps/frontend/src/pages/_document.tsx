@@ -25,6 +25,7 @@ export default function Document() {
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
+        <meta name="p:domain_verify" content="fa930e044f3e1a3fdeaa0a1afa7d6888"/>
         <link rel="shortcut icon" href="/favicon.ico" />
 
         <Script
