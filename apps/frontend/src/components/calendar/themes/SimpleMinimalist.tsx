@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { DateTime } from "luxon";
 import React from "react";
-import { Fonts } from "../../../lib/fonts";
 import {
   DayCell,
   YearCalendar,
@@ -151,7 +150,7 @@ export const SimpleMilimalistYearCalendar = ({
     <div className={styles.root}>
       <YearCalendarHeader date={date} />
       <YearCalendar
-        className={clsx(styles.yearRoot, Fonts.inter.className)}
+        className={clsx(styles.yearRoot)}
         date={date}
         monthHeaderAs={YearCalendarMonthHeader}
         bodyAs={YearCalendarMonthsGrid}
@@ -225,7 +224,7 @@ export const SimpleMinimalistMonthCalendar = ({
   };
 
   return (
-    <div className={clsx(styles.root, Fonts.inter.className)}>
+    <div className={clsx(styles.root)}>
       <div
         className={clsx(
           "flex items-end justify-between",

@@ -15,7 +15,7 @@ module.exports = {
         light: "#e3e3e3",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", ...fontFamily.sans],
+        sans: ["Inter", ...fontFamily.sans],
       },
     },
   },
