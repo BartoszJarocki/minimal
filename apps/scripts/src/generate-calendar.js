@@ -47,7 +47,7 @@ const generateMonthlyCalendar = async ({
     const page = await browser.newPage();
     const monthIndex = i + 1;
 
-    const path = `${destDir}/${locale.englishName}/${theme}/${year}/month-calendar/${format}`;
+    const path = `${destDir}/${theme}/${year}/${locale.englishName}/month-calendar/${format}`;
     if (!fs.existsSync(path)) {
       fs.mkdirSync(path, { recursive: true });
     }
@@ -102,7 +102,7 @@ const generateYearlyCalendar = async ({
   const type = "year";
   const page = await browser.newPage();
 
-  const path = `${destDir}/${locale.englishName}/${theme}/${year}/year-calendar/${format}`;
+  const path = `${destDir}/${theme}/${year}/${locale.englishName}/year-calendar/${format}`;
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path, { recursive: true });
   }
@@ -212,8 +212,8 @@ async function generateProducts() {
   const browser = await puppeteer.launch(browserOptions);
   //iterate over all years, themes, locales, formats
   for (const theme of themes) {
-    for (const locale of locales) {
-      for (const year of years) {
+    for (const year of years) {
+      for (const locale of locales) {
         for (const format of formats) {
           console.log(
             `Generating ${year} ${locale.englishName} ${theme} calendar in ${format} format`
@@ -242,13 +242,25 @@ async function generateProducts() {
     }
   }
 
+  // zip all themes inside of the year folder
+  for (const theme of themes) {
+    for (const year of years) {
+      createZipArchive({
+        folderPathToZip: `${destDir}/${theme}/${year}`,
+        zippedFilePath: `${destDir}/${theme}/${year}-${theme}.zip`,
+      });
+    }
+  }
+
   // zip all themes inside of the locale folder
   for (const locale of locales) {
     for (const theme of themes) {
-      const folderPathToZip = `${destDir}/${locale.englishName}/${theme}`;
-      const zippedFilePath = `${destDir}/${locale.englishName}/${locale.englishName}-${theme}.zip`;
+      for (const year of years) {
+        const folderPathToZip = `${destDir}/${theme}/${year}/${locale.englishName}`;
+        const zippedFilePath = `${destDir}/${theme}/${year}/${locale.englishName}-${theme}.zip`;
 
-      createZipArchive({ folderPathToZip, zippedFilePath });
+        createZipArchive({ folderPathToZip, zippedFilePath });
+      }
     }
   }
 
