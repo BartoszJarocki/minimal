@@ -19,6 +19,7 @@ import { H2 } from "../components/H2";
 import { InlineButton } from "../components/InlineButton";
 import { H1 } from "../components/H1";
 import { BuyButton } from "../components/BuyButton";
+import Link from "next/link";
 
 Settings.defaultLocale = "en-US";
 
@@ -70,7 +71,14 @@ export default function Landing() {
 
             <section className="max-w-3xl py-12 md:py-24">
               <div className="space-y-4">
-                <H2>Minimal</H2>
+                <H2>
+                  <Link
+                    href={`/calendars/preview/${date.year}/minimalist`}
+                    className="underline"
+                  >
+                    Minimalist
+                  </Link>
+                </H2>
                 <P>
                   Yearly and monthly, self print ready minimalist calendar
                   available in A4 and A5 formats in both portrait and landscape.

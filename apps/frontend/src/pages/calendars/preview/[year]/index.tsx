@@ -5,6 +5,10 @@ import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import { SupportedLocales } from "../../../../components/calendar/Calendar";
+import {
+  SimpleMinimalistMonthCalendar,
+  SimpleMilimalistYearCalendar,
+} from "../../../../components/calendar/themes/SimpleMinimalist";
 import { Container } from "../../../../components/Container";
 import { Footer } from "../../../../components/Footer";
 import { H1 } from "../../../../components/H1";
@@ -87,7 +91,7 @@ export default function Preview({ year }: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  context.res.setHeader('Cache-Control', SSR_CACHE_CONFIG);
+  context.res.setHeader("Cache-Control", SSR_CACHE_CONFIG);
 
   return {
     props: {
