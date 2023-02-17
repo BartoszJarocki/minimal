@@ -45,7 +45,6 @@ export const SupportedLocales: Locale[] = [
   { code: "sv", name: "Svenska", englishName: "Swedish", emoji: "🇸🇪" },
   { code: "tr", name: "Türkçe", englishName: "Turkish", emoji: "🇹🇷" },
   { code: "ru", name: "Русский", englishName: "Russian", emoji: "🇷🇺" },
-  { code: "kz", name: "Қазақша", englishName: "Kazakh", emoji: "🇰🇿" },
   { code: "ko", name: "한국어", englishName: "Korean", emoji: "🇰🇷" },
   { code: "ja", name: "日本語", englishName: "Japanese", emoji: "🇯🇵" },
   { code: "hi", name: "हिन्दी", englishName: "Hindi", emoji: "🇮🇳" },
