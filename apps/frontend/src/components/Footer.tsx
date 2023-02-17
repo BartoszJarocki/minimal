@@ -16,6 +16,7 @@ const navigation = {
   planners: [{ name: "Work in progress", href: null }],
   legal: [
     { name: "Terms Of Service", href: "/terms" },
+    { name: "Etsy Store", href: "https://useminimal.etsy.com" },
     { name: "Gumroad Store", href: "https://useminimal.gumroad.com" },
   ],
   social: [
