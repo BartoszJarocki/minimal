@@ -48,8 +48,8 @@ export default function CalendarPreview({
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}/${locale}`;
   const title = `${date.toFormat("yyyy")} ${selectedLocale.englishName} ${
     ThemeNameLookup[theme]
-  } calendar PDF`;
-  const description = `Beautiful, self print ready ${selectedLocale.englishName} ${ThemeNameLookup[theme]} calendar. Available in ${SupportedLocales.length} languages.`;
+  } printable calendar PDF`;
+  const description = `Beautiful, ${selectedLocale.englishName} ${ThemeNameLookup[theme]} printable calendar. Available in ${SupportedLocales.length} languages.`;
 
   return (
     <>

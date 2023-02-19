@@ -24,8 +24,8 @@ interface Props {
 export default function Preview({ year }: Props) {
   const date = DateTime.now().set({ year });
   const url = `https://useminimal.com/calendars/preview/${year}`;
-  const title = `Use Minimal - ${date.toFormat("yyyy")} Minimalist Calendars`;
-  const description = `Beautiful, self print ready minimalist calendars for ${date.toFormat(
+  const title = `${date.toFormat("yyyy")} printable calendar PDF`;
+  const description = `Beautiful, printable calendars for ${date.toFormat(
     "yyyy"
   )}. Available in ${SupportedLocales.length} languages.`;
 
@@ -57,14 +57,8 @@ export default function Preview({ year }: Props) {
       <Container>
         <main className="pb-24">
           <section className="max-w-2xl space-y-4">
-            <H1>{date.toFormat("yyyy")} Calendar PDF</H1>
-            <P className="text-sm">
-              All calendars are available in{" "}
-              {SupportedLocales.map((locale) => (
-                <span key={locale.code}>{locale.englishName}</span>
-              )).reduce(joinComponents, [])}
-              {" languages."}
-            </P>
+            <H1>{title}</H1>
+            <P>{description}</P>
           </section>
 
           <section className="divide mt-8 space-y-1">

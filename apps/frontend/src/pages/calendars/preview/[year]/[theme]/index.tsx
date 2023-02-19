@@ -31,8 +31,8 @@ export default function Preview({ theme, year, locale }: Props) {
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}`;
   const title = `${date.toFormat("yyyy")} ${
     ThemeNameLookup[theme]
-  } calendar PDF`;
-  const description = `Beautiful, self print ready ${ThemeNameLookup[theme]} calendar. Available in ${SupportedLocales.length} languages.`;
+  } printable calendar PDF`;
+  const description = `Beautiful, ${ThemeNameLookup[theme]} printable calendar. Available in ${SupportedLocales.length} languages.`;
 
   return (
     <>
