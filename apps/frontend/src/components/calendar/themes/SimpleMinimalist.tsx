@@ -32,7 +32,7 @@ export const SimpleMilimalistYearCalendar = ({
         yearHeader:
           "text-vertical-rl mb-8 ml-auto basis-[27%] translate-x-14 rotate-180 self-end text-end text-[144px] font-semibold leading-none tracking-tighter",
         monthHeader:
-          "flex items-center px-1 text-2xl font-semibold leading-none tracking-tighter",
+          "flex items-center px-1 text-2xl font-semibold leading-tight tracking-tighter",
         monthsGrid: "grid grid-cols-2 gap-4",
         dayCell: "flex items-center justify-center text-center text-[12px]",
       },
@@ -40,9 +40,9 @@ export const SimpleMilimalistYearCalendar = ({
         root: "flex flex-col p-14 text-dark",
         yearRoot: "",
         yearHeader:
-          "mb-8 ml-auto self-end text-end text-[96px] font-semibold leading-none tracking-tighter",
+          "mb-4 ml-auto self-end text-end text-[96px] font-semibold leading-none tracking-tighter",
         monthHeader:
-          "flex items-center px-1 text-2xl font-semibold leading-normal tracking-tighter",
+          "flex items-center px-1 text-2xl font-semibold leading-tight tracking-tighter",
         monthsGrid: "grid grid-cols-4 gap-4",
         dayCell: "flex items-center justify-center text-center text-[12px]",
       },
@@ -54,7 +54,7 @@ export const SimpleMilimalistYearCalendar = ({
         yearHeader:
           "text-vertical-rl mb-4 ml-auto basis-[29%] translate-x-14 rotate-180 self-end text-end text-[96px] font-semibold leading-none tracking-tighter",
         monthHeader:
-          "flex items-center px-1 text-lg font-semibold leading-normal tracking-tighter",
+          "flex items-center px-1 text-lg font-semibold leading-none` tracking-tighter",
         monthsGrid: "grid grid-cols-2 gap-3",
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
@@ -62,9 +62,9 @@ export const SimpleMilimalistYearCalendar = ({
         root: "flex flex-col p-8 text-dark",
         yearRoot: "",
         yearHeader:
-          "mb-8 ml-auto self-end text-end text-[64px] font-semibold leading-none tracking-tighter",
+          "mb-4 ml-auto self-end text-end text-[44px] font-semibold leading-none tracking-tighter",
         monthHeader:
-          "flex items-center px-1 text-xl font-semibold leading-normal tracking-tighter",
+          "flex items-center px-1 text-xl font-semibold leading-none tracking-tighter",
         monthsGrid: "grid grid-cols-4 gap-4",
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
@@ -163,7 +163,7 @@ export const SimpleMinimalistMonthCalendar = ({
         month: "py-2 text-md",
       },
       landscape: {
-        root: "flex h-full w-full flex-col p-10",
+        root: "flex h-full w-full flex-col p-4",
         monthName: "text-[44px] font-semibold leading-none tracking-tighter",
         yearName: "text-lg leading-none tracking-tighter opacity-50 text-end",
         day: "flex p-2 text-center items-center justify-center",

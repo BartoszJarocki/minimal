@@ -36,11 +36,13 @@ export default function Print() {
   const router = useRouter();
   const { theme, locale, type, month, year, format, variant } =
     parseQueryParams(router.query);
-  const selectedLocale = SupportedLocales.find((l) => l.code === locale)!;
+  const selectedLocale = SupportedLocales.find(
+    (l) => l.code.toLowerCase() === locale.toLowerCase()
+  )!;
   const date = DateTime.now().set({ year, month }).reconfigure({
     locale,
-    // outputCalendar: selectedLocale.outputCalendar,
-    // numberingSystem: selectedLocale.numberingSystem,
+    outputCalendar: selectedLocale.outputCalendar,
+    numberingSystem: selectedLocale.numberingSystem,
   });
   const Calendar = ThemeLookup[type][theme];
 
@@ -73,7 +75,7 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
 
   return {
     theme: theme || "minimalist",
-    locale: locale || "en-US",
+    locale: locale || "en",
     type: type || "year",
     month: month || 1,
     year: year || DateTime.now().year,
