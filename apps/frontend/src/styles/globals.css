@@ -105,3 +105,10 @@ body {
   box-shadow: 1px 1px 0 1px #f9f9fb, -1px 0 28px 0 rgba(34, 33, 81, 0.01),
     28px 28px 28px 0 rgba(34, 33, 81, 0.25);
 }
+
+/** Dot pattern **/
+.dot {
+  opacity: 0.8;
+  background-image: radial-gradient(#0000002d 0.5mm, #ffffff 0.5mm);
+  background-size: 7mm 7mm;
+}

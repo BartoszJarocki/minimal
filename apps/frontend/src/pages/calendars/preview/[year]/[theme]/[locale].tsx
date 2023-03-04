@@ -17,6 +17,7 @@ import { Footer } from "../../../../../components/Footer";
 import { H1 } from "../../../../../components/H1";
 import { H2 } from "../../../../../components/H2";
 import { P } from "../../../../../components/P";
+import { ScaledPreview } from "../../../../../components/ScaledPreview";
 import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
 import {
@@ -43,8 +44,12 @@ export default function CalendarPreview({
 }: Props) {
   const YearCalendar = ThemeLookup["year"][theme];
   const MonthCalendar = ThemeLookup["month"][theme];
-  const date = DateTime.now().setLocale(locale).set({ year });
   const selectedLocale = SupportedLocales.find((l) => l.code === locale)!;
+  const date = DateTime.now().set({ year }).reconfigure({
+    locale,
+    outputCalendar: selectedLocale.outputCalendar,
+    numberingSystem: selectedLocale.numberingSystem,
+  });
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}/${locale}`;
   const title = `${date.toFormat("yyyy")} ${selectedLocale.englishName} ${
     ThemeNameLookup[theme]
@@ -137,35 +142,30 @@ export default function CalendarPreview({
           <section className="mt-12 px-2">
             <H2>Yearly</H2>
 
-            <div className="mt-4 h-[280px]">
-              <div
-                className={clsx(
-                  toPrintClassName(format, variant),
-                  "origin-top-left scale-[25%] bg-white text-zinc-900 shadow-xl"
-                )}
-              >
+            <div className="mt-4">
+              <ScaledPreview format={format} variant={variant}>
                 <YearCalendar date={date} variant={variant} size={format} />
-              </div>
+              </ScaledPreview>
             </div>
           </section>
 
           <section className="mt-12 px-2">
             <H2>Monthly</H2>
 
-            <div className="mt-4 grid h-[900px] w-max origin-top-left scale-[25%] grid-cols-4 gap-8">
+            <div className="mt-4 grid h-[1000px] w-max grid-cols-4 gap-1">
               {Info.months().map((_, index) => (
-                <div
-                  key={`month-${index}`}
-                  className={clsx(
-                    toPrintClassName(format, variant),
-                    "flex-shrink-0 overflow-hidden bg-white text-zinc-900 shadow-2xl"
-                  )}
-                >
-                  <MonthCalendar
-                    date={date.set({ month: index + 1 })}
+                <div className="" key={`month-${index}`}>
+                  <ScaledPreview
+                    format={format}
                     variant={variant}
-                    size={format}
-                  />
+                    className="flex-shrink-0"
+                  >
+                    <MonthCalendar
+                      date={date.set({ month: index + 1 })}
+                      variant={variant}
+                      size={format}
+                    />
+                  </ScaledPreview>
                 </div>
               ))}
             </div>

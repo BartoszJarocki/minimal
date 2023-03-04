@@ -4,7 +4,11 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
-import { Format, FormatVariant } from "../components/calendar/Calendar";
+import {
+  Format,
+  FormatVariant,
+  SupportedLocales,
+} from "../components/calendar/Calendar";
 import {
   SimpleMilimalistYearCalendar,
   SimpleMinimalistMonthCalendar,
@@ -32,7 +36,12 @@ export default function Print() {
   const router = useRouter();
   const { theme, locale, type, month, year, format, variant } =
     parseQueryParams(router.query);
-  const date = DateTime.now().setLocale(locale).set({ month, year });
+  const selectedLocale = SupportedLocales.find((l) => l.code === locale)!;
+  const date = DateTime.now().set({ year, month }).reconfigure({
+    locale,
+    // outputCalendar: selectedLocale.outputCalendar,
+    // numberingSystem: selectedLocale.numberingSystem,
+  });
   const Calendar = ThemeLookup[type][theme];
 
   return (

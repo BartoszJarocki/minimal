@@ -68,6 +68,10 @@ const generateMonthlyCalendar = async ({
       pageRanges: "1-1",
       printBackground: true,
     });
+    await page.screenshot({
+      path: `${path}/${monthIndex}-${month}.png`,
+      fullPage: true,
+    })
 
     const landscapeUrl = buildUrl({
       theme,
@@ -121,6 +125,11 @@ const generateYearlyCalendar = async ({
     format,
     path: `${path}/calendar.pdf`,
     pageRanges: "1-1",
+  });
+
+  await page.screenshot({
+    path: `${path}/calendar.png`,
+    fullPage: true,
   });
 
   const landscapeUrl = buildUrl({

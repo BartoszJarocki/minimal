@@ -16,6 +16,7 @@ import { Container } from "../../../../../components/Container";
 import { Footer } from "../../../../../components/Footer";
 import { H1 } from "../../../../../components/H1";
 import { P } from "../../../../../components/P";
+import { ScaledPreview } from "../../../../../components/ScaledPreview";
 import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
 import { Theme, ThemeNameLookup } from "../../../../print";
@@ -63,24 +64,22 @@ export default function Preview({ theme, year, locale }: Props) {
         <main className="pb-24">
           <section className="max-w-2xl space-y-6">
             <div className="overflow-x-auto px-2">
-              <div className="flex h-[360px] gap-x-12">
-                <div className="inset-0 top-0 right-0 flex h-full origin-top-left scale-[30%] gap-x-24">
-                  <div className="paper-a4-portrait bg-white shadow-2xl">
-                    <SimpleMinimalistMonthCalendar
-                      date={date}
-                      variant="portrait"
-                      size="a4"
-                    />
-                  </div>
+              <div className="flex gap-4 py-4">
+                <ScaledPreview variant="portrait" format="a4">
+                  <SimpleMinimalistMonthCalendar
+                    date={date}
+                    variant="portrait"
+                    size="a4"
+                  />
+                </ScaledPreview>
 
-                  <div className="paper-a4-portrait bg-white shadow-2xl">
-                    <SimpleMilimalistYearCalendar
-                      date={date}
-                      variant="portrait"
-                      size="a4"
-                    />
-                  </div>
-                </div>
+                <ScaledPreview variant="portrait" format="a4">
+                  <SimpleMilimalistYearCalendar
+                    date={date}
+                    variant="portrait"
+                    size="a4"
+                  />
+                </ScaledPreview>
               </div>
             </div>
 

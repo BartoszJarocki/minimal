@@ -20,6 +20,7 @@ import { InlineButton } from "../components/InlineButton";
 import { H1 } from "../components/H1";
 import { BuyButton } from "../components/BuyButton";
 import Link from "next/link";
+import { ScaledPreview } from "../components/ScaledPreview";
 
 Settings.defaultLocale = "en-US";
 
@@ -91,7 +92,12 @@ export default function Landing() {
                     <InlineButton
                       key={locale.code}
                       onClick={() => {
-                        setDate(date.setLocale(locale.code));
+                        setDate(
+                          date.reconfigure({
+                            locale: locale.code,
+                            outputCalendar: locale.outputCalendar,
+                          })
+                        );
                       }}
                     >
                       {locale.englishName}
@@ -102,24 +108,22 @@ export default function Landing() {
                 <BuyButton />
               </div>
               <div className="mt-8 overflow-x-auto px-2">
-                <div className="flex h-[360px] gap-x-12">
-                  <div className="inset-0 top-0 right-0 flex h-full origin-top-left scale-[30%] gap-x-24">
-                    <div className="paper-a4-portrait bg-white shadow-2xl">
-                      <SimpleMinimalistMonthCalendar
-                        date={date}
-                        variant="portrait"
-                        size="a4"
-                      />
-                    </div>
+                <div className="flex gap-4 py-4">
+                  <ScaledPreview format="a4" variant="portrait">
+                    <SimpleMinimalistMonthCalendar
+                      date={date}
+                      variant="portrait"
+                      size="a4"
+                    />
+                  </ScaledPreview>
 
-                    <div className="paper-a4-portrait bg-white shadow-2xl">
-                      <SimpleMilimalistYearCalendar
-                        date={date}
-                        variant="portrait"
-                        size="a4"
-                      />
-                    </div>
-                  </div>
+                  <ScaledPreview format="a4" variant="portrait">
+                    <SimpleMilimalistYearCalendar
+                      date={date}
+                      variant="portrait"
+                      size="a4"
+                    />
+                  </ScaledPreview>
                 </div>
               </div>
             </section>
