@@ -43,7 +43,7 @@ const generateMonthlyCalendar = async ({
 }: Options) => {
   const type = "month";
   // generate all year month calendar
-  const allMonths = Info.months();
+  const allMonths = Info.months("long", { locale: locale.code });
 
   const allMonthsPdfs = allMonths.map(async (month, i) => {
     const page = await browser.newPage();
