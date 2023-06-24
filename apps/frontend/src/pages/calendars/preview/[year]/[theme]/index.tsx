@@ -9,9 +9,9 @@ import Balancer from "react-wrap-balancer";
 import { BuyButton } from "../../../../../components/BuyButton";
 import { SupportedLocales } from "../../../../../components/calendar/Calendar";
 import {
-  SimpleMilimalistYearCalendar,
-  SimpleMinimalistMonthCalendar,
-} from "../../../../../components/calendar/themes/SimpleMinimalist";
+  SimpleYearCalendar,
+  SimpleMonthCalendar,
+} from "../../../../../components/calendar/themes/Simple";
 import { Container } from "../../../../../components/Container";
 import { Footer } from "../../../../../components/Footer";
 import { H1 } from "../../../../../components/H1";
@@ -66,7 +66,7 @@ export default function Preview({ theme, year, locale }: Props) {
             <div className="overflow-x-auto px-2">
               <div className="flex gap-4 py-4">
                 <ScaledPreview variant="portrait" format="a4">
-                  <SimpleMinimalistMonthCalendar
+                  <SimpleMonthCalendar
                     date={date}
                     variant="portrait"
                     size="a4"
@@ -74,7 +74,7 @@ export default function Preview({ theme, year, locale }: Props) {
                 </ScaledPreview>
 
                 <ScaledPreview variant="portrait" format="a4">
-                  <SimpleMilimalistYearCalendar
+                  <SimpleYearCalendar
                     date={date}
                     variant="portrait"
                     size="a4"

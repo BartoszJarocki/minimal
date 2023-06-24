@@ -13,17 +13,17 @@ import {
 // Year Calendar
 // -----------------------------------------------
 
-interface SimpleMilimalistYearCalendarProps {
+interface SimpleYearCalendarProps {
   date: DateTime;
   variant: FormatVariant;
   size: Format;
 }
 
-export const SimpleMilimalistYearCalendar = ({
+export const SimpleYearCalendar = ({
   date,
   variant,
   size,
-}: SimpleMilimalistYearCalendarProps) => {
+}: SimpleYearCalendarProps) => {
   const stylesLookup = {
     a4: {
       portrait: {
@@ -126,17 +126,17 @@ export const SimpleMilimalistYearCalendar = ({
 // Month Calendar
 // -----------------------------------------------
 
-interface SimpleMilimalistMonthlyCalendarProps {
+interface SimpleMonthlyCalendarProps {
   date: DateTime;
   variant: FormatVariant;
   size: Format;
 }
 
-export const SimpleMinimalistMonthCalendar = ({
+export const SimpleMonthCalendar = ({
   date,
   variant,
   size,
-}: SimpleMilimalistMonthlyCalendarProps) => {
+}: SimpleMonthlyCalendarProps) => {
   const stylesLookup = {
     a4: {
       portrait: {
@@ -214,9 +214,6 @@ export const SimpleMinimalistMonthCalendar = ({
         dayAs={MonthCalendarDayCell}
         locale={date.locale}
       />
-      {variant === "portrait" && (
-        <div className="dot flex-1 p-2 opacity-[0.9999]" />
-      )}
     </div>
   );
 };

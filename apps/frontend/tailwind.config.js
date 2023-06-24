@@ -13,6 +13,7 @@ module.exports = {
         ...colors,
         dark: "#1f1f1f",
         light: "#e3e3e3",
+        "lemon-squeezy": "#5523e7",
       },
       fontFamily: {
         sans: ["Inter", ...fontFamily.sans],

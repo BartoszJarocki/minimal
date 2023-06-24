@@ -6,9 +6,9 @@ import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import { SupportedLocales } from "../../../../components/calendar/Calendar";
 import {
-  SimpleMinimalistMonthCalendar,
-  SimpleMilimalistYearCalendar,
-} from "../../../../components/calendar/themes/SimpleMinimalist";
+  SimpleMonthCalendar,
+  SimpleYearCalendar,
+} from "../../../../components/calendar/themes/Simple";
 import { Container } from "../../../../components/Container";
 import { Footer } from "../../../../components/Footer";
 import { H1 } from "../../../../components/H1";

@@ -10,22 +10,22 @@ import {
   SupportedLocales,
 } from "../components/calendar/Calendar";
 import {
-  SimpleMilimalistYearCalendar,
-  SimpleMinimalistMonthCalendar,
-} from "../components/calendar/themes/SimpleMinimalist";
+  SimpleYearCalendar,
+  SimpleMonthCalendar,
+} from "../components/calendar/themes/Simple";
 
 export type CalendarType = "year" | "month";
-export type Theme = "minimalist";
+export type Theme = "simple";
 export const ThemeNameLookup: Record<Theme, string> = {
-  minimalist: "Minimalist",
+  simple: "Simple",
 };
 
 export const ThemeLookup: Record<CalendarType, Record<Theme, any>> = {
   year: {
-    minimalist: SimpleMilimalistYearCalendar,
+    simple: SimpleYearCalendar,
   },
   month: {
-    minimalist: SimpleMinimalistMonthCalendar,
+    simple: SimpleMonthCalendar,
   },
 };
 
@@ -74,7 +74,7 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
   const variant = query.variant as FormatVariant | undefined;
 
   return {
-    theme: theme || "minimalist",
+    theme: theme || "simple",
     locale: locale || "en",
     type: type || "year",
     month: month || 1,

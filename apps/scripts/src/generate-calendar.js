@@ -48,8 +48,20 @@ const generateMonthlyCalendar = async ({
     const monthIndex = i + 1;
 
     const path = `${destDir}/${theme}/${year}/${locale.englishName}/month-calendar/${format}`;
-    if (!fs.existsSync(path)) {
-      fs.mkdirSync(path, { recursive: true });
+    if (!fs.existsSync(`${path}/portrait/pdf`)) {
+      fs.mkdirSync(`${path}/portrait/pdf`, { recursive: true });
+    }
+
+    if (!fs.existsSync(`${path}/portrait/png`)) {
+      fs.mkdirSync(`${path}/portrait/png`, { recursive: true });
+    }
+
+    if (!fs.existsSync(`${path}/landscape/pdf`)) {
+      fs.mkdirSync(`${path}/landscape/pdf`, { recursive: true });
+    }
+
+    if (!fs.existsSync(`${path}/landscape/png`)) {
+      fs.mkdirSync(`${path}/landscape/png`, { recursive: true });
     }
 
     const portraitUrl = buildUrl({
@@ -64,12 +76,12 @@ const generateMonthlyCalendar = async ({
     await page.goto(portraitUrl, { waitUntil: "networkidle0" });
     await page.pdf({
       format,
-      path: `${path}/${monthIndex}-${month}.pdf`,
+      path: `${path}/portrait/pdf/${monthIndex}-${month}.pdf`,
       pageRanges: "1-1",
       printBackground: true,
     });
     await page.screenshot({
-      path: `${path}/${monthIndex}-${month}.png`,
+      path: `${path}/portrait/png/${monthIndex}-${month}.png`,
       fullPage: true,
     });
 
@@ -85,10 +97,14 @@ const generateMonthlyCalendar = async ({
     await page.goto(landscapeUrl, { waitUntil: "networkidle0" });
     await page.pdf({
       format,
-      path: `${path}/${monthIndex}-${month}-landscape.pdf`,
+      path: `${path}/landscape/pdf/${monthIndex}-${month}.pdf`,
       landscape: true,
       pageRanges: "1-1",
       printBackground: true,
+    });
+    await page.screenshot({
+      path: `${path}/landscape/png/${monthIndex}-${month}.png`,
+      fullPage: true,
     });
   });
 
@@ -107,8 +123,20 @@ const generateYearlyCalendar = async ({
   const page = await browser.newPage();
 
   const path = `${destDir}/${theme}/${year}/${locale.englishName}/year-calendar/${format}`;
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path, { recursive: true });
+  if (!fs.existsSync(`${path}/portrait/pdf`)) {
+    fs.mkdirSync(`${path}/portrait/pdf`, { recursive: true });
+  }
+
+  if (!fs.existsSync(`${path}/portrait/png`)) {
+    fs.mkdirSync(`${path}/portrait/png`, { recursive: true });
+  }
+
+  if (!fs.existsSync(`${path}/landscape/pdf`)) {
+    fs.mkdirSync(`${path}/landscape/pdf`, { recursive: true });
+  }
+
+  if (!fs.existsSync(`${path}/landscape/png`)) {
+    fs.mkdirSync(`${path}/landscape/png`, { recursive: true });
   }
 
   const portraitUrl = buildUrl({
@@ -123,12 +151,11 @@ const generateYearlyCalendar = async ({
   await page.goto(portraitUrl, { waitUntil: "networkidle0" });
   await page.pdf({
     format,
-    path: `${path}/calendar.pdf`,
+    path: `${path}/portrait/pdf/calendar.pdf`,
     pageRanges: "1-1",
   });
-
   await page.screenshot({
-    path: `${path}/calendar.png`,
+    path: `${path}/portrait/png/calendar.png`,
     fullPage: true,
   });
 
@@ -144,9 +171,14 @@ const generateYearlyCalendar = async ({
   await page.goto(landscapeUrl, { waitUntil: "networkidle0" });
   await page.pdf({
     format,
-    path: `${path}/calendar-landscape.pdf`,
+    path: `${path}/landscape/pdf/calendar.pdf`,
     landscape: true,
     pageRanges: "1-1",
+  });
+
+  await page.screenshot({
+    path: `${path}/landscape/png/calendar.png`,
+    fullPage: true,
   });
 };
 
@@ -179,9 +211,9 @@ async function generateCalendarPreviews({
 
 async function generateProducts() {
   const destDir = "./generated";
-  const years = [2023];
+  const years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
   const formats = ["a4", "a5"];
-  const themes = ["minimalist"];
+  const themes = ["simple"];
   const locales = [
     {
       code: "en",
@@ -422,62 +454,51 @@ async function generateProducts() {
   const browserOptions = {
     headless: true,
   };
-  const browser = await puppeteer.launch(browserOptions);
+
   //iterate over all years, themes, locales, formats
   for (const theme of themes) {
     for (const year of years) {
+      const browser = await puppeteer.launch(browserOptions);
+
       for (const locale of locales) {
         for (const format of formats) {
           console.log(
-            `Generating ${year} ${locale.englishName} ${theme} calendar in ${format} format`
+            `Generating calendar - [${year}, ${theme}, ${locale.englishName}, ${format}]`
           );
-          await generateMonthlyCalendar({
-            browser,
-            destDir,
-            year,
-            theme,
-            locale,
-            format,
-          });
 
-          await generateYearlyCalendar({
-            browser,
-            year,
-            destDir,
-            theme,
-            locale,
-            format,
-          });
+          const calendarsPromises = [
+            generateMonthlyCalendar({
+              browser,
+              destDir,
+              year,
+              theme,
+              locale,
+              format,
+            }),
+            generateYearlyCalendar({
+              browser,
+              year,
+              destDir,
+              theme,
+              locale,
+              format,
+            }),
+          ];
+
+          await Promise.all(calendarsPromises);
 
           console.log(`Done.`);
         }
       }
-    }
-  }
 
-  // zip all themes inside of the year folder
-  for (const theme of themes) {
-    for (const year of years) {
       createZipArchive({
         folderPathToZip: `${destDir}/${theme}/${year}`,
         zippedFilePath: `${destDir}/${theme}/${year}-${theme}.zip`,
       });
+
+      await browser.close();
     }
   }
-
-  // zip all themes inside of the locale folder
-  for (const locale of locales) {
-    for (const theme of themes) {
-      for (const year of years) {
-        const folderPathToZip = `${destDir}/${theme}/${year}/${locale.englishName}`;
-        const zippedFilePath = `${destDir}/${theme}/${year}/${locale.englishName}-${theme}.zip`;
-
-        createZipArchive({ folderPathToZip, zippedFilePath });
-      }
-    }
-  }
-
-  await browser.close();
 
   // await generateCalendarPreviews({
   //   browser,

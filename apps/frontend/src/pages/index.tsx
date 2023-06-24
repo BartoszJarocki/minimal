@@ -5,9 +5,9 @@ import Balancer from "react-wrap-balancer";
 
 import { NextSeo } from "next-seo";
 import {
-  SimpleMinimalistMonthCalendar,
-  SimpleMilimalistYearCalendar,
-} from "../components/calendar/themes/SimpleMinimalist";
+  SimpleMonthCalendar,
+  SimpleYearCalendar,
+} from "../components/calendar/themes/Simple";
 import { Logo } from "../components/Logo";
 import { Footer } from "../components/Footer";
 import { Container } from "../components/Container";
@@ -62,7 +62,7 @@ export default function Landing() {
             <section className="max-w-2xl space-y-4">
               <div className="flex items-center justify-start gap-x-6 pb-12">
                 <Logo className="h-24 w-24" />
-                <span className="hidden text-4xl font-bold">Use Minimal</span>
+                <span className="hidden text-4xl font-bold">Minimal</span>
               </div>
               <H1>
                 <Balancer>{title}</Balancer>
@@ -77,7 +77,7 @@ export default function Landing() {
                     href={`/calendars/preview/${date.year}/minimalist`}
                     className="underline"
                   >
-                    Minimalist
+                    Simple
                   </Link>
                 </H2>
                 <P>
@@ -110,7 +110,7 @@ export default function Landing() {
               <div className="mt-8 overflow-x-auto px-2">
                 <div className="flex gap-4 py-4">
                   <ScaledPreview format="a4" variant="portrait">
-                    <SimpleMinimalistMonthCalendar
+                    <SimpleMonthCalendar
                       date={date}
                       variant="portrait"
                       size="a4"
@@ -118,7 +118,7 @@ export default function Landing() {
                   </ScaledPreview>
 
                   <ScaledPreview format="a4" variant="portrait">
-                    <SimpleMilimalistYearCalendar
+                    <SimpleYearCalendar
                       date={date}
                       variant="portrait"
                       size="a4"
