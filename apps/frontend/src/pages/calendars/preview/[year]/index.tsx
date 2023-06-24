@@ -4,18 +4,13 @@ import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
-import { SupportedLocales } from "../../../../components/calendar/Calendar";
-import {
-  SimpleMonthCalendar,
-  SimpleYearCalendar,
-} from "../../../../components/calendar/themes/Simple";
 import { Container } from "../../../../components/Container";
 import { Footer } from "../../../../components/Footer";
 import { H1 } from "../../../../components/H1";
 import { P } from "../../../../components/P";
 import { SSR_CACHE_CONFIG } from "../../../../lib/config";
-import { joinComponents } from "../../../../lib/utils";
 import { ThemeNameLookup } from "../../../print";
+import { SupportedLocales } from "@minimal/config";
 
 interface Props {
   year: number;

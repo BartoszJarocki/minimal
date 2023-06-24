@@ -1,5 +1,4 @@
 import { NextSeo } from "next-seo";
-import { SupportedLocales } from "../components/calendar/Calendar";
 import { Container } from "../components/Container";
 import { H1 } from "../components/H1";
 

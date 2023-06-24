@@ -1,10 +1,8 @@
 import { NextApiHandler } from "next";
-import {
-  SupportedYears,
-  SupportedLocales,
-} from "../../components/calendar/Calendar";
+import { SupportedYears } from "../../components/calendar/Calendar";
 import { SSR_CACHE_CONFIG } from "../../lib/config";
 import { ThemeNameLookup } from "../print";
+import { SupportedLocales } from "@minimal/config";
 
 interface SiteMapPage {
   href: string;

@@ -10,7 +10,6 @@ import { BuyButton } from "../../../../../components/BuyButton";
 import {
   Format,
   FormatVariant,
-  SupportedLocales,
 } from "../../../../../components/calendar/Calendar";
 import { Container } from "../../../../../components/Container";
 import { Footer } from "../../../../../components/Footer";
@@ -20,12 +19,8 @@ import { P } from "../../../../../components/P";
 import { ScaledPreview } from "../../../../../components/ScaledPreview";
 import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
-import {
-  Theme,
-  ThemeLookup,
-  ThemeNameLookup,
-  toPrintClassName,
-} from "../../../../print";
+import { Theme, ThemeLookup, ThemeNameLookup } from "../../../../print";
+import { SupportedLocales } from "@minimal/config";
 
 interface Props {
   locale: string;
@@ -203,7 +198,7 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
 
   return {
     locale: locale || "en",
-    theme: theme || "minimalist",
+    theme: theme || "simple",
     year: year || DateTime.now().year,
     format: format || "a4",
     variant: variant || "portrait",

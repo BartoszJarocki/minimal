@@ -7,7 +7,6 @@ import { ParsedUrlQuery } from "querystring";
 import React from "react";
 import Balancer from "react-wrap-balancer";
 import { BuyButton } from "../../../../../components/BuyButton";
-import { SupportedLocales } from "../../../../../components/calendar/Calendar";
 import {
   SimpleYearCalendar,
   SimpleMonthCalendar,
@@ -20,6 +19,7 @@ import { ScaledPreview } from "../../../../../components/ScaledPreview";
 import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
 import { Theme, ThemeNameLookup } from "../../../../print";
+import { SupportedLocales } from "@minimal/config";
 
 interface Props {
   theme: Theme;
@@ -190,6 +190,6 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
 
   return {
     year: year || DateTime.now().year,
-    theme: theme || "minimalist",
+    theme: theme || "simple",
   };
 };

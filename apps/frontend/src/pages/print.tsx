@@ -7,12 +7,12 @@ import React from "react";
 import {
   Format,
   FormatVariant,
-  SupportedLocales,
 } from "../components/calendar/Calendar";
 import {
   SimpleYearCalendar,
   SimpleMonthCalendar,
 } from "../components/calendar/themes/Simple";
+import { SupportedLocales } from "@minimal/config";
 
 export type CalendarType = "year" | "month";
 export type Theme = "simple";

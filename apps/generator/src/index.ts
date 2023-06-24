@@ -1,25 +1,10 @@
-const puppeteer = require("puppeteer");
-const luxon = require("luxon");
-const fs = require("fs");
-const AdmZip = require("adm-zip");
+import puppeteer from "puppeteer";
+import { Info } from "luxon";
+import fs from "fs";
+import AdmZip from "adm-zip";
+import { SupportedLocales } from "@minimal/config";
 
-const debugURL = async (url) => {
-  const page = await browser.newPage();
-  await page.goto(url, { waitUntil: "networkidle0" });
-
-  await page.pdf({
-    format: "A4",
-    path: `calendar-landscape.pdf`,
-    landscape: true,
-    pageRanges: "1-1",
-  });
-
-  await page.evaluate(() => {
-    debugger;
-  });
-};
-
-const createZipArchive = ({ folderPathToZip, zippedFilePath }) => {
+const createZipArchive = ({ folderPathToZip, zippedFilePath }: any) => {
   const zip = new AdmZip();
   zip.addLocalFolder(folderPathToZip);
   zip.writeZip(zippedFilePath);
@@ -27,7 +12,15 @@ const createZipArchive = ({ folderPathToZip, zippedFilePath }) => {
 };
 
 // Example URL: /print?theme=simple-minimalist&locale=en-US&type=year&month=1&year=2021&format=a4&variant=portrait
-const buildUrl = ({ theme, locale, type, year, month, format, variant }) => {
+const buildUrl = ({
+  theme,
+  locale,
+  type,
+  year,
+  month,
+  format,
+  variant,
+}: any) => {
   return `http://localhost:3000/print?theme=${theme}&locale=${locale.code}&type=${type}&year=${year}&month=${month}&format=${format}&variant=${variant}`;
 };
 
@@ -38,10 +31,10 @@ const generateMonthlyCalendar = async ({
   theme,
   locale,
   format,
-}) => {
+}: any) => {
   const type = "month";
   // generate all year month calendar
-  const allMonths = luxon.Info.months();
+  const allMonths = Info.months();
 
   const allMonthsPdfs = allMonths.map(async (month, i) => {
     const page = await browser.newPage();
@@ -118,7 +111,7 @@ const generateYearlyCalendar = async ({
   theme,
   locale,
   format,
-}) => {
+}: any) => {
   const type = "year";
   const page = await browser.newPage();
 
@@ -188,7 +181,7 @@ async function generateCalendarPreviews({
   destDir,
   themes,
   locales,
-}) {
+}: any) {
   const page = await browser.newPage();
 
   for (const theme of themes) {
@@ -214,242 +207,6 @@ async function generateProducts() {
   const years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
   const formats = ["a4", "a5"];
   const themes = ["simple"];
-  const locales = [
-    {
-      code: "en",
-      name: "English",
-      englishName: "English",
-      emoji: "🇺🇸",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "fr",
-      name: "Français",
-      englishName: "French",
-      emoji: "🇫🇷",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "de",
-      name: "Deutsch",
-      englishName: "German",
-      emoji: "🇩🇪",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "es",
-      name: "Español",
-      englishName: "Spanish",
-      emoji: "🇪🇸",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "it",
-      name: "Italiano",
-      englishName: "Italian",
-      emoji: "🇮🇹",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "pt",
-      name: "Português",
-      englishName: "Portuguese",
-      emoji: "🇵🇹",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "pl",
-      name: "Polski",
-      englishName: "Polish",
-      emoji: "🇵🇱",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "lv",
-      name: "Latviešu",
-      englishName: "Latvian",
-      emoji: "🇱🇻",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "nn",
-      name: "Norsk",
-      englishName: "Norwegian",
-      emoji: "🇳🇴",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "cs",
-      name: "Čeština",
-      englishName: "Czech",
-      emoji: "🇨🇿",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "uk",
-      name: "Українська",
-      englishName: "Ukrainian",
-      emoji: "🇺🇦",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "hr",
-      name: "Hrvatski",
-      englishName: "Croatian",
-      emoji: "🇭🇷",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "sk",
-      name: "Slovenčina",
-      englishName: "Slovak",
-      emoji: "🇸🇰",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "sl",
-      name: "Slovenščina",
-      englishName: "Slovenian",
-      emoji: "🇸🇮",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "th",
-      name: "ไทย",
-      englishName: "Thai",
-      emoji: "🇹🇭",
-      outputCalendar: "buddhist",
-      numberingSystem: "thai",
-    },
-    {
-      code: "da",
-      name: "Dansk",
-      englishName: "Danish",
-      emoji: "🇩🇰",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "nl",
-      name: "Nederlands",
-      englishName: "Dutch",
-      emoji: "🇳🇱",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "fi",
-      name: "Suomi",
-      englishName: "Finnish",
-      emoji: "🇫🇮",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "is",
-      name: "Íslenska",
-      englishName: "Icelandic",
-      emoji: "🇮🇸",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "hu",
-      name: "Magyar",
-      englishName: "Hungarian",
-      emoji: "🇭🇺",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "ro",
-      name: "Română",
-      englishName: "Romanian",
-      emoji: "🇷🇴",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "sv",
-      name: "Svenska",
-      englishName: "Swedish",
-      emoji: "🇸🇪",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "tr",
-      name: "Türkçe",
-      englishName: "Turkish",
-      emoji: "🇹🇷",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "ru",
-      name: "Русский",
-      englishName: "Russian",
-      emoji: "🇷🇺",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "ko",
-      name: "한국어",
-      englishName: "Korean",
-      emoji: "🇰🇷",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "hi",
-      name: "हिन्दी",
-      englishName: "Hindi",
-      emoji: "🇮🇳",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "el",
-      name: "Ελληνικά",
-      englishName: "Greek",
-      emoji: "🇬🇷",
-      outputCalendar: "gregory",
-      numberingSystem: "latn",
-    },
-    {
-      code: "ar",
-      name: "العربية",
-      englishName: "Arabic",
-      emoji: "🇸🇦",
-      outputCalendar: "islamic",
-      numberingSystem: "arab",
-    },
-    {
-      code: "he",
-      name: "עברית",
-      englishName: "Hebrew",
-      emoji: "🇮🇱",
-      outputCalendar: "hebrew",
-      numberingSystem: "latn",
-    },
-    // countries below have wierd month short names, need different layout
-    // { code: "lt", name: "Lietuvių", englishName: "Lithuanian", emoji: "🇱🇹" },
-  ];
 
   const browserOptions = {
     headless: true,
@@ -460,7 +217,7 @@ async function generateProducts() {
     for (const year of years) {
       const browser = await puppeteer.launch(browserOptions);
 
-      for (const locale of locales) {
+      for (const locale of SupportedLocales) {
         for (const format of formats) {
           console.log(
             `Generating calendar - [${year}, ${theme}, ${locale.englishName}, ${format}]`

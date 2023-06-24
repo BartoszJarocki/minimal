@@ -32,7 +32,7 @@ export const BuyButton = () => {
 
   return (
     <a
-      className="lemonsqueezy-button inline-flex items-center justify-center rounded bg-black py-2 pl-4 pr-2 text-sm font-medium text-white hover:bg-black/80"
+      className="lemonsqueezy-button inline-flex items-center justify-center rounded bg-black py-3 pl-6 pr-4 text-sm font-medium text-white hover:bg-black/80 w-fit"
       href="https://minimalist.lemonsqueezy.com/checkout/"
     >
       <span>Download for free</span>

@@ -1,6 +1,5 @@
 import { DateTime, Settings } from "luxon";
 import React, { useState } from "react";
-import Script from "next/script";
 import Balancer from "react-wrap-balancer";
 
 import { NextSeo } from "next-seo";
@@ -12,7 +11,6 @@ import { Logo } from "../components/Logo";
 import { Footer } from "../components/Footer";
 import { Container } from "../components/Container";
 import { joinComponents } from "../lib/utils";
-import { SupportedLocales } from "../components/calendar/Calendar";
 
 import { P } from "../components/P";
 import { H2 } from "../components/H2";
@@ -21,6 +19,7 @@ import { H1 } from "../components/H1";
 import { BuyButton } from "../components/BuyButton";
 import Link from "next/link";
 import { ScaledPreview } from "../components/ScaledPreview";
+import { SupportedLocales } from "@minimal/config";
 
 Settings.defaultLocale = "en-US";
 
@@ -71,7 +70,7 @@ export default function Landing() {
             </section>
 
             <section className="max-w-3xl py-12 md:py-24">
-              <div className="space-y-4">
+              <div className="flex flex-col gap-y-4">
                 <H2>
                   <Link
                     href={`/calendars/preview/${date.year}/minimalist`}
