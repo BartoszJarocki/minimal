@@ -2,7 +2,7 @@ import puppeteer, { Browser, PaperFormat } from "puppeteer";
 import { Info } from "luxon";
 import fs from "fs";
 import AdmZip from "adm-zip";
-import { SupportedLocale, SupportedLocales } from "@minimal/config";
+import { SupportedLocale, SupportedLocales, Theme } from "@minimal/config";
 
 const createZipArchive = ({ folderPathToZip, zippedFilePath }: any) => {
   const zip = new AdmZip();
@@ -188,7 +188,7 @@ async function generateProducts() {
   const destDir = "./generated";
   const years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
   const formats: PaperFormat[] = ["a4", "a5"];
-  const themes = ["simple"];
+  const themes: Theme[] = ["simple"];
 
   //iterate over all years, themes, locales, formats
   for (const theme of themes) {
