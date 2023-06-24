@@ -212,7 +212,7 @@ export const SimpleMonthCalendar = ({
         date={date}
         weekNames={"short"}
         dayAs={MonthCalendarDayCell}
-        locale={date.locale}
+        locale={date.locale!}
       />
     </div>
   );

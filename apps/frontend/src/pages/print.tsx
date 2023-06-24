@@ -12,10 +12,10 @@ import {
   SimpleYearCalendar,
   SimpleMonthCalendar,
 } from "../components/calendar/themes/Simple";
-import { SupportedLocales } from "@minimal/config";
+import { SupportedLocales, Theme } from "@minimal/config";
 
 export type CalendarType = "year" | "month";
-export type Theme = "simple";
+
 export const ThemeNameLookup: Record<Theme, string> = {
   simple: "Simple",
 };

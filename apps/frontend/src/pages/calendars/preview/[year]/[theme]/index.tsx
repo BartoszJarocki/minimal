@@ -18,8 +18,8 @@ import { P } from "../../../../../components/P";
 import { ScaledPreview } from "../../../../../components/ScaledPreview";
 import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
-import { Theme, ThemeNameLookup } from "../../../../print";
-import { SupportedLocales } from "@minimal/config";
+import { ThemeNameLookup } from "../../../../print";
+import { SupportedLocales, Theme } from "@minimal/config";
 
 interface Props {
   theme: Theme;

@@ -50,7 +50,7 @@ export const MonthCalendar = ({
   dayAs = DayCell,
   date,
   weekNames,
-  locale = date.locale,
+  locale = date.locale!,
 }: MonthCalendarProps) => {
   const RootComponent = as;
   const CellComponent = dayAs;
@@ -75,7 +75,7 @@ export const MonthCalendar = ({
 
   // create a table with all the days of the month
   let daysInMonth: JSX.Element[] = [];
-  for (let day = 1; day <= date.daysInMonth; day++) {
+  for (let day = 1; day <= date.daysInMonth!; day++) {
     daysInMonth.push(
       <CellComponent key={`locale:${locale}-month:${date.month}-day:${day}`}>
         {date.set({ day }).day}
@@ -133,9 +133,9 @@ export const YearCalendar = ({
   const Footer = footerAs;
   const MonthHeader = monthHeaderAs;
   const months = Info.months("long", {
-    locale: date.locale,
-    outputCalendar: date.outputCalendar,
-    numberingSystem: date.numberingSystem,
+    locale: date.locale!,
+    outputCalendar: date.outputCalendar!,
+    numberingSystem: date.numberingSystem!,
   });
 
   return (

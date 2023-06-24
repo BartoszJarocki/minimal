@@ -19,8 +19,8 @@ import { P } from "../../../../../components/P";
 import { ScaledPreview } from "../../../../../components/ScaledPreview";
 import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
-import { Theme, ThemeLookup, ThemeNameLookup } from "../../../../print";
-import { SupportedLocales } from "@minimal/config";
+import { ThemeLookup, ThemeNameLookup } from "../../../../print";
+import { SupportedLocales, Theme } from "@minimal/config";
 
 interface Props {
   locale: string;

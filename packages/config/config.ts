@@ -7,6 +7,8 @@ export type SupportedLocale = {
   numberingSystem: string;
 };
 
+export type Theme = "simple";
+
 export const SupportedLocales: SupportedLocale[] = [
   {
     code: "en",

@@ -187,17 +187,15 @@ const generateYearlyCalendar = async ({
 async function generateProducts() {
   const destDir = "./generated";
   const years = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
-  const formats = ["a4", "a5"];
+  const formats: PaperFormat[] = ["a4", "a5"];
   const themes = ["simple"];
-
-  const browserOptions = {
-    headless: true,
-  };
 
   //iterate over all years, themes, locales, formats
   for (const theme of themes) {
     for (const year of years) {
-      const browser = await puppeteer.launch(browserOptions);
+      const browser = await puppeteer.launch({
+        headless: true,
+      });
 
       for (const locale of SupportedLocales) {
         for (const format of formats) {
