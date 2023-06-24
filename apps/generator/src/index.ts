@@ -1,8 +1,8 @@
-import puppeteer from "puppeteer";
+import puppeteer, { Browser, PaperFormat } from "puppeteer";
 import { Info } from "luxon";
 import fs from "fs";
 import AdmZip from "adm-zip";
-import { SupportedLocales } from "@minimal/config";
+import { SupportedLocale, SupportedLocales } from "@minimal/config";
 
 const createZipArchive = ({ folderPathToZip, zippedFilePath }: any) => {
   const zip = new AdmZip();
@@ -24,6 +24,15 @@ const buildUrl = ({
   return `http://localhost:3000/print?theme=${theme}&locale=${locale.code}&type=${type}&year=${year}&month=${month}&format=${format}&variant=${variant}`;
 };
 
+type Options = {
+  browser: Browser;
+  year: number;
+  destDir: string;
+  theme: string;
+  locale: SupportedLocale;
+  format: PaperFormat;
+};
+
 const generateMonthlyCalendar = async ({
   browser,
   year,
@@ -31,7 +40,7 @@ const generateMonthlyCalendar = async ({
   theme,
   locale,
   format,
-}: any) => {
+}: Options) => {
   const type = "month";
   // generate all year month calendar
   const allMonths = Info.months();
@@ -111,7 +120,7 @@ const generateYearlyCalendar = async ({
   theme,
   locale,
   format,
-}: any) => {
+}: Options) => {
   const type = "year";
   const page = await browser.newPage();
 
@@ -174,33 +183,6 @@ const generateYearlyCalendar = async ({
     fullPage: true,
   });
 };
-
-async function generateCalendarPreviews({
-  browser,
-  year,
-  destDir,
-  themes,
-  locales,
-}: any) {
-  const page = await browser.newPage();
-
-  for (const theme of themes) {
-    for (const locale of locales) {
-      const path = `${destDir}/previews/${year}/${theme}/${locale.englishName}`;
-      if (!fs.existsSync(path)) {
-        fs.mkdirSync(path, { recursive: true });
-      }
-
-      const url = `http://localhost:3000/calendars/preview/${year}/${theme}/${locale.code}`;
-
-      await page.goto(url, { waitUntil: "networkidle0" });
-      await page.screenshot({
-        path: `${path}/preview.png`,
-        fullPage: true,
-      });
-    }
-  }
-}
 
 async function generateProducts() {
   const destDir = "./generated";
