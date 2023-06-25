@@ -17,7 +17,6 @@ const navigation = {
   legal: [
     { name: "Terms Of Service", href: "/terms" },
     { name: "Etsy Store", href: "https://useminimal.etsy.com" },
-    { name: "Gumroad Store", href: "https://useminimal.gumroad.com" },
   ],
   social: [
     {
@@ -176,7 +175,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-16 border-t border-b border-gray-900/10 py-8">
+        <div className="mt-16 border-b border-t border-gray-900/10 py-8">
           <p className="text-xs leading-5 text-gray-500">
             &copy; {new Date().getFullYear()} Use Minimal. All rights reserved.
           </p>
