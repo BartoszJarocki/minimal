@@ -27,8 +27,8 @@ export default function Landing() {
   const [date, setDate] = useState(DateTime.now());
 
   const url = "https://useminimal.com";
-  const title = `Minimalist Calendars, Habit Trackers and Planners`;
-  const description = `Collection of beautiful, self print ready minimalist calendars, habit trackers and planners. Available in ${SupportedLocales.length} languages.`;
+  const title = `Minimalist printable calendars, habit trackers and planners`;
+  const description = `Collection of beautiful, minimalist printable calendars, habit trackers and planners. Available in ${SupportedLocales.length} languages.`;
 
   return (
     <>
