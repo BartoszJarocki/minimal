@@ -243,22 +243,6 @@ export const SupportedLocales: SupportedLocale[] = [
     numberingSystem: "latn",
   },
   {
-    code: "ar",
-    name: "العربية",
-    englishName: "Arabic",
-    emoji: "🇸🇦",
-    outputCalendar: "islamic",
-    numberingSystem: "arab",
-  },
-  {
-    code: "he",
-    name: "עברית",
-    englishName: "Hebrew",
-    emoji: "🇮🇱",
-    outputCalendar: "hebrew",
-    numberingSystem: "latn",
-  },
-  {
     code: "ja",
     name: "日本語",
     englishName: "Japanese",
