@@ -71,14 +71,13 @@ export default function Landing() {
 
             <section className="max-w-3xl py-12 md:py-24">
               <div className="flex flex-col gap-y-4">
-                <H2>
-                  <Link
-                    href={`/calendars/preview/${date.year}/minimalist`}
-                    className="underline"
-                  >
-                    Simple
-                  </Link>
-                </H2>
+                <Link
+                  href={`/calendars/preview/${date.year}/simple`}
+                  className="underline"
+                >
+                  <H2>Simple printable calendar 2023</H2>
+                </Link>
+
                 <P>
                   Yearly and monthly, self print ready minimalist calendar
                   available in A4 and A5 formats in both portrait and landscape.

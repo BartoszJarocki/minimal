@@ -19,7 +19,7 @@ interface Props {
 export default function Preview({ year }: Props) {
   const date = DateTime.now().set({ year });
   const url = `https://useminimal.com/calendars/preview/${year}`;
-  const title = `${date.toFormat("yyyy")} printable calendar PDF`;
+  const title = `Printable calendars ${date.toFormat("yyyy")} `;
   const description = `Beautiful, printable calendars for ${date.toFormat(
     "yyyy"
   )}. Available in ${SupportedLocales.length} languages.`;

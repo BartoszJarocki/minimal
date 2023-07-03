@@ -46,9 +46,9 @@ export default function CalendarPreview({
     numberingSystem: selectedLocale.numberingSystem,
   });
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}/${locale}`;
-  const title = `${date.toFormat("yyyy")} ${selectedLocale.englishName} ${
-    ThemeNameLookup[theme]
-  } printable calendar PDF`;
+  const title = `${ThemeNameLookup[theme]} ${
+    selectedLocale.englishName
+  }  printable calendar ${date.toFormat("yyyy")}`;
   const description = `Beautiful, ${selectedLocale.englishName} ${ThemeNameLookup[theme]} printable calendar. Available in ${SupportedLocales.length} languages.`;
 
   return (
@@ -58,7 +58,7 @@ export default function CalendarPreview({
         description={description}
         canonical={url}
         openGraph={{
-          siteName: "Use Minimal",
+          siteName: "Minimal",
           title,
           description,
           url,
@@ -83,12 +83,12 @@ export default function CalendarPreview({
             </H1>
 
             <P>
-              Introducing the ultimate {date.toFormat("yyyy")}{" "}
-              {selectedLocale.englishName} {ThemeNameLookup[theme]} calendar -
-              the perfect solution for organizing your daily schedule and
-              keeping track of important dates. With a sleek and stylish design,
-              this calendar will add a touch of sophistication to any office or
-              home space.
+              Introducing the ultimate {selectedLocale.englishName}{" "}
+              {ThemeNameLookup[theme]} printable calendar{" "}
+              {date.toFormat("yyyy")}- the perfect solution for organizing your
+              daily schedule and keeping track of important dates. With a sleek
+              and stylish design, this calendar will add a touch of
+              sophistication to any office or home space.
               <br />
               <br />
               This {date.toFormat("yyyy")} {selectedLocale.englishName}{" "}

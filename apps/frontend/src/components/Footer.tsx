@@ -190,7 +190,7 @@ export const Footer = () => {
               className=" underline"
               href={`/calendars/preview/${year}`}
             >
-              {year} Calendar PDF
+              {year} printable calendar PDF
             </Link>
           )).reduce(joinComponents, [])}
         </section>

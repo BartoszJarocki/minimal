@@ -30,9 +30,9 @@ interface Props {
 export default function Preview({ theme, year, locale }: Props) {
   const date = DateTime.now().set({ year }).setLocale(locale);
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}`;
-  const title = `${date.toFormat("yyyy")} ${
-    ThemeNameLookup[theme]
-  } printable calendar PDF`;
+  const title = `${ThemeNameLookup[theme]} printable calendar ${date.toFormat(
+    "yyyy"
+  )}`;
   const description = `Beautiful, ${ThemeNameLookup[theme]} printable calendar. Available in ${SupportedLocales.length} languages.`;
 
   return (
@@ -150,8 +150,8 @@ export default function Preview({ theme, year, locale }: Props) {
                     <div className="flex flex-1 items-center">
                       <div className="mx-2">{locale.emoji}</div>
                       <h3 className="text-sm font-medium text-gray-900">
-                        {date.toFormat("yyyy")} {ThemeNameLookup[theme]}{" "}
-                        {locale.englishName} Calendar PDF
+                        {ThemeNameLookup[theme]} {locale.englishName} printable
+                        calendar {date.toFormat("yyyy")} (PDF)
                       </h3>
                       <div className="ml-auto">
                         <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
