@@ -79,9 +79,8 @@ export default function Landing() {
                 </Link>
 
                 <P>
-                  Yearly and monthly, self print ready minimalist calendar
-                  available in A4 and A5 formats in both portrait and landscape.
-                  PDF.
+                  Yearly and monthly, simple 2023 printable calendar available
+                  in A4 and A5 formats in both portrait and landscape.
                 </P>
 
                 <P className="max-w-2xl text-sm">
