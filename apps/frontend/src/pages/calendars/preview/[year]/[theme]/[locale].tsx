@@ -21,6 +21,7 @@ import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
 import { ThemeLookup, ThemeNameLookup } from "../../../../print";
 import { SupportedLocales, Theme } from "@minimal/config";
+import { BUY_URLS } from "../../../..";
 
 interface Props {
   locale: string;
@@ -131,7 +132,7 @@ export default function CalendarPreview({
               portrait and landscape orientations)
             </P>
 
-            <BuyButton />
+            <BuyButton link={BUY_URLS[date.year]} />
           </section>
 
           <section className="mt-12 px-2">

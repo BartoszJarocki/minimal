@@ -20,6 +20,7 @@ import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
 import { ThemeNameLookup } from "../../../../print";
 import { SupportedLocales, Theme } from "@minimal/config";
+import { BUY_URLS } from "../../../..";
 
 interface Props {
   theme: Theme;
@@ -133,7 +134,7 @@ export default function Preview({ theme, year, locale }: Props) {
               portrait and landscape orientations)
             </P>
 
-            <BuyButton />
+            <BuyButton link={BUY_URLS[date.year]} />
           </section>
 
           <section className="mt-8 max-w-2xl px-1">

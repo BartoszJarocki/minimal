@@ -29,78 +29,19 @@ export const getDescription = (year: number) => {
   return `Yearly and monthly, simple ${year} printable calendar available in A4 and A5 formats in both portrait and landscape.`;
 };
 
+export const BUY_URLS: Record<number, string> = {
+  2024: "https://minimalist.lemonsqueezy.com/checkout/buy/380158ed-407b-4eba-9e81-338aec2c10a2?embed=1",
+  2023: "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+};
+
 export const AVAILABLE_CALENDARS = [
-  {
-    theme: "simple",
-    year: 2030,
-    title: getTitle(2030),
-    description: getDescription(2030),
-    isVisible: false,
-    buyLink:
-      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
-  },
-  {
-    theme: "simple",
-    year: 2029,
-    title: getTitle(2029),
-    description: getDescription(2029),
-    isVisible: false,
-    buyLink:
-      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
-  },
-  {
-    theme: "simple",
-    year: 2029,
-    title: getTitle(2029),
-    description: getDescription(2029),
-    isVisible: false,
-    buyLink:
-      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
-  },
-  {
-    theme: "simple",
-    year: 2028,
-    title: getTitle(2028),
-    description: getDescription(2028),
-    isVisible: false,
-    buyLink:
-      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
-  },
-  {
-    theme: "simple",
-    year: 2027,
-    title: getTitle(2027),
-    isVisible: false,
-    description: getDescription(2027),
-    buyLink:
-      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
-  },
-  {
-    theme: "simple",
-    year: 2026,
-    title: getTitle(2026),
-    description: getDescription(2026),
-    isVisible: false,
-    buyLink:
-      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
-  },
-  {
-    theme: "simple",
-    year: 2025,
-    title: getTitle(2025),
-    description: getDescription(2025),
-    isVisible: false,
-    buyLink:
-      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
-  },
   {
     theme: "simple",
     year: 2024,
     title: getTitle(2024),
     description: getDescription(2024),
     isVisible: true,
-    buyLink:
-      "https://minimalist.lemonsqueezy.com/checkout/buy/380158ed-407b-4eba-9e81-338aec2c10a2?embed=1",
+    buyLink: BUY_URLS[2024],
   },
   {
     theme: "simple",
@@ -108,8 +49,7 @@ export const AVAILABLE_CALENDARS = [
     title: getTitle(2023),
     description: getDescription(2023),
     isVisible: true,
-    buyLink:
-      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+    buyLink: BUY_URLS[2023],
   },
 ];
 
