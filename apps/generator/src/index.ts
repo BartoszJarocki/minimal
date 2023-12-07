@@ -186,7 +186,7 @@ const generateYearlyCalendar = async ({
 
 async function generateProducts() {
   const destDir = "./generated";
-  const years = [2023];
+  const years = [2024];
   const formats: PaperFormat[] = ["a4", "a5"];
   const themes: Theme[] = ["simple"];
 

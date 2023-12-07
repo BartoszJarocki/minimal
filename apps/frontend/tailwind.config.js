@@ -14,9 +14,21 @@ module.exports = {
         dark: "#1f1f1f",
         light: "#e3e3e3",
         "lemon-squeezy": "#5523e7",
+        "gradient-start": "#34568B",
+        "gradient-end": "#FF6D7F",
       },
       fontFamily: {
-        sans: ["Inter", ...fontFamily.sans],
+        sans: ["var(--font-inter)"],
+      },
+      keyframes: {
+        gradient: {
+          "0%": { "background-position": "0% 50%" },
+          "50%": { "background-position": "100% 50%" },
+          "100%": { "background-position": "0% 50%" },
+        },
+      },
+      animation: {
+        gradient: "gradient 2s ease infinite",
       },
     },
   },

@@ -24,7 +24,7 @@ const LemonSqueezyLogo = (props: LemonSqueezyLogoProps) => {
   );
 };
 
-export const BuyButton = () => {
+export const BuyButton = ({ link }: { link: string }) => {
   useEffect(() => {
     // @ts-ignore
     window.createLemonSqueezy();
@@ -33,9 +33,9 @@ export const BuyButton = () => {
   return (
     <a
       className="lemonsqueezy-button inline-flex w-fit items-center justify-center rounded bg-black py-3 pl-6 pr-4 text-sm font-medium text-white hover:bg-black/80"
-      href="https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1"
+      href={link}
     >
-      <span>Download for free</span>
+      <span className="text-base font-semibold">Download for free</span>
       <LemonSqueezyLogo className="ml-4 h-4 w-auto" />
     </a>
   );

@@ -21,6 +21,98 @@ import Link from "next/link";
 import { ScaledPreview } from "../components/ScaledPreview";
 import { SupportedLocales } from "@minimal/config";
 
+export const getTitle = (year: number) => {
+  return `${year} Simple printable calendar`;
+};
+
+export const getDescription = (year: number) => {
+  return `Yearly and monthly, simple ${year} printable calendar available in A4 and A5 formats in both portrait and landscape.`;
+};
+
+export const AVAILABLE_CALENDARS = [
+  {
+    theme: "simple",
+    year: 2030,
+    title: getTitle(2030),
+    description: getDescription(2030),
+    isVisible: false,
+    buyLink:
+      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+  },
+  {
+    theme: "simple",
+    year: 2029,
+    title: getTitle(2029),
+    description: getDescription(2029),
+    isVisible: false,
+    buyLink:
+      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+  },
+  {
+    theme: "simple",
+    year: 2029,
+    title: getTitle(2029),
+    description: getDescription(2029),
+    isVisible: false,
+    buyLink:
+      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+  },
+  {
+    theme: "simple",
+    year: 2028,
+    title: getTitle(2028),
+    description: getDescription(2028),
+    isVisible: false,
+    buyLink:
+      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+  },
+  {
+    theme: "simple",
+    year: 2027,
+    title: getTitle(2027),
+    isVisible: false,
+    description: getDescription(2027),
+    buyLink:
+      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+  },
+  {
+    theme: "simple",
+    year: 2026,
+    title: getTitle(2026),
+    description: getDescription(2026),
+    isVisible: false,
+    buyLink:
+      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+  },
+  {
+    theme: "simple",
+    year: 2025,
+    title: getTitle(2025),
+    description: getDescription(2025),
+    isVisible: false,
+    buyLink:
+      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+  },
+  {
+    theme: "simple",
+    year: 2024,
+    title: getTitle(2024),
+    description: getDescription(2024),
+    isVisible: true,
+    buyLink:
+      "https://minimalist.lemonsqueezy.com/checkout/buy/380158ed-407b-4eba-9e81-338aec2c10a2?embed=1",
+  },
+  {
+    theme: "simple",
+    year: 2023,
+    title: getTitle(2023),
+    description: getDescription(2023),
+    isVisible: true,
+    buyLink:
+      "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
+  },
+];
+
 Settings.defaultLocale = "en-US";
 
 export default function Landing() {
@@ -69,61 +161,70 @@ export default function Landing() {
               <P className="text-2xl">{description}</P>
             </section>
 
-            <section className="max-w-3xl py-12 md:py-24">
-              <div className="flex flex-col gap-y-4">
-                <Link
-                  href={`/calendars/preview/${date.year}/simple`}
-                  className="underline"
+            {AVAILABLE_CALENDARS.filter((cal) => cal.isVisible).map(
+              (calendar) => (
+                <section
+                  className="max-w-3xl py-6 md:py-24"
+                  key={calendar.title}
                 >
-                  <H2>Simple printable calendar 2023</H2>
-                </Link>
-
-                <P>
-                  Yearly and monthly, simple 2023 printable calendar available
-                  in A4 and A5 formats in both portrait and landscape.
-                </P>
-
-                <P className="max-w-2xl text-sm">
-                  Available languages:{" "}
-                  {SupportedLocales.map((locale) => (
-                    <InlineButton
-                      key={locale.code}
-                      onClick={() => {
-                        setDate(
-                          date.reconfigure({
-                            locale: locale.code,
-                            outputCalendar: locale.outputCalendar,
-                          })
-                        );
-                      }}
+                  <div className="flex flex-col gap-y-4">
+                    <Link
+                      href={`/calendars/preview/${calendar.year}/${calendar.theme}`}
+                      className="underline"
                     >
-                      {locale.englishName}
-                    </InlineButton>
-                  )).reduce(joinComponents, [])}
-                </P>
+                      <H2>Simple printable calendar {calendar.year}</H2>
+                    </Link>
 
-                <BuyButton />
-              </div>
-              <div className="mt-8 overflow-x-auto px-2">
-                <div className="flex gap-4 py-4">
-                  <ScaledPreview format="a4" variant="portrait">
-                    <SimpleMonthCalendar
-                      date={date}
-                      variant="portrait"
-                      size="a4"
-                    />
-                  </ScaledPreview>
+                    <P>
+                      Yearly and monthly, simple {calendar.year} printable
+                      calendar available in A4 and A5 formats in both portrait
+                      and landscape.
+                    </P>
 
-                  <ScaledPreview format="a4" variant="portrait">
-                    <SimpleYearCalendar
-                      date={date}
-                      variant="portrait"
-                      size="a4"
-                    />
-                  </ScaledPreview>
-                </div>
-              </div>
-            </section>
+                    <P className="max-w-2xl text-sm">
+                      Available languages:{" "}
+                      {SupportedLocales.map((locale) => (
+                        <InlineButton
+                          key={locale.code}
+                          onClick={() => {
+                            setDate(
+                              date.reconfigure({
+                                locale: locale.code,
+                                outputCalendar: locale.outputCalendar,
+                              })
+                            );
+                          }}
+                        >
+                          {locale.englishName}
+                        </InlineButton>
+                      )).reduce(joinComponents, [])}
+                    </P>
+
+                    <BuyButton link={calendar.buyLink} />
+                  </div>
+
+                  <div className="mt-8 overflow-x-auto px-2">
+                    <div className="flex gap-4 py-4">
+                      <ScaledPreview format="a4" variant="portrait">
+                        <SimpleMonthCalendar
+                          date={date}
+                          variant="portrait"
+                          size="a4"
+                        />
+                      </ScaledPreview>
+
+                      <ScaledPreview format="a4" variant="portrait">
+                        <SimpleYearCalendar
+                          date={date}
+                          variant="portrait"
+                          size="a4"
+                        />
+                      </ScaledPreview>
+                    </div>
+                  </div>
+                </section>
+              )
+            )}
           </div>
         </main>
         <Footer />
