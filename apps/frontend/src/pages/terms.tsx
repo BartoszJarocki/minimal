@@ -38,9 +38,8 @@ const Terms = () => {
             <li>
               <p>
                 Introduction: These Terms of Service (“Terms”) govern your use
-                of our self printable PDFs, which are available for purchase
-                through Gumroad and Etsy. By using our PDFs, you agree to these
-                Terms.
+                of our self printable PDFs. By using our PDFs, you agree to
+                these Terms.
               </p>
             </li>
             <li>
@@ -137,8 +136,11 @@ const Terms = () => {
             <li>
               <p>
                 Contact Us: If you have any questions or concerns about our
-                Privacy Policy, please contact us at [insert company email
-                address].
+                Privacy Policy, please contact us at{" "}
+                <a href="mailto:contact@useminimal.com">
+                  contact@useminimal.com
+                </a>
+                .
               </p>
             </li>
           </ol>
