@@ -1,6 +1,5 @@
 import { DateTime, Settings } from "luxon";
 import React, { useState } from "react";
-import Balancer from "react-wrap-balancer";
 
 import { NextSeo } from "next-seo";
 import {
@@ -20,6 +19,7 @@ import { BuyButton } from "../components/BuyButton";
 import Link from "next/link";
 import { ScaledPreview } from "../components/ScaledPreview";
 import { SupportedLocales } from "@minimal/config";
+import { Button } from "../components/ui/button";
 
 export const getTitle = (year: number) => {
   return `${year} Simple printable calendar`;
@@ -31,7 +31,6 @@ export const getDescription = (year: number) => {
 
 export const BUY_URLS: Record<number, string> = {
   2024: "https://minimalist.lemonsqueezy.com/checkout/buy/380158ed-407b-4eba-9e81-338aec2c10a2?embed=1",
-  2023: "https://minimalist.lemonsqueezy.com/checkout/buy/e6471318-c35d-4634-be14-1dcfb19d5b6e?embed=1",
 };
 
 export const AVAILABLE_CALENDARS = [
@@ -43,13 +42,13 @@ export const AVAILABLE_CALENDARS = [
     isVisible: true,
     buyLink: BUY_URLS[2024],
   },
+];
+
+export const HABIT_TRACKERS = [
   {
-    theme: "simple",
-    year: 2023,
-    title: getTitle(2023),
-    description: getDescription(2023),
-    isVisible: true,
-    buyLink: BUY_URLS[2023],
+    title: "Habit Tracker",
+    description: "Create and print your own habit tracker",
+    href: "/habit-tracker",
   },
 ];
 
@@ -88,23 +87,21 @@ export default function Landing() {
       />
 
       <Container>
-        <main>
+        <main className="px-4 md:px-8">
           <div className="md:space-y-18 min-h-0 space-y-8">
             <section className="max-w-2xl space-y-4">
               <div className="flex items-center justify-start gap-x-6 pb-12">
                 <Logo className="h-24 w-24" />
                 <span className="hidden text-4xl font-bold">Minimal</span>
               </div>
-              <H1>
-                <Balancer>{title}</Balancer>
-              </H1>
+              <H1>{title}</H1>
               <P className="text-2xl">{description}</P>
             </section>
 
             {AVAILABLE_CALENDARS.filter((cal) => cal.isVisible).map(
               (calendar) => (
                 <section
-                  className="max-w-3xl py-6 md:py-24"
+                  className="max-w-3xl py-6 md:py-12"
                   key={calendar.title}
                 >
                   <div className="flex flex-col gap-y-4">
@@ -165,6 +162,41 @@ export default function Landing() {
                 </section>
               )
             )}
+
+            {HABIT_TRACKERS.map((tracker) => (
+              <section className="max-w-3xl py-6 md:py-12" key={tracker.title}>
+                <div className="flex flex-col gap-y-4">
+                  <Link href={tracker.href} className="underline">
+                    <H2>{tracker.title}</H2>
+                  </Link>
+
+                  <P>{tracker.description}</P>
+
+                  <P className="max-w-2xl text-sm">
+                    Available languages:{" "}
+                    {SupportedLocales.map((locale) => (
+                      <InlineButton
+                        key={locale.code}
+                        onClick={() => {
+                          setDate(
+                            date.reconfigure({
+                              locale: locale.code,
+                              outputCalendar: locale.outputCalendar,
+                            })
+                          );
+                        }}
+                      >
+                        {locale.englishName}
+                      </InlineButton>
+                    )).reduce(joinComponents, [])}
+                  </P>
+
+                  <Button className="w-min" asChild>
+                    <Link href={tracker.href}>Open configurator</Link>
+                  </Button>
+                </div>
+              </section>
+            ))}
           </div>
         </main>
         <Footer />

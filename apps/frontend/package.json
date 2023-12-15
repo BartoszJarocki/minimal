@@ -10,9 +10,14 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.13",
+    "@minimal/config": "*",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.0.2",
     "@vercel/analytics": "^0.1.8",
     "@vercel/og": "^0.1.0",
-    "clsx": "^1.2.1",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.297.0",
     "luxon": "^3.4.4",
     "next": "^13.4.8",
     "next-seo": "^5.15.0",
@@ -20,7 +25,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-wrap-balancer": "^0.4.0",
-    "@minimal/config": "*"
+    "tailwind-merge": "^2.1.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

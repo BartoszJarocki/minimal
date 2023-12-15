@@ -12,7 +12,7 @@ const navigation = {
       href: `/calendars/preview/${new Date().getFullYear()}/minimalist/`,
     },
   ],
-  habitTrackers: [{ name: "Work in progress", href: null }],
+  habitTrackers: [{ name: "Configurator", href: '/habit-tracker' }],
   planners: [{ name: "Work in progress", href: null }],
   legal: [{ name: "Terms Of Service", href: "/terms" }],
   social: [
@@ -152,7 +152,7 @@ export const Footer = () => {
           </p>
         </div>
 
-        <section className="max-w-3xl py-8 text-xs text-dark/40">
+        <section className="text-dark/40 max-w-3xl py-8 text-xs">
           <h4 className="py-1">Next years calendars</h4>
 
           {SupportedYears.map((year) => (
