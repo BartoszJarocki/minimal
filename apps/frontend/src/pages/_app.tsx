@@ -12,7 +12,7 @@ import React from "react";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className={`${inter.variable} font-sans`}>
+    <main className={`${inter.variable} h-full w-full font-sans`}>
       <Component {...pageProps} />
       <Analytics />
     </main>
