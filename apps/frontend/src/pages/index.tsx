@@ -55,7 +55,7 @@ export const HABIT_TRACKERS = [
 Settings.defaultLocale = "en-US";
 
 export default function Landing() {
-  const [date, setDate] = useState(DateTime.now());
+  const [date, setDate] = useState(DateTime.now().set({ year: 2024 }));
 
   const url = "https://useminimal.com";
   const title = `Minimalist printable calendars, habit trackers and planners`;
@@ -166,7 +166,7 @@ export default function Landing() {
             {HABIT_TRACKERS.map((tracker) => (
               <section className="max-w-3xl py-6 md:py-12" key={tracker.title}>
                 <div className="flex flex-col gap-y-4">
-                  <div className="w-fit rounded-md bg-primary px-4 py-1 align-baseline text-white">
+                  <div className="w-fit rounded-md bg-primary px-3 py-1 align-baseline text-sm text-white">
                     Work in progress
                   </div>
                   <Link href={tracker.href} className="underlin inline-flex">
