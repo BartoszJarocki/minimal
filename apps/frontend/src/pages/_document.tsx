@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 
 export default function Document() {
   return (
@@ -29,7 +30,10 @@ export default function Document() {
           content="fa930e044f3e1a3fdeaa0a1afa7d6888"
         />
         <link rel="shortcut icon" href="/favicon.ico" />
-        <script src="https://app.lemonsqueezy.com/js/lemon.js" defer />
+        <Script
+          src="https://gumroad.com/js/gumroad.js"
+          strategy="beforeInteractive"
+        />
       </Head>
       <body className="text-dark h-full w-full">
         <Main />

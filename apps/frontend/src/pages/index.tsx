@@ -166,7 +166,10 @@ export default function Landing() {
             {HABIT_TRACKERS.map((tracker) => (
               <section className="max-w-3xl py-6 md:py-12" key={tracker.title}>
                 <div className="flex flex-col gap-y-4">
-                  <Link href={tracker.href} className="underline">
+                  <div className="w-fit rounded-md bg-primary px-4 py-1 align-baseline text-white">
+                    Work in progress
+                  </div>
+                  <Link href={tracker.href} className="underlin inline-flex">
                     <H2>{tracker.title}</H2>
                   </Link>
 
@@ -191,7 +194,7 @@ export default function Landing() {
                     )).reduce(joinComponents, [])}
                   </P>
 
-                  <Button className="w-min" asChild>
+                  <Button className="w-min" variant="default" size="lg" asChild>
                     <Link href={tracker.href}>Open configurator</Link>
                   </Button>
                 </div>
