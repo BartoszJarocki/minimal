@@ -207,7 +207,9 @@ export default function Landing() {
                     size="lg"
                     asChild
                   >
-                    <Link href={tracker.href}>Open configurator</Link>
+                    <Link href={tracker.href}>
+                      Create and download your own habit tracker
+                    </Link>
                   </Button>
 
                   <div className="-mx-2 overflow-x-auto px-2">
