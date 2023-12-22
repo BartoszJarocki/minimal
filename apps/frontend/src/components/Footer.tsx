@@ -3,7 +3,7 @@ import Balancer from "react-wrap-balancer";
 import Link from "next/link";
 import { joinComponents } from "../lib/utils";
 import { SupportedYears } from "./calendar/Calendar";
-import { Badge } from "./Badge";
+import { Badge } from "./ui/badge";
 
 const navigation = {
   calendars: [

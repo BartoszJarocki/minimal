@@ -20,6 +20,7 @@ import Link from "next/link";
 import { ScaledPreview } from "../components/ScaledPreview";
 import { SupportedLocales } from "@minimal/config";
 import { Button } from "../components/ui/button";
+import { Badge } from "../components/ui/badge";
 
 export const getTitle = (year: number) => {
   return `${year} Simple printable calendar`;
@@ -55,7 +56,9 @@ export const HABIT_TRACKERS = [
 Settings.defaultLocale = "en-US";
 
 export default function Landing() {
-  const [date, setDate] = useState(DateTime.now().set({ year: 2024 }));
+  const [date, setDate] = useState(
+    DateTime.now().set({ year: 2024, month: 1 })
+  );
 
   const url = "https://useminimal.com";
   const title = `Minimalist printable calendars, habit trackers and planners`;
@@ -166,9 +169,7 @@ export default function Landing() {
             {HABIT_TRACKERS.map((tracker) => (
               <section className="max-w-3xl py-6 md:py-12" key={tracker.title}>
                 <div className="flex flex-col gap-y-4">
-                  <div className="w-fit rounded-md bg-primary px-3 py-1 align-baseline text-sm text-white">
-                    Work in progress
-                  </div>
+                  <Badge className="w-fit">Work in progress</Badge>
                   <Link href={tracker.href} className="underlin inline-flex">
                     <H2>{tracker.title}</H2>
                   </Link>
