@@ -21,6 +21,7 @@ import { ScaledPreview } from "../components/ScaledPreview";
 import { SupportedLocales } from "@minimal/config";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
+import { SimpleHabitTracker } from "./habit-tracker";
 
 export const getTitle = (year: number) => {
   return `${year} Simple printable calendar`;
@@ -143,7 +144,7 @@ export default function Landing() {
                     <BuyButton link={calendar.buyLink} />
                   </div>
 
-                  <div className="mt-8 overflow-x-auto px-2">
+                  <div className="-mx-2 overflow-x-auto px-2">
                     <div className="flex gap-4 py-4">
                       <ScaledPreview format="a4" variant="portrait">
                         <SimpleMonthCalendar
@@ -168,10 +169,15 @@ export default function Landing() {
 
             {HABIT_TRACKERS.map((tracker) => (
               <section className="max-w-3xl py-6 md:py-12" key={tracker.title}>
-                <div className="flex flex-col gap-y-4">
-                  <Badge className="w-fit">Work in progress</Badge>
-                  <Link href={tracker.href} className="underlin inline-flex">
-                    <H2>{tracker.title}</H2>
+                <div className="mt-8 flex flex-col gap-y-4">
+                  <Link
+                    href={tracker.href}
+                    className="underlin inline-flex gap-x-4"
+                  >
+                    <H2>{tracker.title}</H2>{" "}
+                    <Badge className="w-fit self-center">
+                      Work in progress
+                    </Badge>
                   </Link>
 
                   <P>{tracker.description}</P>
@@ -195,9 +201,34 @@ export default function Landing() {
                     )).reduce(joinComponents, [])}
                   </P>
 
-                  <Button className="w-min" variant="default" size="lg" asChild>
+                  <Button
+                    className="max-w-md font-semibold text-white"
+                    variant="default"
+                    size="lg"
+                    asChild
+                  >
                     <Link href={tracker.href}>Open configurator</Link>
                   </Button>
+
+                  <div className="-mx-2 overflow-x-auto px-2">
+                    <div className="flex gap-4 py-4">
+                      <ScaledPreview format="a4" variant="portrait">
+                        <SimpleHabitTracker
+                          className="paper-padding-15mm"
+                          date={date}
+                          title="Reading books in 2024"
+                        />
+                      </ScaledPreview>
+
+                      <ScaledPreview format="a4" variant="portrait">
+                        <SimpleHabitTracker
+                          className="paper-padding-15mm"
+                          date={date}
+                          title="Headaches in 2024"
+                        />
+                      </ScaledPreview>
+                    </div>
+                  </div>
                 </div>
               </section>
             ))}

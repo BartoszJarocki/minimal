@@ -15,6 +15,7 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { cn } from "../../lib/utils";
 import { Badge } from "../../components/ui/badge";
+import { NextSeo } from "next-seo";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -58,7 +59,7 @@ const FlowHabitTracker = ({
           placeholder="Click to edit"
         />
       </div>
-      <div className=" mt-4 flex flex-wrap">
+      <div className="mt-4 flex flex-wrap">
         {months.map((_, i) => {
           const monthDate = date.set({ month: i + 1 });
 
@@ -88,13 +89,16 @@ const FlowHabitTracker = ({
   );
 };
 
-const SimpleHabitTracker = ({
+export const SimpleHabitTracker = ({
   className,
   date,
+  title,
 }: {
-  className: string;
+  className?: string;
   date: DateTime;
+  title?: string;
 }) => {
+  const [habitTitle, setHabitTitle] = useState(title ?? "");
   const months = Info.months("long", {
     locale: date.locale!,
     outputCalendar: date.outputCalendar!,
@@ -102,16 +106,13 @@ const SimpleHabitTracker = ({
   });
 
   return (
-    <div
-      className={cn(
-        "overflow-hidden bg-white shadow-2xl print:shadow-none",
-        className
-      )}
-    >
+    <div className={cn("overflow-hidden bg-white", className)}>
       <div>
         <Input
           className="text-5xl font-bold leading-none tracking-tighter placeholder:text-black/40"
           placeholder="Click to edit"
+          onChange={(e) => setHabitTitle(e.target.value)}
+          value={habitTitle}
         />
       </div>
       <div className="mt-4 flex flex-col gap-3">
@@ -174,123 +175,158 @@ const HabitTrackerCreator = () => {
     });
   });
 
+  const url = "https://useminimal.com";
+  const title = `Minimalist Habit Tracker | Minimal`;
+  const description = `Create and print your own habit tracker. Available in ${SupportedLocales.length} languages.`;
+
   return (
-    <div className={clsx("flex h-full w-full overflow-hidden", font.className)}>
-      <div className="flex-1 overflow-auto bg-black/5 p-8 print:overflow-hidden print:p-0">
-        {theme === "simple" && (
-          <SimpleHabitTracker
-            className={cn("mx-auto", FORMATS_STYLES[format])}
-            date={date}
-          />
-        )}
-        {theme === "flow" && (
-          <FlowHabitTracker className="mx-auto" date={date} />
-        )}
-      </div>
-
-      <div className="ml-auto flex h-full min-h-0 w-96 flex-col gap-y-2 border-l border-black/10 bg-white p-4 print:hidden">
-        <div className="mb-2 text-xl font-medium">Configuration</div>
-
-        <div>
-          <div className="mx-3 font-mono text-xs leading-loose">Theme</div>
-          <Select
-            defaultValue={"simple"}
-            onValueChange={(theme) => setTheme(theme as HABIT_TRACKERS_THEMES)}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Theme" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={"simple"}>Simple</SelectItem>
-              <SelectItem value={"flow"} disabled>
-                <span>
-                  <span>Flow</span>
-                  <Badge className="ml-2" variant="default">
-                    Work in progress
-                  </Badge>
-                </span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
+    <>
+      <NextSeo
+        title={title}
+        description={description}
+        canonical={url}
+        openGraph={{
+          siteName: "Use Minimal",
+          title,
+          description,
+          url,
+          images: [
+            {
+              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              width: 1200,
+              height: 630,
+            },
+          ],
+        }}
+        twitter={{
+          handle: "@UseMinimal",
+          cardType: "summary_large_image",
+        }}
+      />
+      <div
+        className={clsx("flex h-full w-full overflow-hidden", font.className)}
+      >
+        <div className="flex-1 overflow-auto bg-black/5 p-8 print:overflow-hidden print:p-0">
+          {theme === "simple" && (
+            <SimpleHabitTracker
+              className={cn(
+                "mx-auto shadow-2xl print:shadow-none",
+                FORMATS_STYLES[format]
+              )}
+              date={date}
+            />
+          )}
+          {theme === "flow" && (
+            <FlowHabitTracker className="mx-auto" date={date} />
+          )}
         </div>
 
-        <div>
-          <div className="mx-3 font-mono text-xs leading-loose">Year</div>
-          <Select
-            defaultValue={date.year.toString()}
-            onValueChange={(year) =>
-              setDate(DateTime.now().set({ year: parseInt(year) }))
-            }
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Year" />
-            </SelectTrigger>
-            <SelectContent>
-              {SupportedYears.map((year) => (
-                <SelectItem key={year} value={year.toString()}>
-                  {year}
+        <div className="ml-auto flex h-full min-h-0 w-96 flex-col gap-y-2 border-l border-black/10 bg-white p-4 print:hidden">
+          <div className="mb-2 text-xl font-medium">Configuration</div>
+
+          <div>
+            <div className="mx-3 font-mono text-xs leading-loose">Theme</div>
+            <Select
+              defaultValue={"simple"}
+              onValueChange={(theme) =>
+                setTheme(theme as HABIT_TRACKERS_THEMES)
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Theme" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={"simple"}>Simple</SelectItem>
+                <SelectItem value={"flow"} disabled>
+                  <span>
+                    <span>Flow</span>
+                    <Badge className="ml-2" variant="default">
+                      Work in progress
+                    </Badge>
+                  </span>
                 </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+              </SelectContent>
+            </Select>
+          </div>
 
-        <div>
-          <div className="mx-3 font-mono text-xs leading-loose">Locale</div>
-          <Select
-            defaultValue={locale.code}
-            onValueChange={(localeCode) => {
-              const newLocale = SupportedLocales.find(
-                (locale) => locale.code === localeCode
-              )!;
-              setLocale(newLocale);
-              setDate(date.reconfigure({ locale: newLocale.code }));
+          <div>
+            <div className="mx-3 font-mono text-xs leading-loose">Year</div>
+            <Select
+              defaultValue={date.year.toString()}
+              onValueChange={(year) =>
+                setDate(DateTime.now().set({ year: parseInt(year) }))
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Year" />
+              </SelectTrigger>
+              <SelectContent>
+                {SupportedYears.map((year) => (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <div className="mx-3 font-mono text-xs leading-loose">Locale</div>
+            <Select
+              defaultValue={locale.code}
+              onValueChange={(localeCode) => {
+                const newLocale = SupportedLocales.find(
+                  (locale) => locale.code === localeCode
+                )!;
+                setLocale(newLocale);
+                setDate(date.reconfigure({ locale: newLocale.code }));
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
+              <SelectContent>
+                {SupportedLocales.map((locale) => (
+                  <SelectItem key={locale.code} value={locale.code}>
+                    {locale.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <div className="mx-3 font-mono text-xs leading-loose">Format</div>
+            <Select
+              defaultValue={format}
+              onValueChange={(format) => {
+                setFormat(format as SupportedFormat);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
+              <SelectContent>
+                {SupportedFormatsList.map((format) => (
+                  <SelectItem key={format} value={format}>
+                    {format}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button
+            className="mt-auto w-full"
+            onClick={() => {
+              window.print();
             }}
           >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Language" />
-            </SelectTrigger>
-            <SelectContent>
-              {SupportedLocales.map((locale) => (
-                <SelectItem key={locale.code} value={locale.code}>
-                  {locale.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            Print
+          </Button>
         </div>
-
-        <div>
-          <div className="mx-3 font-mono text-xs leading-loose">Format</div>
-          <Select
-            defaultValue={format}
-            onValueChange={(format) => {
-              setFormat(format as SupportedFormat);
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Language" />
-            </SelectTrigger>
-            <SelectContent>
-              {SupportedFormatsList.map((format) => (
-                <SelectItem key={format} value={format}>
-                  {format}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Button
-          className="mt-auto w-full"
-          onClick={() => {
-            window.print();
-          }}
-        >
-          Print
-        </Button>
       </div>
-    </div>
+    </>
   );
 };
 
