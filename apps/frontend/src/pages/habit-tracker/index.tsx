@@ -239,7 +239,7 @@ const HabitTrackerCreator = () => {
                 <SelectItem value={"simple"}>Simple</SelectItem>
                 <SelectItem value={"flow"} disabled>
                   <span>
-                    <span>Flow</span>
+                    Flow
                     <Badge className="ml-2" variant="default">
                       Work in progress
                     </Badge>
@@ -304,7 +304,7 @@ const HabitTrackerCreator = () => {
               }}
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Language" />
+                <SelectValue placeholder="Formats" />
               </SelectTrigger>
               <SelectContent>
                 {SupportedFormatsList.map((format) => (

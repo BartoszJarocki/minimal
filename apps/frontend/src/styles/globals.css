@@ -162,10 +162,6 @@ body {
   writing-mode: vertical-rl;
 }
 
-.text-wrap {
-  text-wrap: pretty;
-}
-
 .perspective {
   transform: perspective(900px) rotateY(25deg) scale(0.9) rotateX(10deg);
   transition: 0.6s ease all;

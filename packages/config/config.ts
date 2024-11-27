@@ -258,6 +258,14 @@ export const SupportedLocales: SupportedLocale[] = [
     outputCalendar: "chinese",
     numberingSystem: "latn",
   },
+  // {
+  //   code: "saz",
+  //   name: "Sourashtra",
+  //   englishName: "Sazande",
+  //   emoji: "🇸🇿",
+  //   outputCalendar: "gregory",
+  //   numberingSystem: "latn",
+  // },
   // countries below have wierd month short names, need different layout
   // { code: "lt", name: "Lietuvių", englishName: "Lithuanian", emoji: "🇱🇹" },
 ];

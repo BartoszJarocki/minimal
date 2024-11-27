@@ -9,7 +9,7 @@ export const P = ({
   className?: string;
 }) => {
   return (
-    <p className={clsx("text-wrap text-left text-lg opacity-80", className)}>
+    <p className={clsx("text-pretty text-left text-lg opacity-80", className)}>
       {children}
     </p>
   );

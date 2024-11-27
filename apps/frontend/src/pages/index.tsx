@@ -32,7 +32,8 @@ export const getDescription = (year: number) => {
 };
 
 export const BUY_URLS: Record<number, string> = {
-  2024: "https://minimalist.lemonsqueezy.com/checkout/buy/380158ed-407b-4eba-9e81-338aec2c10a2?embed=1",
+  2024: "https://bjarocki.gumroad.com/l/minimalist",
+  2025: "https://bjarocki.gumroad.com/l/minimalist-2025",
 };
 
 export const AVAILABLE_CALENDARS = [
@@ -44,7 +45,15 @@ export const AVAILABLE_CALENDARS = [
     isVisible: true,
     buyLink: BUY_URLS[2024],
   },
-];
+  {
+    theme: "simple",
+    year: 2025,
+    title: getTitle(2025),
+    description: getDescription(2025),
+    isVisible: true,
+    buyLink: BUY_URLS[2025],
+  },
+].reverse();
 
 export const HABIT_TRACKERS = [
   {
@@ -58,7 +67,7 @@ Settings.defaultLocale = "en-US";
 
 export default function Landing() {
   const [date, setDate] = useState(
-    DateTime.now().set({ year: 2024, month: 1 })
+    DateTime.now().set({ year: 2025, month: 1 })
   );
 
   const url = "https://useminimal.com";
@@ -102,25 +111,86 @@ export default function Landing() {
               <P className="text-2xl">{description}</P>
             </section>
 
-            {AVAILABLE_CALENDARS.filter((cal) => cal.isVisible).map(
-              (calendar) => (
-                <section
-                  className="max-w-3xl py-6 md:py-12"
-                  key={calendar.title}
-                >
-                  <div className="flex flex-col gap-y-4">
+            <section className="space-y-8">
+              {AVAILABLE_CALENDARS.filter((cal) => cal.isVisible).map(
+                (calendar) => (
+                  <section
+                    className="max-w-3xl py-6 md:py-6"
+                    key={calendar.title}
+                  >
+                    <div className="flex flex-col gap-y-4">
+                      <Link
+                        href={`/calendars/preview/${calendar.year}/${calendar.theme}`}
+                        className="underline"
+                      >
+                        <H2>Simple printable calendar {calendar.year}</H2>
+                      </Link>
+
+                      <P>
+                        Yearly and monthly, simple {calendar.year} printable
+                        calendar available in A4 and A5 formats in both portrait
+                        and landscape.
+                      </P>
+
+                      <P className="max-w-2xl text-sm">
+                        Available languages:{" "}
+                        {SupportedLocales.map((locale) => (
+                          <InlineButton
+                            key={locale.code}
+                            onClick={() => {
+                              setDate(
+                                date.reconfigure({
+                                  locale: locale.code,
+                                  outputCalendar: locale.outputCalendar,
+                                })
+                              );
+                            }}
+                          >
+                            {locale.englishName}
+                          </InlineButton>
+                        )).reduce(joinComponents, [])}
+                      </P>
+
+                      <BuyButton link={calendar.buyLink} />
+                    </div>
+
+                    <div className="-mx-2 overflow-x-auto px-2">
+                      <div className="flex gap-4 py-4">
+                        <ScaledPreview format="a4" variant="portrait">
+                          <SimpleMonthCalendar
+                            date={date.set({ year: calendar.year, month: 1 })}
+                            variant="portrait"
+                            size="a4"
+                          />
+                        </ScaledPreview>
+
+                        <ScaledPreview format="a4" variant="portrait">
+                          <SimpleYearCalendar
+                            date={date.set({ year: calendar.year, month: 1 })}
+                            variant="portrait"
+                            size="a4"
+                          />
+                        </ScaledPreview>
+                      </div>
+                    </div>
+                  </section>
+                )
+              )}
+
+              {HABIT_TRACKERS.map((tracker) => (
+                <section className="max-w-3xl py-6 md:py-6" key={tracker.title}>
+                  <div className="mt-8 flex flex-col gap-y-4">
                     <Link
-                      href={`/calendars/preview/${calendar.year}/${calendar.theme}`}
-                      className="underline"
+                      href={tracker.href}
+                      className="underlin inline-flex gap-x-4"
                     >
-                      <H2>Simple printable calendar {calendar.year}</H2>
+                      <H2>{tracker.title}</H2>{" "}
+                      <Badge className="w-fit self-center">
+                        Work in progress
+                      </Badge>
                     </Link>
 
-                    <P>
-                      Yearly and monthly, simple {calendar.year} printable
-                      calendar available in A4 and A5 formats in both portrait
-                      and landscape.
-                    </P>
+                    <P>{tracker.description}</P>
 
                     <P className="max-w-2xl text-sm">
                       Available languages:{" "}
@@ -141,99 +211,40 @@ export default function Landing() {
                       )).reduce(joinComponents, [])}
                     </P>
 
-                    <BuyButton link={calendar.buyLink} />
-                  </div>
+                    <Button
+                      className="max-w-md font-semibold text-white"
+                      variant="default"
+                      size="lg"
+                      asChild
+                    >
+                      <Link href={tracker.href}>
+                        Create and download your own habit tracker
+                      </Link>
+                    </Button>
 
-                  <div className="-mx-2 overflow-x-auto px-2">
-                    <div className="flex gap-4 py-4">
-                      <ScaledPreview format="a4" variant="portrait">
-                        <SimpleMonthCalendar
-                          date={date}
-                          variant="portrait"
-                          size="a4"
-                        />
-                      </ScaledPreview>
+                    <div className="-mx-2 overflow-x-auto px-2">
+                      <div className="flex gap-4 py-4">
+                        <ScaledPreview format="a4" variant="portrait">
+                          <SimpleHabitTracker
+                            className="paper-padding-15mm"
+                            date={date}
+                            title="Reading books in 2024"
+                          />
+                        </ScaledPreview>
 
-                      <ScaledPreview format="a4" variant="portrait">
-                        <SimpleYearCalendar
-                          date={date}
-                          variant="portrait"
-                          size="a4"
-                        />
-                      </ScaledPreview>
+                        <ScaledPreview format="a4" variant="portrait">
+                          <SimpleHabitTracker
+                            className="paper-padding-15mm"
+                            date={date}
+                            title="Headaches in 2024"
+                          />
+                        </ScaledPreview>
+                      </div>
                     </div>
                   </div>
                 </section>
-              )
-            )}
-
-            {HABIT_TRACKERS.map((tracker) => (
-              <section className="max-w-3xl py-6 md:py-12" key={tracker.title}>
-                <div className="mt-8 flex flex-col gap-y-4">
-                  <Link
-                    href={tracker.href}
-                    className="underlin inline-flex gap-x-4"
-                  >
-                    <H2>{tracker.title}</H2>{" "}
-                    <Badge className="w-fit self-center">
-                      Work in progress
-                    </Badge>
-                  </Link>
-
-                  <P>{tracker.description}</P>
-
-                  <P className="max-w-2xl text-sm">
-                    Available languages:{" "}
-                    {SupportedLocales.map((locale) => (
-                      <InlineButton
-                        key={locale.code}
-                        onClick={() => {
-                          setDate(
-                            date.reconfigure({
-                              locale: locale.code,
-                              outputCalendar: locale.outputCalendar,
-                            })
-                          );
-                        }}
-                      >
-                        {locale.englishName}
-                      </InlineButton>
-                    )).reduce(joinComponents, [])}
-                  </P>
-
-                  <Button
-                    className="max-w-md font-semibold text-white"
-                    variant="default"
-                    size="lg"
-                    asChild
-                  >
-                    <Link href={tracker.href}>
-                      Create and download your own habit tracker
-                    </Link>
-                  </Button>
-
-                  <div className="-mx-2 overflow-x-auto px-2">
-                    <div className="flex gap-4 py-4">
-                      <ScaledPreview format="a4" variant="portrait">
-                        <SimpleHabitTracker
-                          className="paper-padding-15mm"
-                          date={date}
-                          title="Reading books in 2024"
-                        />
-                      </ScaledPreview>
-
-                      <ScaledPreview format="a4" variant="portrait">
-                        <SimpleHabitTracker
-                          className="paper-padding-15mm"
-                          date={date}
-                          title="Headaches in 2024"
-                        />
-                      </ScaledPreview>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            ))}
+              ))}
+            </section>
           </div>
         </main>
         <Footer />
