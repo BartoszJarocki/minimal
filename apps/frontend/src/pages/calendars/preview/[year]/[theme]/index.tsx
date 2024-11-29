@@ -16,11 +16,10 @@ import { Footer } from "../../../../../components/Footer";
 import { H1 } from "../../../../../components/H1";
 import { P } from "../../../../../components/P";
 import { ScaledPreview } from "../../../../../components/ScaledPreview";
-import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
+import { BUY_URLS, SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
 import { ThemeNameLookup } from "../../../../print";
 import { SupportedLocales, Theme } from "@minimal/config";
-import { BUY_URLS } from "../../../..";
 
 interface Props {
   theme: Theme;

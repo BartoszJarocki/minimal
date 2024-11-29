@@ -4,14 +4,13 @@ import Link from "next/link";
 import { joinComponents } from "../lib/utils";
 import { SupportedYears } from "./calendar/Calendar";
 import { Badge } from "./ui/badge";
+import { AVAILABLE_CALENDARS } from "../lib/config";
 
 const navigation = {
-  calendars: [
-    {
-      name: `Minimalist`,
-      href: `/calendars/preview/${new Date().getFullYear()}/minimalist/`,
-    },
-  ],
+  calendars: AVAILABLE_CALENDARS.map((calendar) => ({
+    name: calendar.title,
+    href: `/calendars/preview/${calendar.year}/${calendar.theme}`,
+  })),
   habitTrackers: [{ name: "Configurator", href: "/habit-tracker" }],
   planners: [{ name: "Work in progress", href: null }],
   legal: [{ name: "Terms Of Service", href: "/terms" }],

@@ -22,38 +22,7 @@ import { SupportedLocales } from "@minimal/config";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { SimpleHabitTracker } from "./habit-tracker";
-
-export const getTitle = (year: number) => {
-  return `${year} Simple printable calendar`;
-};
-
-export const getDescription = (year: number) => {
-  return `Yearly and monthly, simple ${year} printable calendar available in A4 and A5 formats in both portrait and landscape.`;
-};
-
-export const BUY_URLS: Record<number, string> = {
-  2024: "https://bjarocki.gumroad.com/l/minimalist",
-  2025: "https://bjarocki.gumroad.com/l/minimalist-2025",
-};
-
-export const AVAILABLE_CALENDARS = [
-  {
-    theme: "simple",
-    year: 2024,
-    title: getTitle(2024),
-    description: getDescription(2024),
-    isVisible: true,
-    buyLink: BUY_URLS[2024],
-  },
-  {
-    theme: "simple",
-    year: 2025,
-    title: getTitle(2025),
-    description: getDescription(2025),
-    isVisible: true,
-    buyLink: BUY_URLS[2025],
-  },
-].reverse();
+import { AVAILABLE_CALENDARS } from "../lib/config";
 
 export const HABIT_TRACKERS = [
   {
