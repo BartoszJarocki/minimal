@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { DateTime, Settings } from "luxon";
+import { DateTime } from "luxon";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";

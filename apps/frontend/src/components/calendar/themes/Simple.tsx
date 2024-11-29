@@ -54,7 +54,7 @@ export const SimpleYearCalendar = ({
         yearHeader:
           "text-vertical-rl mb-4 ml-auto basis-[29%] translate-x-14 rotate-180 self-end text-end text-[96px] font-semibold leading-none tracking-tighter",
         monthHeader:
-          "flex items-center px-1 text-lg font-semibold leading-none` tracking-tighter",
+          "flex items-center px-1 font-semibold leading-none` tracking-tighter",
         monthsGrid: "grid grid-cols-2 gap-3",
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },

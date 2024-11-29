@@ -1,8 +1,8 @@
-import puppeteer, { Browser, PaperFormat } from "puppeteer";
-import { Info } from "luxon";
-import fs from "fs";
-import AdmZip from "adm-zip";
-import { SupportedLocale, SupportedLocales, Theme } from "@minimal/config";
+import puppeteer, { Browser, PaperFormat } from 'puppeteer';
+import { Info } from 'luxon';
+import fs from 'fs';
+import AdmZip from 'adm-zip';
+import { SupportedLocale, SupportedLocales, Theme } from '@minimal/config';
 
 const createZipArchive = ({ folderPathToZip, zippedFilePath }: any) => {
   const zip = new AdmZip();
@@ -41,29 +41,17 @@ const generateMonthlyCalendar = async ({
   locale,
   format,
 }: Options) => {
-  const type = "month";
+  const type = 'month';
   // generate all year month calendar
-  const allMonths = Info.months("long", { locale: locale.code });
+  const allMonths = Info.months('long', { locale: locale.code });
 
   const allMonthsPdfs = allMonths.map(async (month, i) => {
     const page = await browser.newPage();
     const monthIndex = i + 1;
 
     const path = `${destDir}/${theme}/${year}/${locale.englishName}/month-calendar/${format}`;
-    if (!fs.existsSync(`${path}/portrait/pdf`)) {
-      fs.mkdirSync(`${path}/portrait/pdf`, { recursive: true });
-    }
-
-    if (!fs.existsSync(`${path}/portrait/png`)) {
-      fs.mkdirSync(`${path}/portrait/png`, { recursive: true });
-    }
-
-    if (!fs.existsSync(`${path}/landscape/pdf`)) {
-      fs.mkdirSync(`${path}/landscape/pdf`, { recursive: true });
-    }
-
-    if (!fs.existsSync(`${path}/landscape/png`)) {
-      fs.mkdirSync(`${path}/landscape/png`, { recursive: true });
+    if (!fs.existsSync(`${path}`)) {
+      fs.mkdirSync(`${path}`, { recursive: true });
     }
 
     const portraitUrl = buildUrl({
@@ -73,17 +61,17 @@ const generateMonthlyCalendar = async ({
       year,
       month: monthIndex,
       format,
-      variant: "portrait",
+      variant: 'portrait',
     });
-    await page.goto(portraitUrl, { waitUntil: "networkidle0" });
+    await page.goto(portraitUrl, { waitUntil: 'networkidle0' });
     await page.pdf({
       format,
-      path: `${path}/portrait/pdf/${monthIndex}-${month}.pdf`,
-      pageRanges: "1-1",
+      path: `${path}/${monthIndex}-${month}-portrait.pdf`,
+      pageRanges: '1-1',
       printBackground: true,
     });
     await page.screenshot({
-      path: `${path}/portrait/png/${monthIndex}-${month}.png`,
+      path: `${path}/${monthIndex}-${month}-portrait.png`,
       fullPage: true,
     });
 
@@ -94,18 +82,18 @@ const generateMonthlyCalendar = async ({
       year,
       month: monthIndex,
       format,
-      variant: "landscape",
+      variant: 'landscape',
     });
-    await page.goto(landscapeUrl, { waitUntil: "networkidle0" });
+    await page.goto(landscapeUrl, { waitUntil: 'networkidle0' });
     await page.pdf({
       format,
-      path: `${path}/landscape/pdf/${monthIndex}-${month}.pdf`,
+      path: `${path}/${monthIndex}-${month}-landscape.pdf`,
       landscape: true,
-      pageRanges: "1-1",
+      pageRanges: '1-1',
       printBackground: true,
     });
     await page.screenshot({
-      path: `${path}/landscape/png/${monthIndex}-${month}.png`,
+      path: `${path}/${monthIndex}-${month}-landscape.png`,
       fullPage: true,
     });
   });
@@ -121,24 +109,12 @@ const generateYearlyCalendar = async ({
   locale,
   format,
 }: Options) => {
-  const type = "year";
+  const type = 'year';
   const page = await browser.newPage();
 
   const path = `${destDir}/${theme}/${year}/${locale.englishName}/year-calendar/${format}`;
-  if (!fs.existsSync(`${path}/portrait/pdf`)) {
-    fs.mkdirSync(`${path}/portrait/pdf`, { recursive: true });
-  }
-
-  if (!fs.existsSync(`${path}/portrait/png`)) {
-    fs.mkdirSync(`${path}/portrait/png`, { recursive: true });
-  }
-
-  if (!fs.existsSync(`${path}/landscape/pdf`)) {
-    fs.mkdirSync(`${path}/landscape/pdf`, { recursive: true });
-  }
-
-  if (!fs.existsSync(`${path}/landscape/png`)) {
-    fs.mkdirSync(`${path}/landscape/png`, { recursive: true });
+  if (!fs.existsSync(`${path}`)) {
+    fs.mkdirSync(`${path}`, { recursive: true });
   }
 
   const portraitUrl = buildUrl({
@@ -148,16 +124,16 @@ const generateYearlyCalendar = async ({
     year,
     month: 1,
     format,
-    variant: "portrait",
+    variant: 'portrait',
   });
-  await page.goto(portraitUrl, { waitUntil: "networkidle0" });
+  await page.goto(portraitUrl, { waitUntil: 'networkidle0' });
   await page.pdf({
     format,
-    path: `${path}/portrait/pdf/calendar.pdf`,
-    pageRanges: "1-1",
+    path: `${path}/calendar-portrait.pdf`,
+    pageRanges: '1-1',
   });
   await page.screenshot({
-    path: `${path}/portrait/png/calendar.png`,
+    path: `${path}/calendar-portrait.png`,
     fullPage: true,
   });
 
@@ -168,27 +144,27 @@ const generateYearlyCalendar = async ({
     year,
     month: 1,
     format,
-    variant: "landscape",
+    variant: 'landscape',
   });
-  await page.goto(landscapeUrl, { waitUntil: "networkidle0" });
+  await page.goto(landscapeUrl, { waitUntil: 'networkidle0' });
   await page.pdf({
     format,
-    path: `${path}/landscape/pdf/calendar.pdf`,
+    path: `${path}/calendar-landscape.pdf`,
     landscape: true,
-    pageRanges: "1-1",
+    pageRanges: '1-1',
   });
 
   await page.screenshot({
-    path: `${path}/landscape/png/calendar.png`,
+    path: `${path}/calendar-landscape.png`,
     fullPage: true,
   });
 };
 
 async function generateProducts() {
-  const destDir = "./generated";
+  const destDir = './generated';
   const years = [2025];
-  const formats: PaperFormat[] = ["a4", "a5"];
-  const themes: Theme[] = ["simple"];
+  const formats: PaperFormat[] = ['a4', 'a5'];
+  const themes: Theme[] = ['simple'];
 
   //iterate over all years, themes, locales, formats
   for (const theme of themes) {
@@ -236,14 +212,6 @@ async function generateProducts() {
       await browser.close();
     }
   }
-
-  // await generateCalendarPreviews({
-  //   browser,
-  //   year,
-  //   destDir,
-  //   themes,
-  //   locales,
-  // });
 }
 
 generateProducts();
