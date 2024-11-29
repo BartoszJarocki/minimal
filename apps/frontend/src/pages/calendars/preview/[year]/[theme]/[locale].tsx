@@ -1,5 +1,4 @@
-import clsx from "clsx";
-import { DateTime, Info, Settings } from "luxon";
+import { DateTime, Info } from "luxon";
 import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
@@ -17,11 +16,10 @@ import { H1 } from "../../../../../components/H1";
 import { H2 } from "../../../../../components/H2";
 import { P } from "../../../../../components/P";
 import { ScaledPreview } from "../../../../../components/ScaledPreview";
-import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
+import { BUY_URLS, SSR_CACHE_CONFIG } from "../../../../../lib/config";
 import { joinComponents } from "../../../../../lib/utils";
 import { ThemeLookup, ThemeNameLookup } from "../../../../print";
 import { SupportedLocales, Theme } from "@minimal/config";
-import { BUY_URLS } from "../../../..";
 
 interface Props {
   locale: string;

@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import { DateTime } from "luxon";
 import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
