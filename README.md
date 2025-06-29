@@ -1,4 +1,4 @@
-# Use Minimal - Minimalist Calendar Generator
+# Minimal - Minimalist Calendar Generator
 
 A modern, type-safe web application for generating beautiful minimalist printable calendars and habit trackers. Built with Next.js, TypeScript, and Tailwind CSS.
 
