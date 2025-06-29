@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { DateTime, Info, StringUnitLength } from "luxon";
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 
 export const WEEK_LENGTH = 7;
 
@@ -16,16 +16,18 @@ export type FormatVariant = "landscape" | "portrait";
 export const DayCell = ({
   className,
   children,
+  ...props
 }: {
   className?: string;
   children: React.ReactNode;
-}) => {
+} & React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
       className={clsx(
         className,
         `relative aspect-video align-baseline tabular-nums leading-none tracking-tighter`
       )}
+      {...props}
     >
       {children}
     </div>
@@ -44,24 +46,25 @@ interface MonthCalendarProps {
   locale?: string;
 }
 
-export const MonthCalendar = ({
+export const MonthCalendar = React.memo(({
   className,
   as = "div",
   dayAs = DayCell,
   date,
   weekNames,
-  locale = date.locale!,
+  locale = date.locale || 'en',
 }: MonthCalendarProps) => {
   const RootComponent = as;
   const CellComponent = dayAs;
 
-  const createEmptyCell = (day: DateTime) => (
+  const createEmptyCell = useCallback((day: DateTime) => (
     <CellComponent
       key={`inactive-locale:${locale}-month:${date.month}-${day.day}`}
+      role="gridcell"
     >
       <span className="opacity-25">{day.day}</span>
     </CellComponent>
-  );
+  ), [CellComponent, locale, date.month]);
 
   // calculate how many blank cells are at the start
   const firstDayOfTheMonth = date.startOf("month");
@@ -75,9 +78,13 @@ export const MonthCalendar = ({
 
   // create a table with all the days of the month
   let daysInMonth: JSX.Element[] = [];
-  for (let day = 1; day <= date.daysInMonth!; day++) {
+  const daysInCurrentMonth = date.daysInMonth || 31;
+  for (let day = 1; day <= daysInCurrentMonth; day++) {
     daysInMonth.push(
-      <CellComponent key={`locale:${locale}-month:${date.month}-day:${day}`}>
+      <CellComponent 
+        key={`locale:${locale}-month:${date.month}-day:${day}`}
+        role="gridcell"
+      >
         {date.set({ day }).day}
         <span className="absolute left-0 top-0 m-0.5 hidden h-1 w-1 rounded-full border md:m-1"></span>
       </CellComponent>
@@ -94,11 +101,17 @@ export const MonthCalendar = ({
   }
 
   return (
-    <RootComponent className={clsx(className, "grid grid-cols-7")}>
+    <RootComponent 
+      className={clsx(className, "grid grid-cols-7")}
+      role="grid"
+      aria-label={`Calendar for ${date.monthLong} ${date.year}`}
+    >
       {Info.weekdays(weekNames, { locale }).map((day, i) => (
         <CellComponent
           key={`locale:${locale}-month:${date.month}-day:${i}`}
           className="font-semibold"
+          role="columnheader"
+          aria-label={`${day}`}
         >
           {day}
         </CellComponent>
@@ -106,7 +119,7 @@ export const MonthCalendar = ({
       {[...blanksBefore, ...daysInMonth, ...blanksAfter]}
     </RootComponent>
   );
-};
+});
 
 interface Props {
   className?: string;
@@ -133,9 +146,9 @@ export const YearCalendar = ({
   const Footer = footerAs;
   const MonthHeader = monthHeaderAs;
   const months = Info.months("long", {
-    locale: date.locale!,
-    outputCalendar: date.outputCalendar!,
-    numberingSystem: date.numberingSystem!,
+    locale: date.locale || 'en',
+    outputCalendar: date.outputCalendar || 'gregory',
+    numberingSystem: date.numberingSystem || 'latn',
   });
 
   return (

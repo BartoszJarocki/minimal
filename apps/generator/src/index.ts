@@ -93,6 +93,16 @@ const createZipArchive = ({
   console.log(`Zipped ${folderPathToZip} into ${zippedFilePath} successfully.`);
 };
 
+interface BuildUrlParams {
+  theme: string;
+  locale: SupportedLocale;
+  type: 'month' | 'year';
+  year: number;
+  month: number;
+  format: PaperFormat;
+  variant: 'portrait' | 'landscape';
+}
+
 const buildUrl = ({
   theme,
   locale,
@@ -101,7 +111,7 @@ const buildUrl = ({
   month,
   format,
   variant,
-}: any) => {
+}: BuildUrlParams) => {
   return `http://localhost:3000/print?theme=${theme}&locale=${locale.code}&type=${type}&year=${year}&month=${month}&format=${format}&variant=${variant}`;
 };
 

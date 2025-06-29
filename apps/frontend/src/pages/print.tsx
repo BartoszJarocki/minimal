@@ -20,7 +20,11 @@ export const ThemeNameLookup: Record<Theme, string> = {
   simple: "Simple",
 };
 
-export const ThemeLookup: Record<CalendarType, Record<Theme, any>> = {
+interface CalendarComponent {
+  (props: { date: DateTime; variant: FormatVariant; size: Format }): JSX.Element;
+}
+
+export const ThemeLookup: Record<CalendarType, Record<Theme, CalendarComponent>> = {
   year: {
     simple: SimpleYearCalendar,
   },

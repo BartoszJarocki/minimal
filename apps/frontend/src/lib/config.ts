@@ -2,11 +2,11 @@ export const SSR_CACHE_CONFIG = `public, maxage=${60 * 10}, s-maxage=${
   60 * 10
 }, stale-while-revalidate=${10}`;
 
-export const getTitle = (year: number) => {
+export const getTitle = (year: number): string => {
   return `${year} Minimalist printable calendar`;
 };
 
-export const getDescription = (year: number) => {
+export const getDescription = (year: number): string => {
   return `Yearly and monthly, minimalist ${year} printable calendar available in A4 and A5 formats in both portrait and landscape.`;
 };
 

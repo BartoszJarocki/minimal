@@ -23,6 +23,7 @@ import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { SimpleHabitTracker } from "./habit-tracker";
 import { AVAILABLE_CALENDARS } from "../lib/config";
+import { CalendarErrorBoundary } from "../components/ErrorBoundary";
 
 export const HABIT_TRACKERS = [
   {
@@ -126,19 +127,23 @@ export default function Landing() {
                     <div className="-mx-2 overflow-x-auto px-2">
                       <div className="flex gap-4 py-4">
                         <ScaledPreview format="a4" variant="portrait">
-                          <SimpleMonthCalendar
-                            date={date.set({ year: calendar.year, month: 1 })}
-                            variant="portrait"
-                            size="a4"
-                          />
+                          <CalendarErrorBoundary>
+                            <SimpleMonthCalendar
+                              date={date.set({ year: calendar.year, month: 1 })}
+                              variant="portrait"
+                              size="a4"
+                            />
+                          </CalendarErrorBoundary>
                         </ScaledPreview>
 
                         <ScaledPreview format="a4" variant="portrait">
-                          <SimpleYearCalendar
-                            date={date.set({ year: calendar.year, month: 1 })}
-                            variant="portrait"
-                            size="a4"
-                          />
+                          <CalendarErrorBoundary>
+                            <SimpleYearCalendar
+                              date={date.set({ year: calendar.year, month: 1 })}
+                              variant="portrait"
+                              size="a4"
+                            />
+                          </CalendarErrorBoundary>
                         </ScaledPreview>
                       </div>
                     </div>
@@ -194,19 +199,23 @@ export default function Landing() {
                     <div className="-mx-2 overflow-x-auto px-2">
                       <div className="flex gap-4 py-4">
                         <ScaledPreview format="a4" variant="portrait">
-                          <SimpleHabitTracker
-                            className="paper-padding-15mm"
-                            date={date}
-                            title="Reading books in 2024"
-                          />
+                          <CalendarErrorBoundary>
+                            <SimpleHabitTracker
+                              className="paper-padding-15mm"
+                              date={date}
+                              title="Reading books in 2024"
+                            />
+                          </CalendarErrorBoundary>
                         </ScaledPreview>
 
                         <ScaledPreview format="a4" variant="portrait">
-                          <SimpleHabitTracker
-                            className="paper-padding-15mm"
-                            date={date}
-                            title="Headaches in 2024"
-                          />
+                          <CalendarErrorBoundary>
+                            <SimpleHabitTracker
+                              className="paper-padding-15mm"
+                              date={date}
+                              title="Headaches in 2024"
+                            />
+                          </CalendarErrorBoundary>
                         </ScaledPreview>
                       </div>
                     </div>

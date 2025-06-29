@@ -10,7 +10,7 @@ import {
 } from "../../components/ui/select";
 import { SupportedLocales } from "@minimal/config";
 import type { SupportedLocale } from "@minimal/config";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { cn } from "../../lib/utils";
@@ -154,7 +154,7 @@ export const SimpleHabitTracker = ({
 
 const createMonthDates = (date: DateTime) => {
   let days: DateTime[] = [];
-  for (let day = 1; day <= date.daysInMonth!; day++) {
+  for (let day = 1; day <= (date.daysInMonth || 31); day++) {
     days.push(date.set({ day }));
   }
 
@@ -174,6 +174,34 @@ const HabitTrackerCreator = () => {
       locale: locale.code,
     });
   });
+
+  const handleYearChange = useCallback((year: string) => {
+    setDate(DateTime.now().set({ year: parseInt(year) }));
+  }, []);
+
+  const handleLocaleChange = useCallback((localeCode: string) => {
+    const newLocale = SupportedLocales.find(
+      (locale) => locale.code === localeCode
+    );
+    if (!newLocale) return;
+    setLocale(newLocale);
+    setDate(date.reconfigure({ locale: newLocale.code }));
+  }, [date]);
+
+  const handleFormatChange = useCallback((format: string) => {
+    setFormat(format as SupportedFormat);
+  }, []);
+
+  const handlePrint = useCallback(() => {
+    window.print();
+  }, []);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      window.print();
+    }
+  }, []);
 
   const url = "https://useminimal.com";
   const title = `Minimalist Habit Tracker | Minimal`;
@@ -253,9 +281,7 @@ const HabitTrackerCreator = () => {
             <div className="mx-3 font-mono text-xs leading-loose">Year</div>
             <Select
               defaultValue={date.year.toString()}
-              onValueChange={(year) =>
-                setDate(DateTime.now().set({ year: parseInt(year) }))
-              }
+              onValueChange={handleYearChange}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Year" />
@@ -274,13 +300,7 @@ const HabitTrackerCreator = () => {
             <div className="mx-3 font-mono text-xs leading-loose">Locale</div>
             <Select
               defaultValue={locale.code}
-              onValueChange={(localeCode) => {
-                const newLocale = SupportedLocales.find(
-                  (locale) => locale.code === localeCode
-                )!;
-                setLocale(newLocale);
-                setDate(date.reconfigure({ locale: newLocale.code }));
-              }}
+              onValueChange={handleLocaleChange}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Language" />
@@ -299,9 +319,7 @@ const HabitTrackerCreator = () => {
             <div className="mx-3 font-mono text-xs leading-loose">Format</div>
             <Select
               defaultValue={format}
-              onValueChange={(format) => {
-                setFormat(format as SupportedFormat);
-              }}
+              onValueChange={handleFormatChange}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Formats" />
@@ -318,9 +336,9 @@ const HabitTrackerCreator = () => {
 
           <Button
             className="mt-auto w-full"
-            onClick={() => {
-              window.print();
-            }}
+            onClick={handlePrint}
+            onKeyDown={handleKeyDown}
+            aria-label="Print habit tracker"
           >
             Print
           </Button>

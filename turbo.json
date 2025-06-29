@@ -13,6 +13,17 @@
     },
     "generate": {
       "cache": false
+    },
+    "test": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
+    },
+    "test:watch": {
+      "cache": false
+    },
+    "test:coverage": {
+      "outputs": ["coverage/**"],
+      "dependsOn": []
     }
   }
 }

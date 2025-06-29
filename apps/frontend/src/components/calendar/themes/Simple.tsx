@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { DateTime } from "luxon";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   DayCell,
   YearCalendar,
@@ -19,12 +19,12 @@ interface SimpleYearCalendarProps {
   size: Format;
 }
 
-export const SimpleYearCalendar = ({
+export const SimpleYearCalendar = React.memo(({
   date,
   variant,
   size,
 }: SimpleYearCalendarProps) => {
-  const stylesLookup = {
+  const stylesLookup = useMemo(() => ({
     a4: {
       portrait: {
         root: "flex items-end text-dark",
@@ -69,8 +69,9 @@ export const SimpleYearCalendar = ({
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
     },
-  } as const;
-  const styles = stylesLookup[size][variant];
+  }), []) as const;
+  
+  const styles = useMemo(() => stylesLookup[size][variant], [stylesLookup, size, variant]);
 
   const YearCalendarMonthsGrid = ({
     children,
@@ -121,7 +122,7 @@ export const SimpleYearCalendar = ({
       />
     </div>
   );
-};
+});
 
 // Month Calendar
 // -----------------------------------------------
@@ -132,12 +133,12 @@ interface SimpleMonthlyCalendarProps {
   size: Format;
 }
 
-export const SimpleMonthCalendar = ({
+export const SimpleMonthCalendar = React.memo(({
   date,
   variant,
   size,
 }: SimpleMonthlyCalendarProps) => {
-  const stylesLookup = {
+  const stylesLookup = useMemo(() => ({
     a4: {
       portrait: {
         root: "flex h-full w-full flex-col p-12",
@@ -170,9 +171,9 @@ export const SimpleMonthCalendar = ({
         month: "py-2 text-md",
       },
     },
-  } as const;
+  }), []) as const;
 
-  const styles = stylesLookup[size][variant];
+  const styles = useMemo(() => stylesLookup[size][variant], [stylesLookup, size, variant]);
 
   const MonthCalendarDayCell = ({
     className,
@@ -212,8 +213,8 @@ export const SimpleMonthCalendar = ({
         date={date}
         weekNames={"short"}
         dayAs={MonthCalendarDayCell}
-        locale={date.locale!}
+        locale={date.locale || 'en'}
       />
     </div>
   );
-};
+});

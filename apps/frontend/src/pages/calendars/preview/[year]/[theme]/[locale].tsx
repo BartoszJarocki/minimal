@@ -38,7 +38,16 @@ export default function CalendarPreview({
 }: Props) {
   const YearCalendar = ThemeLookup["year"][theme];
   const MonthCalendar = ThemeLookup["month"][theme];
-  const selectedLocale = SupportedLocales.find((l) => l.code === locale)!;
+  const selectedLocale = SupportedLocales.find((l) => l.code === locale);
+  
+  if (!selectedLocale) {
+    return (
+      <div className="p-4 text-center">
+        <h1 className="text-2xl font-bold">Locale not found</h1>
+        <p>The locale '{locale}' is not supported.</p>
+      </div>
+    );
+  }
   const date = DateTime.now().set({ year }).reconfigure({
     locale,
     outputCalendar: selectedLocale.outputCalendar,

@@ -22,9 +22,23 @@ export default async function OpenGraphImageHandler(req: NextRequest) {
   const type = searchParams.get("type") as ImageType;
 
   if (type === "calendar") {
-    const day = parseInt(searchParams.get("day")!);
-    const month = parseInt(searchParams.get("month")!);
-    const year = parseInt(searchParams.get("year")!);
+    const dayParam = searchParams.get("day");
+    const monthParam = searchParams.get("month");
+    const yearParam = searchParams.get("year");
+    
+    if (!dayParam || !monthParam || !yearParam) {
+      return new Response("Missing required parameters", { status: 400 });
+    }
+    
+    const day = parseInt(dayParam);
+    const month = parseInt(monthParam);
+    const year = parseInt(yearParam);
+    
+    if (isNaN(day) || isNaN(month) || isNaN(year) || 
+        day < 1 || day > 31 || month < 1 || month > 12 || 
+        year < 2020 || year > 2030) {
+      return new Response("Invalid date parameters", { status: 400 });
+    }
     const date = DateTime.now().set({ day, month, year }).setLocale("en");
 
     return new ImageResponse(
@@ -58,8 +72,8 @@ export default async function OpenGraphImageHandler(req: NextRequest) {
     );
   }
 
-  const title = searchParams.get("title")!;
-  const description = searchParams.get("description")!;
+  const title = searchParams.get("title") || "Minimalist Calendar";
+  const description = searchParams.get("description") || "Beautiful printable calendar";
 
   return new ImageResponse(
     (
