@@ -227,6 +227,14 @@ export const SupportedLocales: SupportedLocale[] = [
     numberingSystem: "latn",
   },
   {
+    code: "fa",
+    name: "فارسی",
+    englishName: "Persian",
+    emoji: "🇮🇷",
+    outputCalendar: "persian",
+    numberingSystem: "arab",
+  },
+  {
     code: "ar",
     name: "العربية",
     englishName: "Arabic",
