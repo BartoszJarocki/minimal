@@ -232,7 +232,7 @@ export const SupportedLocales: SupportedLocale[] = [
     englishName: "Persian",
     emoji: "🇮🇷",
     outputCalendar: "persian",
-    numberingSystem: "arab",
+    numberingSystem: "arabext",
   },
   {
     code: "ar",
