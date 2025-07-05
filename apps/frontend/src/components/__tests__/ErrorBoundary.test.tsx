@@ -56,7 +56,7 @@ describe('ErrorBoundary', () => {
 
   it('should show error details in development mode', () => {
     const originalEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'development';
+    (process.env as any).NODE_ENV = 'development';
 
     render(
       <ErrorBoundary>
@@ -66,12 +66,12 @@ describe('ErrorBoundary', () => {
 
     expect(screen.getByText('Error details (development only)')).toBeInTheDocument();
 
-    process.env.NODE_ENV = originalEnv;
+    (process.env as any).NODE_ENV = originalEnv;
   });
 
   it('should not show error details in production mode', () => {
     const originalEnv = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'production';
+    (process.env as any).NODE_ENV = 'production';
 
     render(
       <ErrorBoundary>
@@ -81,7 +81,7 @@ describe('ErrorBoundary', () => {
 
     expect(screen.queryByText('Error details (development only)')).not.toBeInTheDocument();
 
-    process.env.NODE_ENV = originalEnv;
+    (process.env as any).NODE_ENV = originalEnv;
   });
 });
 

@@ -69,7 +69,7 @@ export const SimpleYearCalendar = React.memo(({
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
     },
-  }), []) as const;
+  }), []);
   
   const styles = useMemo(() => stylesLookup[size][variant], [stylesLookup, size, variant]);
 
@@ -124,6 +124,8 @@ export const SimpleYearCalendar = React.memo(({
   );
 });
 
+SimpleYearCalendar.displayName = 'SimpleYearCalendar';
+
 // Month Calendar
 // -----------------------------------------------
 
@@ -171,7 +173,7 @@ export const SimpleMonthCalendar = React.memo(({
         month: "py-2 text-md",
       },
     },
-  }), []) as const;
+  }), []);
 
   const styles = useMemo(() => stylesLookup[size][variant], [stylesLookup, size, variant]);
 
@@ -218,3 +220,5 @@ export const SimpleMonthCalendar = React.memo(({
     </div>
   );
 });
+
+SimpleMonthCalendar.displayName = 'SimpleMonthCalendar';

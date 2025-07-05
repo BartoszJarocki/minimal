@@ -44,7 +44,7 @@ export default function CalendarPreview({
     return (
       <div className="p-4 text-center">
         <h1 className="text-2xl font-bold">Locale not found</h1>
-        <p>The locale '{locale}' is not supported.</p>
+        <p>The locale &quot;{locale}&quot; is not supported.</p>
       </div>
     );
   }

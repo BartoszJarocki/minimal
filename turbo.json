@@ -8,6 +8,10 @@
     "lint": {
       "outputs": []
     },
+    "typecheck": {
+      "cache": false,
+      "outputs": []
+    },
     "dev": {
       "cache": false
     },

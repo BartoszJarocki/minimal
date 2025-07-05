@@ -2,6 +2,8 @@
   "name": "robot",
   "version": "0.0.0",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "typecheck": "echo 'No TypeScript files to check'"
+  },
   "dependencies": {}
 }

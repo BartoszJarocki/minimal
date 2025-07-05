@@ -40,7 +40,7 @@ interface MonthCalendarProps {
   dayAs?: React.ComponentType<{
     children: React.ReactNode;
     className?: string;
-  }>;
+  } & React.HTMLAttributes<HTMLDivElement>>;
   date: DateTime;
   weekNames: StringUnitLength;
   locale?: string;
@@ -120,6 +120,8 @@ export const MonthCalendar = React.memo(({
     </RootComponent>
   );
 });
+
+MonthCalendar.displayName = 'MonthCalendar';
 
 interface Props {
   className?: string;

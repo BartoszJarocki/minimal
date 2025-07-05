@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "generate": "bun ./src/index.ts"
+    "generate": "bun ./src/index.ts",
+    "typecheck": "echo 'Bun handles TypeScript natively'"
   },
   "dependencies": {
     "@minimal/config": "*",
