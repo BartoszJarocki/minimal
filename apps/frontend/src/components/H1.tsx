@@ -11,7 +11,7 @@ export const H1 = ({
   return (
     <h1
       className={clsx(
-        "text-wrap text-4xl font-bold leading-none tracking-tighter md:text-7xl",
+        "text-balance text-4xl font-bold leading-none tracking-tighter md:text-7xl",
         className
       )}
     >

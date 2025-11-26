@@ -72,7 +72,7 @@ export default function Landing() {
       <Container>
         <main className="px-4 md:px-8">
           <div className="md:space-y-18 min-h-0 space-y-8">
-            <section className="max-w-2xl space-y-4">
+            <section className="max-w-3xl space-y-4">
               <div className="flex items-center justify-start gap-x-6 pb-12">
                 <Logo className="h-24 w-24" />
                 <span className="hidden text-4xl font-bold">Minimal</span>
@@ -102,7 +102,7 @@ export default function Landing() {
                         and landscape.
                       </P>
 
-                      <P className="max-w-2xl text-sm">
+                      <P className="max-w-3xl text-sm">
                         Available languages:{" "}
                         {SupportedLocales.map((locale) => (
                           <InlineButton
@@ -166,7 +166,7 @@ export default function Landing() {
 
                     <P>{tracker.description}</P>
 
-                    <P className="max-w-2xl text-sm">
+                    <P className="max-w-3xl text-sm">
                       Available languages:{" "}
                       {SupportedLocales.map((locale) => (
                         <InlineButton
@@ -203,7 +203,11 @@ export default function Landing() {
                             <SimpleHabitTracker
                               className="paper-padding-15mm"
                               date={date}
-                              title="Reading books in 2024"
+                              habits={[
+                                { id: 0, title: "Exercise" },
+                                { id: 1, title: "Reading" },
+                                { id: 2, title: "Meditation" },
+                              ]}
                             />
                           </CalendarErrorBoundary>
                         </ScaledPreview>
@@ -213,7 +217,10 @@ export default function Landing() {
                             <SimpleHabitTracker
                               className="paper-padding-15mm"
                               date={date}
-                              title="Headaches in 2024"
+                              habits={[
+                                { id: 0, title: "Water intake" },
+                                { id: 1, title: "Sleep 8hrs" },
+                              ]}
                             />
                           </CalendarErrorBoundary>
                         </ScaledPreview>

@@ -51,7 +51,7 @@ export default function Preview({ year }: Props) {
 
       <Container>
         <main className="pb-24">
-          <section className="max-w-2xl space-y-4">
+          <section className="max-w-3xl space-y-4">
             <H1>{title}</H1>
             <P>{description}</P>
           </section>

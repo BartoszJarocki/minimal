@@ -1,5 +1,4 @@
 import { Logo } from "./Logo";
-import Balancer from "react-wrap-balancer";
 import Link from "next/link";
 import { joinComponents } from "../lib/utils";
 import { SupportedYears } from "./calendar/Calendar";
@@ -44,9 +43,7 @@ export const Footer = () => {
           <div className="space-y-8">
             <Logo className="h-7 w-auto" />
             <h2 className="text-sm leading-6 text-gray-600">
-              <Balancer>
-                Making the world more productive one day at a time.
-              </Balancer>
+              Making the world more productive one day at a time.
             </h2>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (

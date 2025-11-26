@@ -4,7 +4,6 @@ import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
-import Balancer from "react-wrap-balancer";
 import { BuyButton } from "../../../../../components/BuyButton";
 import {
   Format,
@@ -39,7 +38,7 @@ export default function CalendarPreview({
   const YearCalendar = ThemeLookup["year"][theme];
   const MonthCalendar = ThemeLookup["month"][theme];
   const selectedLocale = SupportedLocales.find((l) => l.code === locale);
-  
+
   if (!selectedLocale) {
     return (
       <div className="p-4 text-center">
@@ -85,10 +84,8 @@ export default function CalendarPreview({
       />
       <Container>
         <main className="pb-24">
-          <section className="max-w-2xl space-y-6">
-            <H1>
-              <Balancer>{title}</Balancer>
-            </H1>
+          <section className="max-w-3xl space-y-6">
+            <H1>{title}</H1>
 
             <P>
               Introducing the ultimate {selectedLocale.englishName}{" "}

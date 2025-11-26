@@ -1,6 +1,5 @@
 import { DateTime, Info } from "luxon";
 import clsx from "clsx";
-import { Inter } from "next/font/google";
 import {
   Select,
   SelectContent,
@@ -10,14 +9,14 @@ import {
 } from "../../components/ui/select";
 import { SupportedLocales } from "@minimal/config";
 import type { SupportedLocale } from "@minimal/config";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { cn } from "../../lib/utils";
 import { Badge } from "../../components/ui/badge";
 import { NextSeo } from "next-seo";
 
-const font = Inter({ subsets: ["latin"] });
+export type HabitData = { id: number; title: string };
 
 type HABIT_TRACKERS_THEMES = "simple" | "flow";
 
@@ -89,61 +88,103 @@ const FlowHabitTracker = ({
   );
 };
 
+const getCellSize = (format: SupportedFormat = "A4") => {
+  const sizes = {
+    A4: { cell: "w-3 h-3", text: "text-[6px]", gap: "gap-1", label: "w-20" },
+    A5: { cell: "w-1.5 h-1.5", text: "text-[3px]", gap: "gap-0.5", label: "w-12" },
+    Letter: { cell: "w-2.5 h-2.5", text: "text-[5px]", gap: "gap-0.5", label: "w-16" },
+  };
+  return sizes[format];
+};
+
 export const SimpleHabitTracker = ({
   className,
   date,
-  title,
+  habits,
+  format = "A4",
+  onUpdateHabit,
 }: {
   className?: string;
   date: DateTime;
-  title?: string;
+  habits: HabitData[];
+  format?: SupportedFormat;
+  onUpdateHabit?: (id: number, title: string) => void;
 }) => {
-  const [habitTitle, setHabitTitle] = useState(title ?? "");
   const months = Info.months("long", {
     locale: date.locale!,
     outputCalendar: date.outputCalendar!,
     numberingSystem: date.numberingSystem!,
   });
 
+  const { cell: cellSize, text: textSize, gap: gapSize, label: labelWidth } = getCellSize(format);
+
   return (
     <div className={cn("overflow-hidden bg-white", className)}>
-      <div>
-        <Input
-          className="text-5xl font-bold leading-none tracking-tighter placeholder:text-black/40"
-          placeholder="Click to edit"
-          onChange={(e) => setHabitTitle(e.target.value)}
-          value={habitTitle}
-        />
-      </div>
-      <div className="mt-4 flex flex-col gap-3">
+      <div className="mb-4 text-2xl font-bold tracking-tight">{date.year}</div>
+      <div className="flex flex-col gap-2">
         {months.map((_, i) => {
           const monthDate = date.set({ month: i + 1 });
+          const days = createMonthDates(monthDate);
 
           return (
             <div key={`year-cal-locale:${monthDate.locale}-month:${i}`}>
-              <div>
-                <span className="ml-auto align-bottom leading-none text-black">
+              <div className="mb-0.5">
+                <span className="text-xs font-medium text-black">
                   {monthDate.monthLong}
                 </span>
               </div>
-              <div className="border-px inline-flex divide-x divide-black/20 border-x border-y border-black/20 text-xs">
-                {createMonthDates(monthDate).map((day) => (
-                  <div
-                    className={clsx(
-                      "flex aspect-square h-[21px] w-[21px] flex-col",
-                      [6, 7].includes(day.weekday) ? "bg-black/10" : "bg-white"
-                    )}
-                    key={`month:${date.month}-${day}`}
-                  >
-                    <span className="p-[2px] text-[6px] leading-none text-black/80">
+
+              {/* Day numbers header */}
+              <div className="flex">
+                <div className={cn(labelWidth, "shrink-0 px-1")} />
+                <div className={cn("inline-flex", gapSize)}>
+                  {days.map((day) => (
+                    <div
+                      key={`header-${day.day}`}
+                      className={cn(
+                        cellSize,
+                        "flex items-center justify-center tabular-nums",
+                        textSize,
+                        "text-black/50"
+                      )}
+                    >
                       {day.day}
-                    </span>
-                    <span className="mt-auto p-[2px] align-bottom text-[5px] leading-none text-black/50">
-                      {day.weekdayShort![0]}
-                    </span>
-                  </div>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {/* Habit rows */}
+              {habits.map((habit, idx) => (
+                <div key={habit.id} className="flex">
+                  <Input
+                    className={cn(
+                      labelWidth,
+                      "shrink-0 h-auto border-0 p-0 px-1 rounded-none mx-0",
+                      "focus-visible:ring-0 focus-visible:ring-offset-0",
+                      textSize,
+                      "placeholder:text-black/30"
+                    )}
+                    placeholder={`Habit ${idx + 1}`}
+                    value={habit.title}
+                    onChange={(e) => onUpdateHabit?.(habit.id, e.target.value)}
+                  />
+                  <div className={cn("inline-flex", gapSize)}>
+                    {days.map((day) => (
+                      <div
+                        key={`habit-${habit.id}-day-${day.day}`}
+                        className={cn(
+                          cellSize,
+                          "rounded-full border border-black/20",
+                          [6, 7].includes(day.weekday)
+                            ? "bg-black/10"
+                            : "bg-white"
+                        )}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           );
         })}
@@ -169,11 +210,32 @@ const HabitTrackerCreator = () => {
       SupportedLocales[0]
   );
   const [format, setFormat] = useState<SupportedFormat>("A4");
+  const [habits, setHabits] = useState<HabitData[]>([
+    { id: 0, title: "" },
+    { id: 1, title: "" },
+    { id: 2, title: "" },
+  ]);
+  const [newHabitName, setNewHabitName] = useState("");
   const [date, setDate] = useState(() => {
     return DateTime.now().reconfigure({
       locale: locale.code,
     });
   });
+
+  const addHabit = useCallback(() => {
+    if (newHabitName.trim()) {
+      setHabits((prev) => [...prev, { id: Date.now(), title: newHabitName.trim() }]);
+      setNewHabitName("");
+    }
+  }, [newHabitName]);
+
+  const removeHabit = useCallback((id: number) => {
+    setHabits((prev) => prev.filter((h) => h.id !== id));
+  }, []);
+
+  const updateHabitTitle = useCallback((id: number, title: string) => {
+    setHabits((prev) => prev.map((h) => (h.id === id ? { ...h, title } : h)));
+  }, []);
 
   const handleYearChange = useCallback((year: string) => {
     setDate(DateTime.now().set({ year: parseInt(year) }));
@@ -231,9 +293,7 @@ const HabitTrackerCreator = () => {
           cardType: "summary_large_image",
         }}
       />
-      <div
-        className={clsx("flex h-full w-full overflow-hidden", font.className)}
-      >
+      <div className="flex h-full w-full overflow-hidden">
         <div className="flex-1 overflow-auto bg-black/5 p-8 print:overflow-hidden print:p-0">
           {theme === "simple" && (
             <SimpleHabitTracker
@@ -242,6 +302,9 @@ const HabitTrackerCreator = () => {
                 FORMATS_STYLES[format]
               )}
               date={date}
+              habits={habits}
+              format={format}
+              onUpdateHabit={updateHabitTitle}
             />
           )}
           {theme === "flow" && (
@@ -332,6 +395,43 @@ const HabitTrackerCreator = () => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <div className="mx-3 font-mono text-xs leading-loose">Habits</div>
+            <div className="flex gap-2">
+              <Input
+                className="flex-1 h-10"
+                placeholder="New habit..."
+                value={newHabitName}
+                onChange={(e) => setNewHabitName(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addHabit()}
+              />
+              <Button variant="outline" onClick={addHabit}>
+                Add
+              </Button>
+            </div>
+
+            {habits.length > 0 && (
+              <div className="mt-2 space-y-1">
+                {habits.map((habit, idx) => (
+                  <div
+                    key={habit.id}
+                    className="flex items-center gap-2 rounded px-2 py-1 text-sm hover:bg-black/5"
+                  >
+                    <span className="flex-1 truncate">
+                      {habit.title || `Habit ${idx + 1}`}
+                    </span>
+                    <button
+                      onClick={() => removeHabit(habit.id)}
+                      className="text-black/40 hover:text-black"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <Button

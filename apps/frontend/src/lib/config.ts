@@ -11,25 +11,25 @@ export const getDescription = (year: number): string => {
 };
 
 export const BUY_URLS: Record<number, string> = {
-  2024: "https://bjarocki.gumroad.com/l/minimalist",
-  2025: "https://bjarocki.gumroad.com/l/minimalist-2025",
+  2026: "https://bjarocki.gumroad.com/l/minimalist-2026",
+  2027: "https://bjarocki.gumroad.com/l/minimalist-2027",
 };
 
 export const AVAILABLE_CALENDARS = [
   {
     theme: "simple",
-    year: 2024,
-    title: getTitle(2024),
-    description: getDescription(2024),
+    year: 2026,
+    title: getTitle(2026),
+    description: getDescription(2026),
     isVisible: true,
-    buyLink: BUY_URLS[2024],
+    buyLink: BUY_URLS[2026],
   },
   {
     theme: "simple",
-    year: 2025,
-    title: getTitle(2025),
-    description: getDescription(2025),
+    year: 2027,
+    title: getTitle(2027),
+    description: getDescription(2027),
     isVisible: true,
-    buyLink: BUY_URLS[2025],
+    buyLink: BUY_URLS[2027],
   },
 ].reverse();

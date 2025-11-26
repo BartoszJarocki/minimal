@@ -4,7 +4,6 @@ import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
-import Balancer from "react-wrap-balancer";
 import { BuyButton } from "../../../../../components/BuyButton";
 import {
   SimpleYearCalendar,
@@ -61,7 +60,7 @@ export default function Preview({ theme, year, locale }: Props) {
 
       <Container>
         <main className="pb-24">
-          <section className="max-w-2xl space-y-6">
+          <section className="max-w-3xl space-y-6">
             <div className="overflow-x-auto px-2">
               <div className="flex gap-4 py-4">
                 <ScaledPreview variant="portrait" format="a4">
@@ -82,9 +81,7 @@ export default function Preview({ theme, year, locale }: Props) {
               </div>
             </div>
 
-            <H1>
-              <Balancer>{title}</Balancer>
-            </H1>
+            <H1>{title}</H1>
 
             <P>
               Introducing the ultimate {date.toFormat("yyyy")}{" "}
@@ -135,7 +132,7 @@ export default function Preview({ theme, year, locale }: Props) {
             <BuyButton link={BUY_URLS[date.year]} />
           </section>
 
-          <section className="mt-8 max-w-2xl px-1">
+          <section className="mt-8 max-w-3xl px-1">
             <ul role="list" className="flex flex-col gap-2">
               {SupportedLocales.map((locale) => (
                 <li
