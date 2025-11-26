@@ -44,6 +44,7 @@ interface MonthCalendarProps {
   date: DateTime;
   weekNames: StringUnitLength;
   locale?: string;
+  weekStartsOn?: 1 | 7; // 1=Monday, 7=Sunday (Luxon convention)
 }
 
 export const MonthCalendar = React.memo(({
@@ -53,6 +54,7 @@ export const MonthCalendar = React.memo(({
   date,
   weekNames,
   locale = date.locale || 'en',
+  weekStartsOn = 1,
 }: MonthCalendarProps) => {
   const RootComponent = as;
   const CellComponent = dayAs;
@@ -67,10 +69,15 @@ export const MonthCalendar = React.memo(({
   ), [CellComponent, locale, date.month]);
 
   // calculate how many blank cells are at the start
+  // Luxon weekday: 1=Mon, 7=Sun
+  // For Monday start (1): offset = weekday - 1 (Mon=0, Sun=6)
+  // For Sunday start (7): offset = weekday % 7 (Sun=0, Mon=1, Sat=6)
   const firstDayOfTheMonth = date.startOf("month");
   const blanksBefore: JSX.Element[] = [];
-  const blanksBeforeCount = firstDayOfTheMonth.weekday;
-  for (let i = 1; i < blanksBeforeCount; i++) {
+  const blanksBeforeCount = weekStartsOn === 7
+    ? firstDayOfTheMonth.weekday % 7
+    : firstDayOfTheMonth.weekday - 1;
+  for (let i = 0; i < blanksBeforeCount; i++) {
     blanksBefore.push(
       createEmptyCell(firstDayOfTheMonth.minus({ days: blanksBeforeCount - i }))
     );
@@ -93,9 +100,11 @@ export const MonthCalendar = React.memo(({
 
   // calculate how many blank cells are at the end
   const lastDayInMonth = date.endOf("month");
-  const lastDayInMonthIndex = lastDayInMonth.weekday;
+  const lastDayOffset = weekStartsOn === 7
+    ? lastDayInMonth.weekday % 7
+    : lastDayInMonth.weekday - 1;
   const blanksAfter: JSX.Element[] = [];
-  const blanksAfterCount = WEEK_LENGTH - lastDayInMonthIndex;
+  const blanksAfterCount = 6 - lastDayOffset;
   for (let i = 1; i <= blanksAfterCount; i++) {
     blanksAfter.push(createEmptyCell(lastDayInMonth.plus({ days: i })));
   }
@@ -106,9 +115,16 @@ export const MonthCalendar = React.memo(({
       role="grid"
       aria-label={`Calendar for ${date.monthLong} ${date.year}`}
     >
-      {Info.weekdays(weekNames, { locale }).map((day, i) => (
+      {useMemo(() => {
+        const weekdays = Info.weekdays(weekNames, { locale });
+        // Rotate: move Sunday to front when weekStartsOn=7
+        const orderedWeekdays = weekStartsOn === 7
+          ? [weekdays[6], ...weekdays.slice(0, 6)]
+          : weekdays;
+        return orderedWeekdays;
+      }, [weekNames, locale, weekStartsOn]).map((day, i) => (
         <CellComponent
-          key={`locale:${locale}-month:${date.month}-day:${i}`}
+          key={`locale:${locale}-month:${date.month}-weekday:${i}`}
           className="font-semibold"
           role="columnheader"
           aria-label={`${day}`}
@@ -131,6 +147,7 @@ interface Props {
   footerAs?: React.ComponentType<{ date: DateTime }>;
   dayAs: React.ComponentType<{ children: React.ReactNode }>;
   date: DateTime;
+  weekStartsOn?: 1 | 7;
 }
 
 export const YearCalendar = ({
@@ -141,6 +158,7 @@ export const YearCalendar = ({
   bodyAs,
   footerAs,
   dayAs,
+  weekStartsOn = 1,
 }: Props) => {
   const Header = headerAs;
   const Body = bodyAs;
@@ -172,6 +190,7 @@ export const YearCalendar = ({
                   date={monthDate}
                   weekNames="narrow"
                   dayAs={DayCell}
+                  weekStartsOn={weekStartsOn}
                 />
               </section>
             </div>

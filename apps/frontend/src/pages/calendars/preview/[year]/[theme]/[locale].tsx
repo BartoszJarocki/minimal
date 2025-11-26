@@ -26,6 +26,7 @@ interface Props {
   format: Format;
   variant: FormatVariant;
   year: number;
+  weekStartsOn?: 1 | 7;
 }
 
 export default function CalendarPreview({
@@ -34,10 +35,12 @@ export default function CalendarPreview({
   variant,
   year,
   locale,
+  weekStartsOn,
 }: Props) {
   const YearCalendar = ThemeLookup["year"][theme];
   const MonthCalendar = ThemeLookup["month"][theme];
   const selectedLocale = SupportedLocales.find((l) => l.code === locale);
+  const effectiveWeekStartsOn = (weekStartsOn ?? selectedLocale?.weekStartsOn ?? 1) as 1 | 7;
 
   if (!selectedLocale) {
     return (
@@ -144,7 +147,7 @@ export default function CalendarPreview({
 
             <div className="mt-4">
               <ScaledPreview format={format} variant={variant}>
-                <YearCalendar date={date} variant={variant} size={format} />
+                <YearCalendar date={date} variant={variant} size={format} weekStartsOn={effectiveWeekStartsOn} />
               </ScaledPreview>
             </div>
           </section>
@@ -164,6 +167,7 @@ export default function CalendarPreview({
                       date={date.set({ month: index + 1 })}
                       variant={variant}
                       size={format}
+                      weekStartsOn={effectiveWeekStartsOn}
                     />
                   </ScaledPreview>
                 </div>
@@ -190,16 +194,18 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 /**
- * Example url: /preview/en?theme=simple-minimalist&year=2021&format=a4&variant=portrait
+ * Example url: /preview/en?theme=simple-minimalist&year=2021&format=a4&variant=portrait&weekStartsOn=1
  * @param query
  * @returns
  */
-export const parseQueryParams = (query: ParsedUrlQuery) => {
+export const parseQueryParams = (query: ParsedUrlQuery): Props => {
   const locale = query.locale as string | undefined;
   const theme = query.theme as Theme | undefined;
   const year = query.year ? parseInt(query.year as string, 10) : undefined;
   const format = query.format as Format | undefined;
   const variant = query.variant as FormatVariant | undefined;
+  const weekStartsOnParam = query.weekStartsOn as string | undefined;
+  const weekStartsOn: 1 | 7 | undefined = weekStartsOnParam === '7' ? 7 : weekStartsOnParam === '1' ? 1 : undefined;
 
   return {
     locale: locale || "en",
@@ -207,5 +213,6 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
     year: year || DateTime.now().year,
     format: format || "a4",
     variant: variant || "portrait",
+    weekStartsOn,
   };
 };

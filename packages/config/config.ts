@@ -5,6 +5,7 @@ export type SupportedLocale = {
   emoji: string;
   outputCalendar: string;
   numberingSystem: string;
+  weekStartsOn: 1 | 7; // 1=Monday, 7=Sunday (Luxon convention)
 };
 
 export type Theme = "simple";
@@ -17,6 +18,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇺🇸",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 7,
   },
   {
     code: "fr",
@@ -25,6 +27,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇫🇷",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "de",
@@ -33,6 +36,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇩🇪",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "es",
@@ -41,6 +45,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇪🇸",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "it",
@@ -49,6 +54,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇮🇹",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "pt",
@@ -57,6 +63,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇵🇹",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "pl",
@@ -65,6 +72,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇵🇱",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "lv",
@@ -73,6 +81,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇱🇻",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "nn",
@@ -81,6 +90,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇳🇴",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "cs",
@@ -89,6 +99,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇨🇿",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "uk",
@@ -97,6 +108,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇺🇦",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "hr",
@@ -105,6 +117,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇭🇷",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "sk",
@@ -113,6 +126,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇸🇰",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "sl",
@@ -121,6 +135,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇸🇮",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "th",
@@ -129,6 +144,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇹🇭",
     outputCalendar: "buddhist",
     numberingSystem: "thai",
+    weekStartsOn: 1,
   },
   {
     code: "da",
@@ -137,6 +153,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇩🇰",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "nl",
@@ -145,6 +162,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇳🇱",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "fi",
@@ -153,6 +171,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇫🇮",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "is",
@@ -161,6 +180,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇮🇸",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "hu",
@@ -169,6 +189,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇭🇺",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "ro",
@@ -177,6 +198,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇷🇴",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "sv",
@@ -185,6 +207,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇸🇪",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "tr",
@@ -193,6 +216,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇹🇷",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "ru",
@@ -201,6 +225,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇷🇺",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "ko",
@@ -209,6 +234,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇰🇷",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 7,
   },
   {
     code: "hi",
@@ -217,6 +243,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇮🇳",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 7,
   },
   {
     code: "el",
@@ -225,6 +252,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇬🇷",
     outputCalendar: "gregory",
     numberingSystem: "latn",
+    weekStartsOn: 1,
   },
   {
     code: "fa",
@@ -233,6 +261,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇮🇷",
     outputCalendar: "persian",
     numberingSystem: "arabext",
+    weekStartsOn: 1,
   },
   {
     code: "ar",
@@ -241,6 +270,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇸🇦",
     outputCalendar: "islamic",
     numberingSystem: "arab",
+    weekStartsOn: 7,
   },
   {
     code: "he",
@@ -249,6 +279,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇮🇱",
     outputCalendar: "hebrew",
     numberingSystem: "latn",
+    weekStartsOn: 7,
   },
   {
     code: "ja",
@@ -257,6 +288,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇯🇵",
     outputCalendar: "japanese",
     numberingSystem: "latn",
+    weekStartsOn: 7,
   },
   {
     code: "zh",
@@ -265,6 +297,7 @@ export const SupportedLocales: SupportedLocale[] = [
     emoji: "🇨🇳",
     outputCalendar: "chinese",
     numberingSystem: "latn",
+    weekStartsOn: 7,
   },
   // {
   //   code: "saz",

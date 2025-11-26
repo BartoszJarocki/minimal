@@ -20,7 +20,7 @@ export const ThemeNameLookup: Record<Theme, string> = {
   simple: "Simple",
 };
 
-type CalendarComponent = React.ComponentType<{ date: DateTime; variant: FormatVariant; size: Format }>;
+type CalendarComponent = React.ComponentType<{ date: DateTime; variant: FormatVariant; size: Format; weekStartsOn?: 1 | 7 }>;
 
 export const ThemeLookup: Record<CalendarType, Record<Theme, CalendarComponent>> = {
   year: {
@@ -36,11 +36,13 @@ export const toPrintClassName = (format: Format, variant: FormatVariant) =>
 
 export default function Print() {
   const router = useRouter();
-  const { theme, locale, type, month, year, format, variant } =
+  const { theme, locale, type, month, year, format, variant, weekStartsOn } =
     parseQueryParams(router.query);
   const selectedLocale = SupportedLocales.find(
     (l) => l.code.toLowerCase() === locale.toLowerCase()
   );
+  // Use URL param if provided, otherwise use locale default
+  const effectiveWeekStartsOn = (weekStartsOn ?? selectedLocale?.weekStartsOn ?? 1) as 1 | 7;
 
   if (!selectedLocale) {
     return (
@@ -66,13 +68,13 @@ export default function Print() {
       )}
     >
       <NextSeo nofollow noindex />
-      <Calendar date={date} variant={variant} size={format} />
+      <Calendar date={date} variant={variant} size={format} weekStartsOn={effectiveWeekStartsOn} />
     </div>
   );
 }
 
 /**
- * Example url: /print?theme=simple-minimalist&locale=en-US&type=year&month=1&year=2021&format=a4&variant=portrait
+ * Example url: /print?theme=simple-minimalist&locale=en-US&type=year&month=1&year=2021&format=a4&variant=portrait&weekStartsOn=1
  * @param query
  * @returns
  */
@@ -84,6 +86,8 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
   const year = query.year ? parseInt(query.year as string, 10) : undefined;
   const format = query.format as Format | undefined;
   const variant = query.variant as FormatVariant | undefined;
+  const weekStartsOnParam = query.weekStartsOn as string | undefined;
+  const weekStartsOn = weekStartsOnParam === '7' ? 7 : weekStartsOnParam === '1' ? 1 : undefined;
 
   return {
     theme: theme || "simple",
@@ -93,5 +97,6 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
     year: year || DateTime.now().year,
     format: format || "a4",
     variant: variant || "portrait",
+    weekStartsOn,
   };
 };

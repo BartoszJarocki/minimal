@@ -18,6 +18,8 @@ interface CalendarPaths {
   };
 }
 
+type WeekStartsOn = 1 | 7; // 1=Monday, 7=Sunday
+
 type Options = {
   browser: Browser;
   year: number;
@@ -25,6 +27,7 @@ type Options = {
   theme: string;
   locale: SupportedLocale;
   format: PaperFormat;
+  weekStartsOn: WeekStartsOn;
 };
 
 // Utility Functions
@@ -40,15 +43,20 @@ const getPaperDimensions = (format: PaperFormat, isLandscape = false) => {
     : dimensions;
 };
 
+const getWeekStartLabel = (weekStartsOn: WeekStartsOn) =>
+  weekStartsOn === 7 ? 'sunday-start' : 'monday-start';
+
 const getCalendarPaths = (
   baseDir: string,
   theme: string,
   year: number,
   locale: string,
   format: string,
-  type: 'monthly' | 'yearly'
+  type: 'monthly' | 'yearly',
+  weekStartsOn: WeekStartsOn
 ): CalendarPaths => {
-  const root = path.join(baseDir, theme, year.toString(), format, locale, type);
+  const weekStartLabel = getWeekStartLabel(weekStartsOn);
+  const root = path.join(baseDir, theme, year.toString(), format, locale, weekStartLabel, type);
 
   return {
     root,
@@ -101,6 +109,7 @@ interface BuildUrlParams {
   month: number;
   format: PaperFormat;
   variant: 'portrait' | 'landscape';
+  weekStartsOn: WeekStartsOn;
 }
 
 const buildUrl = ({
@@ -111,8 +120,9 @@ const buildUrl = ({
   month,
   format,
   variant,
+  weekStartsOn,
 }: BuildUrlParams) => {
-  return `http://localhost:3000/print?theme=${theme}&locale=${locale.code}&type=${type}&year=${year}&month=${month}&format=${format}&variant=${variant}`;
+  return `http://localhost:3000/print?theme=${theme}&locale=${locale.code}&type=${type}&year=${year}&month=${month}&format=${format}&variant=${variant}&weekStartsOn=${weekStartsOn}`;
 };
 
 const generateMonthlyCalendar = async ({
@@ -122,6 +132,7 @@ const generateMonthlyCalendar = async ({
   theme,
   locale,
   format,
+  weekStartsOn,
 }: Options) => {
   const type = 'month';
   const allMonths = Info.months('long', { locale: locale.code });
@@ -132,7 +143,8 @@ const generateMonthlyCalendar = async ({
     year,
     locale.code,
     format,
-    'monthly'
+    'monthly',
+    weekStartsOn
   );
 
   await Promise.all([
@@ -159,6 +171,7 @@ const generateMonthlyCalendar = async ({
       month: monthIndex,
       format,
       variant: 'portrait',
+      weekStartsOn,
     });
 
     await page.goto(portraitUrl, { waitUntil: 'networkidle0' });
@@ -186,6 +199,7 @@ const generateMonthlyCalendar = async ({
       month: monthIndex,
       format,
       variant: 'landscape',
+      weekStartsOn,
     });
 
     await page.goto(landscapeUrl, { waitUntil: 'networkidle0' });
@@ -215,6 +229,7 @@ const generateYearlyCalendar = async ({
   theme,
   locale,
   format,
+  weekStartsOn,
 }: Options) => {
   const type = 'year';
   const page = await browser.newPage();
@@ -225,7 +240,8 @@ const generateYearlyCalendar = async ({
     year,
     locale.code,
     format,
-    'yearly'
+    'yearly',
+    weekStartsOn
   );
 
   await Promise.all([
@@ -249,6 +265,7 @@ const generateYearlyCalendar = async ({
     month: 1,
     format,
     variant: 'portrait',
+    weekStartsOn,
   });
 
   await page.goto(portraitUrl, { waitUntil: 'networkidle0' });
@@ -276,6 +293,7 @@ const generateYearlyCalendar = async ({
     month: 1,
     format,
     variant: 'landscape',
+    weekStartsOn,
   });
 
   await page.goto(landscapeUrl, { waitUntil: 'networkidle0' });
@@ -300,6 +318,7 @@ async function generateProducts() {
   const years = [2026, 2027];
   const formats: PaperFormat[] = ['a4', 'a5'];
   const themes: Theme[] = ['simple'];
+  const weekStartOptions: WeekStartsOn[] = [1, 7]; // Monday and Sunday
 
   for (const theme of themes) {
     for (const year of years) {
@@ -313,33 +332,38 @@ async function generateProducts() {
 
       for (const format of formats) {
         for (const locale of SupportedLocales) {
-          console.log(
-            `Generating calendar - [${year}, ${theme}, ${locale.englishName}, ${format}]`
-          );
+          for (const weekStartsOn of weekStartOptions) {
+            const weekStartLabel = getWeekStartLabel(weekStartsOn);
+            console.log(
+              `Generating calendar - [${year}, ${theme}, ${locale.englishName}, ${format}, ${weekStartLabel}]`
+            );
 
-          await Promise.all([
-            generateMonthlyCalendar({
-              browser,
-              destDir,
-              year,
-              theme,
-              locale,
-              format,
-            }),
-            generateYearlyCalendar({
-              browser,
-              year,
-              destDir,
-              theme,
-              locale,
-              format,
-            }),
-          ]);
+            await Promise.all([
+              generateMonthlyCalendar({
+                browser,
+                destDir,
+                year,
+                theme,
+                locale,
+                format,
+                weekStartsOn,
+              }),
+              generateYearlyCalendar({
+                browser,
+                year,
+                destDir,
+                theme,
+                locale,
+                format,
+                weekStartsOn,
+              }),
+            ]);
 
-          console.log(`Done generating ${locale.englishName} ${format}`);
+            console.log(`Done generating ${locale.englishName} ${format} ${weekStartLabel}`);
+          }
         }
 
-        // Create format-specific zip with all languages
+        // Create format-specific zip with all languages and week start variants
         const zipName = `${theme}-${year}-${format}.zip`;
         const sourceDir = path.join(destDir, theme, year.toString(), format);
 

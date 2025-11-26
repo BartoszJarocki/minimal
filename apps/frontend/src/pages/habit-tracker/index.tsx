@@ -210,6 +210,9 @@ const HabitTrackerCreator = () => {
       SupportedLocales[0]
   );
   const [format, setFormat] = useState<SupportedFormat>("A4");
+  const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(
+    () => (SupportedLocales.find((l) => l.code === "en-US")?.weekStartsOn ?? 7)
+  );
   const [habits, setHabits] = useState<HabitData[]>([
     { id: 0, title: "" },
     { id: 1, title: "" },
@@ -247,6 +250,7 @@ const HabitTrackerCreator = () => {
     );
     if (!newLocale) return;
     setLocale(newLocale);
+    setWeekStartsOn(newLocale.weekStartsOn);
     setDate((prev) => prev.reconfigure({
       locale: newLocale.code,
       outputCalendar: newLocale.outputCalendar,
@@ -397,6 +401,22 @@ const HabitTrackerCreator = () => {
                     {format}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <div className="mx-3 font-mono text-xs leading-loose">Week starts on</div>
+            <Select
+              value={weekStartsOn.toString()}
+              onValueChange={(val) => setWeekStartsOn(val === "7" ? 7 : 1)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Week start" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="7">Sunday</SelectItem>
+                <SelectItem value="1">Monday</SelectItem>
               </SelectContent>
             </Select>
           </div>

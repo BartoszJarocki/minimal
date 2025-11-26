@@ -39,6 +39,7 @@ export default function Landing() {
   const [date, setDate] = useState(
     DateTime.now().set({ year: 2025, month: 1 })
   );
+  const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(7); // default Sunday for en
 
   const url = "https://useminimal.com";
   const title = `Minimalist printable calendars, habit trackers and planners`;
@@ -114,11 +115,29 @@ export default function Landing() {
                                   outputCalendar: locale.outputCalendar,
                                 })
                               );
+                              setWeekStartsOn(locale.weekStartsOn);
                             }}
                           >
                             {locale.englishName}
                           </InlineButton>
                         )).reduce(joinComponents, [])}
+                      </P>
+
+                      <P className="max-w-3xl text-sm">
+                        Week starts on:{" "}
+                        <InlineButton
+                          onClick={() => setWeekStartsOn(7)}
+                          className={weekStartsOn === 7 ? "font-bold" : ""}
+                        >
+                          Sunday
+                        </InlineButton>
+                        {" / "}
+                        <InlineButton
+                          onClick={() => setWeekStartsOn(1)}
+                          className={weekStartsOn === 1 ? "font-bold" : ""}
+                        >
+                          Monday
+                        </InlineButton>
                       </P>
 
                       <BuyButton link={calendar.buyLink} />
@@ -132,6 +151,7 @@ export default function Landing() {
                               date={date.set({ year: calendar.year, month: 1 })}
                               variant="portrait"
                               size="a4"
+                              weekStartsOn={weekStartsOn}
                             />
                           </CalendarErrorBoundary>
                         </ScaledPreview>
@@ -142,6 +162,7 @@ export default function Landing() {
                               date={date.set({ year: calendar.year, month: 1 })}
                               variant="portrait"
                               size="a4"
+                              weekStartsOn={weekStartsOn}
                             />
                           </CalendarErrorBoundary>
                         </ScaledPreview>

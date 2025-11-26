@@ -17,12 +17,14 @@ interface SimpleYearCalendarProps {
   date: DateTime;
   variant: FormatVariant;
   size: Format;
+  weekStartsOn?: 1 | 7;
 }
 
 export const SimpleYearCalendar = React.memo(({
   date,
   variant,
   size,
+  weekStartsOn = 1,
 }: SimpleYearCalendarProps) => {
   const stylesLookup = useMemo(() => ({
     a4: {
@@ -119,6 +121,7 @@ export const SimpleYearCalendar = React.memo(({
         monthHeaderAs={YearCalendarMonthHeader}
         bodyAs={YearCalendarMonthsGrid}
         dayAs={YearCalendarDayCell}
+        weekStartsOn={weekStartsOn}
       />
     </div>
   );
@@ -133,12 +136,14 @@ interface SimpleMonthlyCalendarProps {
   date: DateTime;
   variant: FormatVariant;
   size: Format;
+  weekStartsOn?: 1 | 7;
 }
 
 export const SimpleMonthCalendar = React.memo(({
   date,
   variant,
   size,
+  weekStartsOn = 1,
 }: SimpleMonthlyCalendarProps) => {
   const stylesLookup = useMemo(() => ({
     a4: {
@@ -216,6 +221,7 @@ export const SimpleMonthCalendar = React.memo(({
         weekNames={"short"}
         dayAs={MonthCalendarDayCell}
         locale={date.locale || 'en'}
+        weekStartsOn={weekStartsOn}
       />
     </div>
   );
