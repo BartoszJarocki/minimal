@@ -181,7 +181,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 };
 
 export const parseQueryParams = (query: ParsedUrlQuery) => {
-  const year = query.year as number | undefined;
+  const year = query.year ? parseInt(query.year as string, 10) : undefined;
   const theme = query.theme as Theme | undefined;
 
   return {

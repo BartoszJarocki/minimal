@@ -130,7 +130,7 @@ const generateMonthlyCalendar = async ({
     destDir,
     theme,
     year,
-    locale.englishName,
+    locale.code,
     format,
     'monthly'
   );
@@ -201,6 +201,8 @@ const generateMonthlyCalendar = async ({
       fullPage: false,
       omitBackground: false,
     });
+
+    await page.close();
   });
 
   return Promise.all(allMonthsPdfs);
@@ -221,7 +223,7 @@ const generateYearlyCalendar = async ({
     destDir,
     theme,
     year,
-    locale.englishName,
+    locale.code,
     format,
     'yearly'
   );
@@ -289,11 +291,13 @@ const generateYearlyCalendar = async ({
     fullPage: false,
     omitBackground: false,
   });
+
+  await page.close();
 };
 
 async function generateProducts() {
   const destDir = './generated';
-  const years = [2025];
+  const years = [2026, 2027];
   const formats: PaperFormat[] = ['a4', 'a5'];
   const themes: Theme[] = ['simple'];
 

@@ -40,7 +40,17 @@ export default function Print() {
     parseQueryParams(router.query);
   const selectedLocale = SupportedLocales.find(
     (l) => l.code.toLowerCase() === locale.toLowerCase()
-  )!;
+  );
+
+  if (!selectedLocale) {
+    return (
+      <div className="p-4 text-center">
+        <h1 className="text-2xl font-bold">Locale not found</h1>
+        <p>The locale &quot;{locale}&quot; is not supported.</p>
+      </div>
+    );
+  }
+
   const date = DateTime.now().set({ year, month }).reconfigure({
     locale,
     outputCalendar: selectedLocale.outputCalendar,
@@ -70,8 +80,8 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
   const theme = query.theme as Theme | undefined;
   const locale = query.locale as string | undefined;
   const type = query.type as CalendarType;
-  const month = query.month as number | undefined;
-  const year = query.year as number | undefined;
+  const month = query.month ? parseInt(query.month as string, 10) : undefined;
+  const year = query.year ? parseInt(query.year as string, 10) : undefined;
   const format = query.format as Format | undefined;
   const variant = query.variant as FormatVariant | undefined;
 

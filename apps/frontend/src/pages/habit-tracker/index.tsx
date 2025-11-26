@@ -238,17 +238,21 @@ const HabitTrackerCreator = () => {
   }, []);
 
   const handleYearChange = useCallback((year: string) => {
-    setDate(DateTime.now().set({ year: parseInt(year) }));
+    setDate((prev) => prev.set({ year: parseInt(year, 10) }));
   }, []);
 
   const handleLocaleChange = useCallback((localeCode: string) => {
     const newLocale = SupportedLocales.find(
-      (locale) => locale.code === localeCode
+      (l) => l.code === localeCode
     );
     if (!newLocale) return;
     setLocale(newLocale);
-    setDate(date.reconfigure({ locale: newLocale.code }));
-  }, [date]);
+    setDate((prev) => prev.reconfigure({
+      locale: newLocale.code,
+      outputCalendar: newLocale.outputCalendar,
+      numberingSystem: newLocale.numberingSystem,
+    }));
+  }, []);
 
   const handleFormatChange = useCallback((format: string) => {
     setFormat(format as SupportedFormat);
