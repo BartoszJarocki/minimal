@@ -1,18 +1,44 @@
 import { Logo } from "./Logo";
 import Link from "next/link";
-import { joinComponents } from "../lib/utils";
 import { SupportedYears } from "./calendar/Calendar";
-import { Badge } from "./ui/badge";
-import { AVAILABLE_CALENDARS } from "../lib/config";
+import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../lib/config";
+import { SupportedLocales } from "@minimal/config";
+
+const CURRENT_YEAR = Math.max(...AVAILABLE_CALENDARS.map((c) => c.year));
 
 const navigation = {
-  calendars: AVAILABLE_CALENDARS.map((calendar) => ({
-    name: calendar.title,
-    href: `/calendars/preview/${calendar.year}/${calendar.theme}`,
-  })),
-  habitTrackers: [{ name: "Configurator", href: "/habit-tracker" }],
-  planners: [{ name: "Work in progress", href: null }],
-  legal: [{ name: "Terms Of Service", href: "/terms" }],
+  products: [
+    ...AVAILABLE_CALENDARS.map((calendar) => ({
+      name: `${calendar.year} Calendar`,
+      href: `/calendars/preview/${calendar.year}/${calendar.theme}`,
+    })),
+    { name: "Habit Tracker", href: "/habit-tracker" },
+  ],
+  years: [
+    ...SupportedYears.slice(-4)
+      .reverse()
+      .map((year) => ({
+        name: year.toString(),
+        href: `/calendars/preview/${year}/simple`,
+      })),
+    { name: "See all years →", href: "/calendars" },
+  ],
+  languages: [
+    ...FEATURED_LANGUAGES.map((lang) => ({
+      name: lang.name,
+      href: `/calendars/preview/${CURRENT_YEAR}/simple/${lang.code}`,
+    })),
+    {
+      name: `All ${SupportedLocales.length} languages →`,
+      href: "/calendars/languages",
+    },
+  ],
+  formats: [
+    { name: "A4 Calendars", href: "/calendars/formats" },
+    { name: "A5 Calendars", href: "/calendars/formats" },
+    { name: "Letter Calendars", href: "/calendars/formats" },
+  ],
+  legal: [{ name: "Terms of Service", href: "/terms" }],
   social: [
     {
       name: "Twitter",
@@ -37,14 +63,17 @@ const navigation = {
 
 export const Footer = () => {
   return (
-    <footer className="border-t" aria-labelledby="footer-heading">
-      <div className="px-4 pb-16 pt-16 md:px-8">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
+    <footer className="mt-24 md:mt-32" aria-labelledby="footer-heading">
+      <h2 id="footer-heading" className="sr-only">
+        Footer
+      </h2>
+      <div className="px-4 pb-16 md:px-8">
+        <div className="space-y-16">
           <div className="space-y-8">
             <Logo className="h-7 w-auto" />
-            <h2 className="text-sm leading-6 text-muted-foreground">
-              Making the world more productive one day at a time.
-            </h2>
+            <p className="max-w-xs text-sm leading-6 text-muted-foreground">
+              Minimalist printable calendars and habit trackers.
+            </p>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (
                 <a
@@ -58,109 +87,132 @@ export const Footer = () => {
               ))}
             </div>
           </div>
-          <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-foreground">
-                  Calendars
-                </h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {navigation.calendars.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className="text-sm leading-6 text-muted-foreground hover:text-foreground"
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-foreground">
-                  Habit trackers
-                </h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {navigation.habitTrackers.map((item) => (
-                    <li key={item.name}>
-                      {item.href ? (
-                        <Link
-                          href={item.href}
-                          className="text-sm leading-6 text-muted-foreground hover:text-foreground"
-                        >
-                          {item.name}
-                        </Link>
-                      ) : (
-                        <Badge>{item.name}</Badge>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6 text-foreground">
-                  Planners
-                </h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {navigation.planners.map((item) => (
-                    <li key={item.name}>
-                      {item.href ? (
-                        <Link
-                          href={item.href}
-                          className="text-sm leading-6 text-muted-foreground hover:text-foreground"
-                        >
-                          {item.name}
-                        </Link>
-                      ) : (
-                        <Badge>{item.name}</Badge>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-foreground">
-                  Misc
-                </h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {navigation.legal.map((item) => (
-                    <li key={item.name}>
-                      <a
-                        href={item.href}
-                        className="text-sm leading-6 text-muted-foreground hover:text-foreground"
-                      >
-                        {item.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div className="mt-16 border-b border-t py-8">
-          <p className="text-xs leading-5 text-muted-foreground">
+          <nav
+            aria-label="Footer navigation"
+            className="grid grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-5"
+          >
+            <div>
+              <h3 className="text-sm font-semibold leading-6 text-foreground">
+                Products
+              </h3>
+              <ul role="list" className="mt-6 space-y-4">
+                {navigation.products.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-sm leading-6 text-muted-foreground hover:text-foreground"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold leading-6 text-foreground">
+                By Year
+              </h3>
+              <ul role="list" className="mt-6 space-y-4">
+                {navigation.years.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-sm leading-6 text-muted-foreground hover:text-foreground"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold leading-6 text-foreground">
+                By Language
+              </h3>
+              <ul role="list" className="mt-6 space-y-4">
+                {navigation.languages.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-sm leading-6 text-muted-foreground hover:text-foreground"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold leading-6 text-foreground">
+                Formats
+              </h3>
+              <ul role="list" className="mt-6 space-y-4">
+                {navigation.formats.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-sm leading-6 text-muted-foreground hover:text-foreground"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold leading-6 text-foreground">
+                Legal
+              </h3>
+              <ul role="list" className="mt-6 space-y-4">
+                {navigation.legal.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-sm leading-6 text-muted-foreground hover:text-foreground"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </nav>
+
+          <p className="pt-8 text-xs leading-5 text-muted-foreground/60">
             &copy; {new Date().getFullYear()} Use Minimal. All rights reserved.
           </p>
         </div>
 
-        <section className="text-foreground/40 sr-only max-w-3xl py-8 text-xs">
-          <h4 className="py-1">Next years calendars</h4>
+        <nav aria-label="All calendars" className="sr-only">
+          <h4>Printable calendars by year</h4>
+          <ul>
+            {SupportedYears.map((year) => (
+              <li key={year}>
+                <Link href={`/calendars/preview/${year}/simple`}>
+                  {year} printable calendar PDF
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-          {SupportedYears.map((year) => (
-            <Link
-              key={year}
-              className=" underline"
-              href={`/calendars/preview/${year}`}
-            >
-              {year} printable calendar PDF
-            </Link>
-          )).reduce(joinComponents, [])}
-        </section>
+          <h4>Printable calendars by language</h4>
+          <ul>
+            {SupportedLocales.map((locale) => (
+              <li key={locale.code}>
+                <Link
+                  href={`/calendars/preview/${CURRENT_YEAR}/simple/${locale.code}`}
+                >
+                  {locale.englishName} printable calendar
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
     </footer>
   );

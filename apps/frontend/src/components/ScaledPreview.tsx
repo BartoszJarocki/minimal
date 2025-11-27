@@ -4,12 +4,12 @@ import { Format, FormatVariant } from "./calendar/Calendar";
 
 const scaledStylesLookup = {
   a4: {
-    portrait: "h-[336px] w-[240px]",
-    landscape: "h-[240px] w-[336px]",
+    portrait: "h-[448px] w-[320px]",
+    landscape: "h-[320px] w-[448px]",
   },
   a5: {
-    portrait: "h-[240px] w-[168px]",
-    landscape: "h-[168px] w-[240px]",
+    portrait: "h-[320px] w-[224px]",
+    landscape: "h-[224px] w-[320px]",
   },
 };
 
@@ -29,7 +29,7 @@ export const ScaledPreview = ({
       <div
         className={cn(
           toPrintClassName(format, variant),
-          "m-auto origin-top-left scale-[30%] overflow-hidden bg-white p-4 text-foreground shadow-card transition-shadow hover:shadow-lg",
+          "m-auto origin-top-left scale-[40%] overflow-hidden bg-white p-4 text-foreground shadow-card transition-shadow hover:shadow-lg",
           className
         )}
       >

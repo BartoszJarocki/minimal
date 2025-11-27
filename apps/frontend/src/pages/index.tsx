@@ -15,15 +15,16 @@ import { P } from "../components/P";
 import { H2 } from "../components/H2";
 import { InlineButton } from "../components/InlineButton";
 import { H1 } from "../components/H1";
-import { BuyButton } from "../components/BuyButton";
 import Link from "next/link";
 import { ScaledPreview } from "../components/ScaledPreview";
 import { SupportedLocales } from "@minimal/config";
 import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
 import { SimpleHabitTracker } from "./habit-tracker";
 import { AVAILABLE_CALENDARS } from "../lib/config";
 import { CalendarErrorBoundary } from "../components/ErrorBoundary";
+import { SocialProof } from "../components/landing/SocialProof";
+import { ValueProp } from "../components/landing/ValueProp";
+import { PrimaryCTA } from "../components/landing/PrimaryCTA";
 
 export const HABIT_TRACKERS = [
   {
@@ -42,8 +43,8 @@ export default function Landing() {
   const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(7); // default Sunday for en
 
   const url = "https://useminimal.com";
-  const title = `Minimalist printable calendars, habit trackers and planners`;
-  const description = `Collection of beautiful, minimalist printable calendars, habit trackers and planners. Available in ${SupportedLocales.length} languages.`;
+  const title = `All your productivity printables. One purchase. Forever.`;
+  const description = `Minimalist printable calendars and habit trackers. Lifetime access in ${SupportedLocales.length} languages.`;
 
   return (
     <>
@@ -79,28 +80,30 @@ export default function Landing() {
                 <span className="hidden text-4xl font-bold">Minimal</span>
               </div>
               <H1>{title}</H1>
-              <P className="text-2xl">{description}</P>
+              <P className="text-xl md:text-2xl">{description}</P>
             </section>
 
+            <SocialProof />
+
             <section className="space-y-8">
-              {AVAILABLE_CALENDARS.filter((cal) => cal.isVisible).map(
-                (calendar) => (
-                  <section
-                    className="max-w-3xl py-6 md:py-6"
-                    key={calendar.title}
-                  >
+              {(() => {
+                const calendar = AVAILABLE_CALENDARS.filter(
+                  (cal) => cal.isVisible
+                )[0];
+                return (
+                  <section className="max-w-3xl py-6 md:py-6">
                     <div className="flex flex-col gap-y-4">
                       <Link
                         href={`/calendars/preview/${calendar.year}/${calendar.theme}`}
                         className="underline"
                       >
-                        <H2>Simple printable calendar {calendar.year}</H2>
+                        <H2>Printable Calendar</H2>
                       </Link>
 
                       <P>
-                        Yearly and monthly, simple {calendar.year} printable
-                        calendar available in A4 and A5 formats in both portrait
-                        and landscape.
+                        Yearly and monthly minimalist printable calendars.
+                        Available in A4 and A5 formats in both portrait and
+                        landscape.
                       </P>
 
                       <P className="max-w-3xl text-sm">
@@ -139,8 +142,6 @@ export default function Landing() {
                           Monday
                         </InlineButton>
                       </P>
-
-                      <BuyButton link={calendar.buyLink} />
                     </div>
 
                     <div className="-mx-2 overflow-x-auto px-2">
@@ -169,20 +170,14 @@ export default function Landing() {
                       </div>
                     </div>
                   </section>
-                )
-              )}
+                );
+              })()}
 
               {HABIT_TRACKERS.map((tracker) => (
                 <section className="max-w-3xl py-6 md:py-6" key={tracker.title}>
                   <div className="mt-8 flex flex-col gap-y-4">
-                    <Link
-                      href={tracker.href}
-                      className="underlin inline-flex gap-x-4"
-                    >
-                      <H2>{tracker.title}</H2>{" "}
-                      <Badge className="w-fit self-center">
-                        Work in progress
-                      </Badge>
+                    <Link href={tracker.href} className="underline">
+                      <H2>{tracker.title}</H2>
                     </Link>
 
                     <P>{tracker.description}</P>
@@ -206,17 +201,6 @@ export default function Landing() {
                       )).reduce(joinComponents, [])}
                     </P>
 
-                    <Button
-                      className="max-w-md font-semibold text-white"
-                      variant="default"
-                      size="lg"
-                      asChild
-                    >
-                      <Link href={tracker.href}>
-                        Create and download your own habit tracker
-                      </Link>
-                    </Button>
-
                     <div className="-mx-2 overflow-x-auto px-2">
                       <div className="flex gap-4 py-4">
                         <ScaledPreview format="a4" variant="portrait">
@@ -232,25 +216,15 @@ export default function Landing() {
                             />
                           </CalendarErrorBoundary>
                         </ScaledPreview>
-
-                        <ScaledPreview format="a4" variant="portrait">
-                          <CalendarErrorBoundary>
-                            <SimpleHabitTracker
-                              className="paper-padding-15mm"
-                              date={date}
-                              habits={[
-                                { id: 0, title: "Water intake" },
-                                { id: 1, title: "Sleep 8hrs" },
-                              ]}
-                            />
-                          </CalendarErrorBoundary>
-                        </ScaledPreview>
                       </div>
                     </div>
                   </div>
                 </section>
               ))}
             </section>
+
+            <ValueProp />
+            <PrimaryCTA variant="bottom" />
           </div>
         </main>
         <Footer />

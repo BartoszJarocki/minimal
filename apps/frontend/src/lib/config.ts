@@ -2,6 +2,28 @@ export const SSR_CACHE_CONFIG = `public, max-age=${60 * 10}, s-maxage=${
   60 * 10
 }, stale-while-revalidate=${10}`;
 
+// Lifetime purchase config (Polar integration coming later)
+export const LIFETIME_BUY_URL = "#";
+export const LIFETIME_PRICE = "$19";
+
+export const FEATURED_LANGUAGES = [
+  { code: "en", name: "English" },
+  { code: "de", name: "German" },
+  { code: "fr", name: "French" },
+  { code: "es", name: "Spanish" },
+];
+
+export const SOCIAL_PROOF = {
+  review: {
+    quote: "These are beautiful and thoughtfully designed. I'm printing them as a two-month spread for planning.",
+    author: "Brandon P.",
+  },
+  metrics: [
+    { value: "26", label: "languages" },
+    { value: "∞", label: "lifetime updates" },
+  ],
+};
+
 export const getTitle = (year: number): string => {
   return `${year} Minimalist printable calendar`;
 };

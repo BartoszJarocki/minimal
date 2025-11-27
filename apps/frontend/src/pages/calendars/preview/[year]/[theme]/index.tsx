@@ -4,7 +4,6 @@ import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
 import React from "react";
-import { BuyButton } from "../../../../../components/BuyButton";
 import {
   SimpleYearCalendar,
   SimpleMonthCalendar,
@@ -14,7 +13,8 @@ import { Footer } from "../../../../../components/Footer";
 import { H1 } from "../../../../../components/H1";
 import { P } from "../../../../../components/P";
 import { ScaledPreview } from "../../../../../components/ScaledPreview";
-import { BUY_URLS, SSR_CACHE_CONFIG } from "../../../../../lib/config";
+import { SSR_CACHE_CONFIG } from "../../../../../lib/config";
+import { PrimaryCTA } from "../../../../../components/landing/PrimaryCTA";
 import { joinComponents } from "../../../../../lib/utils";
 import { ThemeNameLookup } from "../../../../print";
 import { SupportedLocales, Theme } from "@minimal/config";
@@ -129,7 +129,7 @@ export default function Preview({ theme, year, locale }: Props) {
               portrait and landscape orientations)
             </P>
 
-            <BuyButton link={BUY_URLS[date.year]} />
+            <PrimaryCTA />
           </section>
 
           <section className="mt-8 max-w-3xl px-1">
