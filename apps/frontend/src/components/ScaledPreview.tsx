@@ -1,8 +1,8 @@
-import clsx from "clsx";
+import { cn } from "../lib/utils";
 import { toPrintClassName } from "../pages/print";
 import { Format, FormatVariant } from "./calendar/Calendar";
 
-const scaledStylesLookup=  {
+const scaledStylesLookup = {
   a4: {
     portrait: "h-[336px] w-[240px]",
     landscape: "h-[240px] w-[336px]",
@@ -10,7 +10,7 @@ const scaledStylesLookup=  {
   a5: {
     portrait: "h-[240px] w-[168px]",
     landscape: "h-[168px] w-[240px]",
-  }
+  },
 };
 
 export const ScaledPreview = ({
@@ -27,9 +27,9 @@ export const ScaledPreview = ({
   return (
     <div className={scaledStylesLookup[format][variant]}>
       <div
-        className={clsx(
+        className={cn(
           toPrintClassName(format, variant),
-          "m-auto origin-top-left scale-[30%] overflow-hidden bg-white p-4 text-zinc-900 shadow-xl",
+          "m-auto origin-top-left scale-[30%] overflow-hidden bg-white p-4 text-foreground shadow-card transition-shadow hover:shadow-lg",
           className
         )}
       >

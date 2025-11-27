@@ -137,7 +137,7 @@ export default function Preview({ theme, year, locale }: Props) {
               {SupportedLocales.map((locale) => (
                 <li
                   key={locale.code}
-                  className="flex rounded-lg bg-white p-2 text-center shadow"
+                  className="flex bg-white p-2 text-center shadow"
                 >
                   <Link
                     href={`/calendars/preview/${year}/${theme}/${locale.code}`}
@@ -145,12 +145,12 @@ export default function Preview({ theme, year, locale }: Props) {
                   >
                     <div className="flex flex-1 items-center">
                       <div className="mx-2">{locale.emoji}</div>
-                      <h3 className="text-sm font-medium text-gray-900">
+                      <h3 className="text-sm font-medium text-foreground">
                         {ThemeNameLookup[theme]} {locale.englishName} printable
                         calendar {date.toFormat("yyyy")} (PDF)
                       </h3>
                       <div className="ml-auto">
-                        <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                        <span className="bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
                           {locale.name}
                         </span>
                       </div>

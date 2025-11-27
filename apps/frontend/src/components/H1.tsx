@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import React from "react";
+import { cn } from "../lib/utils";
 
 export const H1 = ({
   children,
@@ -10,8 +10,8 @@ export const H1 = ({
 }) => {
   return (
     <h1
-      className={clsx(
-        "text-balance text-4xl font-bold leading-none tracking-tighter md:text-7xl",
+      className={cn(
+        "text-balance text-4xl font-semibold leading-none tracking-tight md:text-6xl",
         className
       )}
     >

@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import React from "react";
+import { cn } from "../lib/utils";
 
 export const P = ({
   children,
@@ -9,7 +9,12 @@ export const P = ({
   className?: string;
 }) => {
   return (
-    <p className={clsx("text-pretty text-left text-lg opacity-80", className)}>
+    <p
+      className={cn(
+        "text-pretty text-left text-lg leading-relaxed text-muted-foreground",
+        className
+      )}
+    >
       {children}
     </p>
   );

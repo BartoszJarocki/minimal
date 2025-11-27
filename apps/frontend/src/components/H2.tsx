@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import React from "react";
+import { cn } from "../lib/utils";
 
 export const H2 = ({
   children,
@@ -9,7 +9,12 @@ export const H2 = ({
   className?: string;
 }) => {
   return (
-    <h2 className={clsx("text-left text-3xl font-semibold", className)}>
+    <h2
+      className={cn(
+        "text-left text-2xl font-semibold tracking-tight md:text-3xl",
+        className
+      )}
+    >
       {children}
     </h2>
   );

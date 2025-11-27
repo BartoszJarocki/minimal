@@ -35,7 +35,7 @@ export default function Document() {
           strategy="beforeInteractive"
         />
       </Head>
-      <body className="text-dark h-full w-full">
+      <body className="text-foreground h-full w-full">
         <Main />
         <NextScript />
       </body>

@@ -64,7 +64,7 @@ export default function Print() {
     <div
       className={clsx(
         toPrintClassName(format, variant),
-        "bg-white text-zinc-900"
+        "bg-white text-foreground"
       )}
     >
       <NextSeo nofollow noindex />

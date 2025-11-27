@@ -1,5 +1,5 @@
 import React from "react";
-import clsx from "clsx";
+import { cn } from "../lib/utils";
 
 export const InlineButton = ({
   children,
@@ -12,7 +12,10 @@ export const InlineButton = ({
 }) => {
   return (
     <button
-      className={clsx("inline text-zinc-700 underline hover:text-zinc-900", className)}
+      className={cn(
+        "inline text-muted-foreground underline underline-offset-2 transition-colors hover:text-foreground",
+        className
+      )}
       onClick={onClick}
     >
       {children}

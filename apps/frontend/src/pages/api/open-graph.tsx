@@ -7,16 +7,16 @@ export const config = {
 };
 
 const black = fetch(
-  new URL("../../assets/Inter-Black.ttf", import.meta.url)
+  new URL("../../assets/Geist-Black.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
 const bold = fetch(
-  new URL("../../assets/Inter-Bold.ttf", import.meta.url)
+  new URL("../../assets/Geist-Bold.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer());
 
 type ImageType = "calendar" | "page";
 
 export default async function OpenGraphImageHandler(req: NextRequest) {
-  const [InterBold, InterBlack] = await Promise.all([bold, black]);
+  const [GeistBold, GeistBlack] = await Promise.all([bold, black]);
 
   const { searchParams } = req.nextUrl;
   const type = searchParams.get("type") as ImageType;
@@ -58,13 +58,13 @@ export default async function OpenGraphImageHandler(req: NextRequest) {
         height: 600,
         fonts: [
           {
-            name: "Inter",
-            data: InterBold,
+            name: "Geist",
+            data: GeistBold,
             weight: 700,
           },
           {
-            name: "Inter",
-            data: InterBlack,
+            name: "Geist",
+            data: GeistBlack,
             weight: 900,
           },
         ],
@@ -111,13 +111,13 @@ export default async function OpenGraphImageHandler(req: NextRequest) {
       height: 600,
       fonts: [
         {
-          name: "Inter",
-          data: InterBold,
+          name: "Geist",
+          data: GeistBold,
           weight: 700,
         },
         {
-          name: "Inter",
-          data: InterBlack,
+          name: "Geist",
+          data: GeistBlack,
           weight: 900,
         },
       ],

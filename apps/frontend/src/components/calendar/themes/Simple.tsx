@@ -29,7 +29,7 @@ export const SimpleYearCalendar = React.memo(({
   const stylesLookup = useMemo(() => ({
     a4: {
       portrait: {
-        root: "flex items-end text-dark",
+        root: "flex items-end text-foreground",
         yearRoot: "p-8 basis-[73%]",
         yearHeader:
           "text-vertical-rl mb-8 ml-auto basis-[27%] translate-x-14 rotate-180 self-end text-end text-[144px] font-semibold leading-none tracking-tighter",
@@ -39,7 +39,7 @@ export const SimpleYearCalendar = React.memo(({
         dayCell: "flex items-center justify-center text-center text-[12px]",
       },
       landscape: {
-        root: "flex flex-col p-14 text-dark",
+        root: "flex flex-col p-14 text-foreground",
         yearRoot: "",
         yearHeader:
           "mb-4 ml-auto self-end text-end text-[96px] font-semibold leading-none tracking-tighter",
@@ -51,7 +51,7 @@ export const SimpleYearCalendar = React.memo(({
     },
     a5: {
       portrait: {
-        root: "flex items-end text-dark",
+        root: "flex items-end text-foreground",
         yearRoot: "p-6 basis-[71%]",
         yearHeader:
           "text-vertical-rl mb-4 ml-auto basis-[29%] translate-x-14 rotate-180 self-end text-end text-[96px] font-semibold leading-none tracking-tighter",
@@ -61,7 +61,7 @@ export const SimpleYearCalendar = React.memo(({
         dayCell: "flex items-center justify-center text-center text-[8px]",
       },
       landscape: {
-        root: "flex flex-col p-8 text-dark",
+        root: "flex flex-col p-8 text-foreground",
         yearRoot: "",
         yearHeader:
           "mb-4 ml-auto self-end text-end text-[44px] font-semibold leading-none tracking-tighter",

@@ -1,10 +1,10 @@
-import clsx from "clsx";
+import { cn } from "../lib/utils";
 
 export const Container = ({ children }: React.PropsWithChildren) => {
   return (
     <div
-      className={clsx(
-        "mx-auto min-h-screen max-w-5xl overflow-x-hidden py-24 px-2"
+      className={cn(
+        "mx-auto min-h-screen max-w-5xl overflow-x-hidden px-4 py-20 md:px-8 md:py-32"
       )}
     >
       {children}

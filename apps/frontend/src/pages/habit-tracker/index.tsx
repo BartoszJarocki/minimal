@@ -175,7 +175,7 @@ export const SimpleHabitTracker = ({
                         key={`habit-${habit.id}-day-${day.day}`}
                         className={cn(
                           cellSize,
-                          "rounded-full border border-black/20",
+                          "border border-black/20",
                           [6, 7].includes(day.weekday)
                             ? "bg-black/10"
                             : "bg-white"
@@ -441,7 +441,7 @@ const HabitTrackerCreator = () => {
                 {habits.map((habit, idx) => (
                   <div
                     key={habit.id}
-                    className="flex items-center gap-2 rounded px-2 py-1 text-sm hover:bg-black/5"
+                    className="flex items-center gap-2 px-2 py-1 text-sm hover:bg-black/5"
                   >
                     <span className="flex-1 truncate">
                       {habit.title || `Habit ${idx + 1}`}

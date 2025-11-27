@@ -42,7 +42,7 @@ export const Footer = () => {
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8">
             <Logo className="h-7 w-auto" />
-            <h2 className="text-sm leading-6 text-gray-600">
+            <h2 className="text-sm leading-6 text-muted-foreground">
               Making the world more productive one day at a time.
             </h2>
             <div className="flex space-x-6">
@@ -50,7 +50,7 @@ export const Footer = () => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-dark/75 hover:text-dark"
+                  className="text-foreground/75 hover:text-foreground"
                 >
                   <span className="sr-only">{item.name}</span>
                   <item.icon className="h-6 w-6" aria-hidden="true" />
@@ -61,7 +61,7 @@ export const Footer = () => {
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm font-semibold leading-6 text-gray-900">
+                <h3 className="text-sm font-semibold leading-6 text-foreground">
                   Calendars
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
@@ -69,7 +69,7 @@ export const Footer = () => {
                     <li key={item.name}>
                       <Link
                         href={item.href}
-                        className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                        className="text-sm leading-6 text-muted-foreground hover:text-foreground"
                       >
                         {item.name}
                       </Link>
@@ -78,7 +78,7 @@ export const Footer = () => {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-gray-900">
+                <h3 className="text-sm font-semibold leading-6 text-foreground">
                   Habit trackers
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
@@ -87,7 +87,7 @@ export const Footer = () => {
                       {item.href ? (
                         <Link
                           href={item.href}
-                          className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                          className="text-sm leading-6 text-muted-foreground hover:text-foreground"
                         >
                           {item.name}
                         </Link>
@@ -101,7 +101,7 @@ export const Footer = () => {
             </div>
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
-                <h3 className="text-sm font-semibold leading-6 text-gray-900">
+                <h3 className="text-sm font-semibold leading-6 text-foreground">
                   Planners
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
@@ -110,7 +110,7 @@ export const Footer = () => {
                       {item.href ? (
                         <Link
                           href={item.href}
-                          className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                          className="text-sm leading-6 text-muted-foreground hover:text-foreground"
                         >
                           {item.name}
                         </Link>
@@ -122,7 +122,7 @@ export const Footer = () => {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6 text-gray-900">
+                <h3 className="text-sm font-semibold leading-6 text-foreground">
                   Misc
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
@@ -130,7 +130,7 @@ export const Footer = () => {
                     <li key={item.name}>
                       <a
                         href={item.href}
-                        className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+                        className="text-sm leading-6 text-muted-foreground hover:text-foreground"
                       >
                         {item.name}
                       </a>
@@ -142,13 +142,13 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-16 border-b border-t border-gray-900/10 py-8">
-          <p className="text-xs leading-5 text-gray-500">
+        <div className="mt-16 border-b border-t py-8">
+          <p className="text-xs leading-5 text-muted-foreground">
             &copy; {new Date().getFullYear()} Use Minimal. All rights reserved.
           </p>
         </div>
 
-        <section className="text-dark/40 sr-only max-w-3xl py-8 text-xs">
+        <section className="text-foreground/40 sr-only max-w-3xl py-8 text-xs">
           <h4 className="py-1">Next years calendars</h4>
 
           {SupportedYears.map((year) => (

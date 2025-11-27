@@ -93,7 +93,7 @@ export const MonthCalendar = React.memo(({
         role="gridcell"
       >
         {date.set({ day }).day}
-        <span className="absolute left-0 top-0 m-0.5 hidden h-1 w-1 rounded-full border md:m-1"></span>
+        <span className="absolute left-0 top-0 m-0.5 hidden h-1 w-1 border md:m-1"></span>
       </CellComponent>
     );
   }
