@@ -321,14 +321,18 @@ async function generateProducts() {
   const weekStartOptions: WeekStartsOn[] = [1, 7]; // Monday and Sunday
 
   for (const theme of themes) {
+    // Clean previous output
+    const themeDir = path.join(destDir, theme);
+    await fs.promises.rm(themeDir, { recursive: true, force: true });
+
+    // Create dist directory for zip files
+    const distDir = path.join(destDir, theme, 'dist');
+    await fs.promises.mkdir(distDir, { recursive: true });
+
     for (const year of years) {
       const browser = await puppeteer.launch({
         headless: true,
       });
-
-      // Create dist directory for zip files
-      const distDir = path.join(destDir, theme, 'dist');
-      await fs.promises.mkdir(distDir, { recursive: true });
 
       for (const format of formats) {
         for (const locale of SupportedLocales) {
