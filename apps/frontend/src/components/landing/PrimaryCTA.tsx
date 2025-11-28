@@ -1,12 +1,15 @@
-import Link from "next/link";
 import { Button } from "../ui/button";
-import { LIFETIME_BUY_URL, LIFETIME_PRICE } from "../../lib/config";
+import { LIFETIME_PRICE, POLAR_PRODUCT_ID } from "../../lib/config";
 
 interface PrimaryCTAProps {
   variant?: "hero" | "bottom";
 }
 
 export const PrimaryCTA = ({ variant = "hero" }: PrimaryCTAProps) => {
+  const handleCheckout = () => {
+    window.location.href = `/api/checkout?productId=${POLAR_PRODUCT_ID}`;
+  };
+
   return (
     <section className="py-12 md:py-16">
       <div className="max-w-2xl space-y-6">
@@ -16,19 +19,24 @@ export const PrimaryCTA = ({ variant = "hero" }: PrimaryCTAProps) => {
               One purchase. Every calendar. Forever.
             </h2>
             <p className="text-lg text-muted-foreground">
-              Get lifetime access to all calendars and habit trackers. Includes
-              all future years and new products.
+              All calendars, habit trackers, and future years included. Instant
+              PDF download. Digital product — no refunds.
             </p>
           </>
         )}
 
-        <div className="space-y-3">
-          <Button variant="cta" size="cta" asChild>
-            <Link href={LIFETIME_BUY_URL}>
-              Get Lifetime Access — {LIFETIME_PRICE}
-            </Link>
+        <div>
+          <Button
+            variant="cta"
+            size="cta"
+            onClick={handleCheckout}
+            className="flex flex-col"
+          >
+            <span>Get lifetime access — {LIFETIME_PRICE}</span>
+            <span className="font-mono text-xs font-normal opacity-80">
+              One-time payment, no subscription
+            </span>
           </Button>
-          <p className="text-sm text-muted-foreground">One-time payment</p>
         </div>
       </div>
     </section>

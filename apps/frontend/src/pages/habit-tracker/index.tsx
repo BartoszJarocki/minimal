@@ -15,6 +15,8 @@ import { Input } from "../../components/ui/input";
 import { cn } from "../../lib/utils";
 import { Badge } from "../../components/ui/badge";
 import { NextSeo } from "next-seo";
+import type { GetServerSideProps } from "next";
+import { getSessionFromCookieHeader } from "../../lib/portal";
 
 export type HabitData = { id: number; title: string };
 
@@ -473,3 +475,18 @@ const HabitTrackerCreator = () => {
 };
 
 export default HabitTrackerCreator;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const session = getSessionFromCookieHeader(req.headers.cookie || "");
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/portal",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
+};

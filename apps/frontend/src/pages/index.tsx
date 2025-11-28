@@ -18,18 +18,20 @@ import { H1 } from "../components/H1";
 import Link from "next/link";
 import { ScaledPreview } from "../components/ScaledPreview";
 import { SupportedLocales } from "@minimal/config";
-import { Button } from "../components/ui/button";
 import { SimpleHabitTracker } from "./habit-tracker";
-import { AVAILABLE_CALENDARS } from "../lib/config";
+import { AVAILABLE_CALENDARS, LIFETIME_PRICE } from "../lib/config";
 import { CalendarErrorBoundary } from "../components/ErrorBoundary";
 import { SocialProof } from "../components/landing/SocialProof";
 import { ValueProp } from "../components/landing/ValueProp";
 import { PrimaryCTA } from "../components/landing/PrimaryCTA";
+import { FAQ } from "../components/landing/FAQ";
+import { FEATURED_LANGUAGES } from "../lib/config";
 
 export const HABIT_TRACKERS = [
   {
     title: "Habit Tracker",
-    description: "Create and print your own habit tracker",
+    description:
+      "Track daily habits with a printable grid. 3 habits per page, reusable monthly. Perfect for exercise, reading, meditation, or any routine.",
     href: "/habit-tracker",
   },
 ];
@@ -38,13 +40,14 @@ Settings.defaultLocale = "en-US";
 
 export default function Landing() {
   const [date, setDate] = useState(
-    DateTime.now().set({ year: 2025, month: 1 })
+    DateTime.now().set({ year: 2026, month: 1 })
   );
   const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(7); // default Sunday for en
+  const [showAllLanguages, setShowAllLanguages] = useState(false);
 
   const url = "https://useminimal.com";
-  const title = `All your productivity printables. One purchase. Forever.`;
-  const description = `Minimalist printable calendars and habit trackers. Lifetime access in ${SupportedLocales.length} languages.`;
+  const title = `Printable calendars and habit trackers. ${LIFETIME_PRICE} once, yours forever.`;
+  const description = `Clean, ink-light PDFs in ${SupportedLocales.length} languages. A4 & A5, portrait & landscape. Instant download.`;
 
   return (
     <>
@@ -85,6 +88,8 @@ export default function Landing() {
 
             <SocialProof />
 
+            <PrimaryCTA variant="hero" />
+
             <section className="space-y-8">
               {(() => {
                 const calendar = AVAILABLE_CALENDARS.filter(
@@ -97,33 +102,13 @@ export default function Landing() {
                         href={`/calendars/preview/${calendar.year}/${calendar.theme}`}
                         className="underline"
                       >
-                        <H2>Printable Calendar</H2>
+                        <H2>Preview {calendar.year} calendar →</H2>
                       </Link>
 
                       <P>
-                        Yearly and monthly minimalist printable calendars.
-                        Available in A4 and A5 formats in both portrait and
-                        landscape.
-                      </P>
-
-                      <P className="max-w-3xl text-sm">
-                        Available languages:{" "}
-                        {SupportedLocales.map((locale) => (
-                          <InlineButton
-                            key={locale.code}
-                            onClick={() => {
-                              setDate(
-                                date.reconfigure({
-                                  locale: locale.code,
-                                  outputCalendar: locale.outputCalendar,
-                                })
-                              );
-                              setWeekStartsOn(locale.weekStartsOn);
-                            }}
-                          >
-                            {locale.englishName}
-                          </InlineButton>
-                        )).reduce(joinComponents, [])}
+                        Minimalist calendars for wall display or planning. A4 &
+                        A5 sizes, portrait & landscape. Ink-light design,
+                        generous margins.
                       </P>
 
                       <P className="max-w-3xl text-sm">
@@ -141,6 +126,46 @@ export default function Landing() {
                         >
                           Monday
                         </InlineButton>
+                      </P>
+
+                      <P className="max-w-3xl text-sm">
+                        Localized for {SupportedLocales.length} languages:{" "}
+                        {(showAllLanguages
+                          ? SupportedLocales
+                          : SupportedLocales.filter((l) =>
+                              FEATURED_LANGUAGES.some((f) => f.code === l.code)
+                            )
+                        )
+                          .map((locale) => (
+                            <InlineButton
+                              key={locale.code}
+                              onClick={() => {
+                                setDate(
+                                  date.reconfigure({
+                                    locale: locale.code,
+                                    outputCalendar: locale.outputCalendar,
+                                  })
+                                );
+                                setWeekStartsOn(locale.weekStartsOn);
+                              }}
+                            >
+                              {locale.englishName}
+                            </InlineButton>
+                          ))
+                          .reduce(joinComponents, [])}
+                        {!showAllLanguages && (
+                          <>
+                            {", "}
+                            <InlineButton
+                              onClick={() => setShowAllLanguages(true)}
+                            >
+                              +
+                              {SupportedLocales.length -
+                                FEATURED_LANGUAGES.length}{" "}
+                              more
+                            </InlineButton>
+                          </>
+                        )}
                       </P>
                     </div>
 
@@ -177,28 +202,48 @@ export default function Landing() {
                 <section className="max-w-3xl py-6 md:py-6" key={tracker.title}>
                   <div className="mt-8 flex flex-col gap-y-4">
                     <Link href={tracker.href} className="underline">
-                      <H2>{tracker.title}</H2>
+                      <H2>Print a sample tracker →</H2>
                     </Link>
 
                     <P>{tracker.description}</P>
 
                     <P className="max-w-3xl text-sm">
-                      Available languages:{" "}
-                      {SupportedLocales.map((locale) => (
-                        <InlineButton
-                          key={locale.code}
-                          onClick={() => {
-                            setDate(
-                              date.reconfigure({
-                                locale: locale.code,
-                                outputCalendar: locale.outputCalendar,
-                              })
-                            );
-                          }}
-                        >
-                          {locale.englishName}
-                        </InlineButton>
-                      )).reduce(joinComponents, [])}
+                      Localized for {SupportedLocales.length} languages:{" "}
+                      {(showAllLanguages
+                        ? SupportedLocales
+                        : SupportedLocales.filter((l) =>
+                            FEATURED_LANGUAGES.some((f) => f.code === l.code)
+                          )
+                      )
+                        .map((locale) => (
+                          <InlineButton
+                            key={locale.code}
+                            onClick={() => {
+                              setDate(
+                                date.reconfigure({
+                                  locale: locale.code,
+                                  outputCalendar: locale.outputCalendar,
+                                })
+                              );
+                            }}
+                          >
+                            {locale.englishName}
+                          </InlineButton>
+                        ))
+                        .reduce(joinComponents, [])}
+                      {!showAllLanguages && (
+                        <>
+                          {", "}
+                          <InlineButton
+                            onClick={() => setShowAllLanguages(true)}
+                          >
+                            +
+                            {SupportedLocales.length -
+                              FEATURED_LANGUAGES.length}{" "}
+                            more
+                          </InlineButton>
+                        </>
+                      )}
                     </P>
 
                     <div className="-mx-2 overflow-x-auto px-2">
@@ -224,6 +269,7 @@ export default function Landing() {
             </section>
 
             <ValueProp />
+            <FAQ />
             <PrimaryCTA variant="bottom" />
           </div>
         </main>
