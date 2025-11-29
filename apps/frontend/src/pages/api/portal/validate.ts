@@ -25,10 +25,15 @@ export default async function handler(
     return res.status(400).json({ success: false, error: "License key required" });
   }
 
+  if (!process.env.POLAR_ORGANIZATION_ID) {
+    console.error("POLAR_ORGANIZATION_ID env var not set");
+    return res.status(500).json({ success: false, error: "Server configuration error" });
+  }
+
   try {
     const result = await polar.customerPortal.licenseKeys.validate({
       key: key.trim(),
-      organizationId: process.env.POLAR_ORGANIZATION_ID!,
+      organizationId: process.env.POLAR_ORGANIZATION_ID,
     });
 
     if (result.status !== "granted") {

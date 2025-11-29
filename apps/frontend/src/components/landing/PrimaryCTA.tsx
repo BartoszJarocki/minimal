@@ -7,7 +7,7 @@ interface PrimaryCTAProps {
 
 export const PrimaryCTA = ({ variant = "hero" }: PrimaryCTAProps) => {
   const handleCheckout = () => {
-    window.location.href = `/api/checkout?productId=${POLAR_PRODUCT_ID}`;
+    window.location.href = `/api/checkout?products=${POLAR_PRODUCT_ID}`;
   };
 
   return (
