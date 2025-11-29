@@ -11,7 +11,7 @@ export const PrimaryCTA = ({ variant = "hero" }: PrimaryCTAProps) => {
   };
 
   return (
-    <section className="py-12 md:py-16">
+    <section>
       <div className="max-w-2xl space-y-6">
         {variant === "bottom" && (
           <>

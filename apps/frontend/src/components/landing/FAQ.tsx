@@ -30,7 +30,7 @@ export const FAQ = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-12 md:py-16">
+    <section>
       <h2 className="mb-8 text-xl font-semibold tracking-tight md:text-2xl">
         Questions
       </h2>

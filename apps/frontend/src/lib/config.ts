@@ -17,13 +17,14 @@ export const FEATURED_LANGUAGES = [
 
 export const SOCIAL_PROOF = {
   review: {
-    quote: "These are beautiful and thoughtfully designed. I'm printing them as a two-month spread for planning.",
+    quote:
+      "These are beautiful and thoughtfully designed. I'm printing them as a two-month spread for planning.",
     author: "Brandon P.",
   },
   metrics: [
-    { value: "[X]+", label: "downloads" },
-    { value: "[X]", label: "countries" },
-    { value: "★ [X]", label: "rating" },
+    { value: "50+", label: "downloads" },
+    { value: "10+", label: "countries" },
+    { value: "4.9/5", label: "rating" },
   ],
 };
 
@@ -41,13 +42,6 @@ export const AVAILABLE_CALENDARS = [
     year: 2026,
     title: getTitle(2026),
     description: getDescription(2026),
-    isVisible: true,
-  },
-  {
-    theme: "simple",
-    year: 2027,
-    title: getTitle(2027),
-    description: getDescription(2027),
     isVisible: true,
   },
 ].reverse();

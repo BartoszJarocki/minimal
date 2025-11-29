@@ -6,7 +6,7 @@ import {
   SimpleMonthCalendar,
   SimpleYearCalendar,
 } from "../components/calendar/themes/Simple";
-import { Logo } from "../components/Logo";
+import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Container } from "../components/Container";
 import { joinComponents } from "../lib/utils";
@@ -46,8 +46,8 @@ export default function Landing() {
   const [showAllLanguages, setShowAllLanguages] = useState(false);
 
   const url = "https://useminimal.com";
-  const title = `Printable calendars and habit trackers. ${LIFETIME_PRICE} once, yours forever.`;
-  const description = `Clean, ink-light PDFs in ${SupportedLocales.length} languages. A4 & A5, portrait & landscape. Instant download.`;
+  const title = `Printable calendars and habit trackers`;
+  const description = `${LIFETIME_PRICE} once, yours forever. Clean, ink-light PDFs in ${SupportedLocales.length} languages. A4, A5 & Letter, portrait & landscape.`;
 
   return (
     <>
@@ -76,11 +76,10 @@ export default function Landing() {
 
       <Container>
         <main className="px-4 md:px-8">
-          <div className="md:space-y-18 min-h-0 space-y-8">
+          <div className="min-h-0 space-y-12 md:space-y-16">
             <section className="max-w-3xl space-y-4">
-              <div className="flex items-center justify-start gap-x-6 pb-12">
-                <Logo className="h-24 w-24" />
-                <span className="hidden text-4xl font-bold">Minimal</span>
+              <div className="pb-12">
+                <Header />
               </div>
               <H1>{title}</H1>
               <P className="text-xl md:text-2xl">{description}</P>
@@ -96,18 +95,18 @@ export default function Landing() {
                   (cal) => cal.isVisible
                 )[0];
                 return (
-                  <section className="max-w-3xl py-6 md:py-6">
+                  <section className="max-w-3xl">
                     <div className="flex flex-col gap-y-4">
                       <Link
                         href={`/calendars/preview/${calendar.year}/${calendar.theme}`}
                         className="underline"
                       >
-                        <H2>Preview {calendar.year} calendar →</H2>
+                        <H2>{calendar.title} →</H2>
                       </Link>
 
                       <P>
-                        Minimalist calendars for wall display or planning. A4 &
-                        A5 sizes, portrait & landscape. Ink-light design,
+                        Minimalist calendars for wall display or planning. A4,
+                        A5 & Letter, portrait & landscape. Ink-light design,
                         generous margins.
                       </P>
 
@@ -199,10 +198,10 @@ export default function Landing() {
               })()}
 
               {HABIT_TRACKERS.map((tracker) => (
-                <section className="max-w-3xl py-6 md:py-6" key={tracker.title}>
-                  <div className="mt-8 flex flex-col gap-y-4">
+                <section className="max-w-3xl" key={tracker.title}>
+                  <div className="flex flex-col gap-y-4">
                     <Link href={tracker.href} className="underline">
-                      <H2>Print a sample tracker →</H2>
+                      <H2>{tracker.title} →</H2>
                     </Link>
 
                     <P>{tracker.description}</P>

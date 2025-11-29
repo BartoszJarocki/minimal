@@ -15,8 +15,9 @@ import { Input } from "../../components/ui/input";
 import { cn } from "../../lib/utils";
 import { Badge } from "../../components/ui/badge";
 import { NextSeo } from "next-seo";
-import type { GetServerSideProps } from "next";
+import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSessionFromCookieHeader } from "../../lib/portal";
+import { UpgradeModal } from "../../components/UpgradeModal";
 
 export type HabitData = { id: number; title: string };
 
@@ -204,8 +205,11 @@ const createMonthDates = (date: DateTime) => {
   return days;
 };
 
-const HabitTrackerCreator = () => {
+const HabitTrackerCreator = ({
+  isAuthenticated,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [theme, setTheme] = useState<HABIT_TRACKERS_THEMES>("simple");
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [locale, setLocale] = useState<SupportedLocale>(
     () =>
       SupportedLocales.find((locale) => locale.code === "en-US") ??
@@ -265,15 +269,22 @@ const HabitTrackerCreator = () => {
   }, []);
 
   const handlePrint = useCallback(() => {
-    window.print();
-  }, []);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      window.print();
+    if (!isAuthenticated) {
+      setShowUpgradeModal(true);
+      return;
     }
-  }, []);
+    window.print();
+  }, [isAuthenticated]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handlePrint();
+      }
+    },
+    [handlePrint]
+  );
 
   const url = "https://useminimal.com";
   const title = `Minimalist Habit Tracker | Minimal`;
@@ -470,23 +481,15 @@ const HabitTrackerCreator = () => {
           </Button>
         </div>
       </div>
+
+      <UpgradeModal open={showUpgradeModal} onOpenChange={setShowUpgradeModal} />
     </>
   );
 };
 
 export default HabitTrackerCreator;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps = (async ({ req }) => {
   const session = getSessionFromCookieHeader(req.headers.cookie || "");
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/portal",
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: {} };
-};
+  return { props: { isAuthenticated: !!session } };
+}) satisfies GetServerSideProps<{ isAuthenticated: boolean }>;

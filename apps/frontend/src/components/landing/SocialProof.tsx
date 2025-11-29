@@ -2,11 +2,11 @@ import { SOCIAL_PROOF } from "../../lib/config";
 
 export const SocialProof = () => {
   return (
-    <section className="py-16 md:py-20">
+    <section>
       <div className="max-w-2xl space-y-10">
         <blockquote className="space-y-4 border-l-2 border-foreground/20 pl-6">
           <p className="text-xl leading-relaxed text-foreground md:text-2xl">
-            "{SOCIAL_PROOF.review.quote}"
+            &ldquo;{SOCIAL_PROOF.review.quote}&rdquo;
           </p>
           <footer className="text-sm text-muted-foreground">
             — {SOCIAL_PROOF.review.author}

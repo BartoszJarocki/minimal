@@ -3,42 +3,27 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { H1 } from "../H1";
 import { P } from "../P";
+import { useValidateLicense } from "../../hooks/use-portal";
 
 export function LicenseForm() {
   const [key, setKey] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const validateLicense = useValidateLicense();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/portal/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
+    validateLicense.mutate(key, {
+      onSuccess: () => {
         window.location.reload();
-      } else {
-        setError(data.error || "Validation failed");
-      }
-    } catch {
-      setError("Network error");
-    } finally {
-      setLoading(false);
-    }
+      },
+    });
   };
+
+  const error = validateLicense.error?.message;
 
   return (
     <section className="max-w-md space-y-6">
       <H1>Customer Portal</H1>
-      <P>Enter your license key to access downloads.</P>
+      <P>Enter your license key to access your account.</P>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
@@ -47,7 +32,7 @@ export function LicenseForm() {
           onChange={(e) => setKey(e.target.value)}
           placeholder="XXXX-XXXX-XXXX-XXXX"
           className="font-mono"
-          disabled={loading}
+          disabled={validateLicense.isPending}
         />
 
         {error && <p className="text-sm text-destructive">{error}</p>}
@@ -56,10 +41,10 @@ export function LicenseForm() {
           type="submit"
           variant="cta"
           size="cta"
-          disabled={loading || !key.trim()}
+          disabled={validateLicense.isPending || !key.trim()}
           className="w-full"
         >
-          {loading ? "Validating..." : "Access Portal"}
+          {validateLicense.isPending ? "Validating..." : "Access Portal"}
         </Button>
       </form>
 

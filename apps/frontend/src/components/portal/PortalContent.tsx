@@ -16,7 +16,7 @@ export function PortalContent({ session }: Props) {
   return (
     <section className="max-w-2xl space-y-12">
       <div className="space-y-4">
-        <H1>Your Downloads</H1>
+        <H1>Your account</H1>
         <P className="text-muted-foreground">
           License: <code className="font-mono">{session.licenseKey}</code>
         </P>
@@ -36,7 +36,7 @@ export function PortalContent({ session }: Props) {
                   All formats, all languages
                 </p>
               </div>
-              <Button variant="outline" asChild>
+              <Button variant="default" asChild>
                 <a href={`/api/portal/download?file=${DOWNLOAD_FILES[year]}`}>
                   Download
                 </a>
@@ -56,7 +56,7 @@ export function PortalContent({ session }: Props) {
                 Create custom printable trackers
               </p>
             </div>
-            <Button variant="outline" asChild>
+            <Button variant="default" asChild>
               <Link href="/habit-tracker">Open</Link>
             </Button>
           </div>
@@ -64,7 +64,7 @@ export function PortalContent({ session }: Props) {
       </div>
 
       <div className="pt-8">
-        <Button variant="ghost" asChild>
+        <Button variant="secondary" asChild>
           <a href="/api/portal/logout">Sign out</a>
         </Button>
       </div>

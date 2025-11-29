@@ -38,7 +38,10 @@ const navigation = {
     { name: "A5 Calendars", href: "/calendars/formats" },
     { name: "Letter Calendars", href: "/calendars/formats" },
   ],
-  legal: [{ name: "Terms of Service", href: "/terms" }],
+  legal: [
+    { name: "Terms of Service", href: "/terms" },
+    { name: "My account", href: "/portal" },
+  ],
   social: [
     {
       name: "Twitter",
