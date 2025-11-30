@@ -3,7 +3,7 @@ import { Container } from "../components/Container";
 import { H1 } from "../components/H1";
 
 const Terms = () => {
-  const url = "https://useminimal.com";
+  const url = "https://useminimal.com/terms";
   const title = `Minimal - Terms of Service`;
   const description = `Terms of Service for Use Minimal`;
 

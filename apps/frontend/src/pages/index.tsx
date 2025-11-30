@@ -26,6 +26,7 @@ import { ValueProp } from "../components/landing/ValueProp";
 import { PrimaryCTA } from "../components/landing/PrimaryCTA";
 import { FAQ } from "../components/landing/FAQ";
 import { FEATURED_LANGUAGES } from "../lib/config";
+import { OrganizationSchema, ProductSchema } from "../components/seo";
 
 export const HABIT_TRACKERS = [
   {
@@ -73,6 +74,13 @@ export default function Landing() {
           cardType: "summary_large_image",
         }}
       />
+      <OrganizationSchema />
+      <ProductSchema
+        name="Minimalist Printable Calendars & Habit Trackers"
+        description={description}
+        url={url}
+        image={`${url}/api/open-graph?type=landing`}
+      />
 
       <Container>
         <main className="px-4 md:px-8">
@@ -98,7 +106,7 @@ export default function Landing() {
                   <section className="max-w-3xl">
                     <div className="flex flex-col gap-y-4">
                       <Link
-                        href={`/calendars/preview/${calendar.year}/${calendar.theme}`}
+                        href={`/calendars/${calendar.year}/${calendar.theme}`}
                         className="underline"
                       >
                         <H2>{calendar.title} →</H2>
@@ -265,6 +273,80 @@ export default function Landing() {
                   </div>
                 </section>
               ))}
+            </section>
+
+            <section className="max-w-3xl space-y-6">
+              <H2>Browse by Type</H2>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                <Link
+                  href="/calendars/intent/weekly"
+                  className="rounded-lg border p-4 text-center hover:bg-muted"
+                >
+                  <div className="text-sm font-medium">Weekly</div>
+                </Link>
+                <Link
+                  href="/calendars/intent/monthly"
+                  className="rounded-lg border p-4 text-center hover:bg-muted"
+                >
+                  <div className="text-sm font-medium">Monthly</div>
+                </Link>
+                <Link
+                  href="/calendars/intent/blank"
+                  className="rounded-lg border p-4 text-center hover:bg-muted"
+                >
+                  <div className="text-sm font-medium">Blank</div>
+                </Link>
+                <Link
+                  href="/calendars/intent/academic"
+                  className="rounded-lg border p-4 text-center hover:bg-muted"
+                >
+                  <div className="text-sm font-medium">Academic</div>
+                </Link>
+                <Link
+                  href="/calendars/intent/wall-planner"
+                  className="rounded-lg border p-4 text-center hover:bg-muted"
+                >
+                  <div className="text-sm font-medium">Wall Planner</div>
+                </Link>
+              </div>
+
+              <P className="text-sm font-medium">By Format</P>
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href="/calendars/formats/a4"
+                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                >
+                  A4
+                </Link>
+                <Link
+                  href="/calendars/formats/a5"
+                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                >
+                  A5
+                </Link>
+                <Link
+                  href="/calendars/formats/letter"
+                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                >
+                  US Letter
+                </Link>
+              </div>
+
+              <P className="text-sm font-medium">By Week Start</P>
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href="/calendars/week-start/monday"
+                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                >
+                  Monday Start
+                </Link>
+                <Link
+                  href="/calendars/week-start/sunday"
+                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                >
+                  Sunday Start
+                </Link>
+              </div>
             </section>
 
             <ValueProp />

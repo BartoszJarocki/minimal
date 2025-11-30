@@ -1,6 +1,5 @@
 import { Logo } from "./Logo";
 import Link from "next/link";
-import { SupportedYears } from "./calendar/Calendar";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../lib/config";
 import { SupportedLocales } from "@minimal/config";
 
@@ -10,23 +9,21 @@ const navigation = {
   products: [
     ...AVAILABLE_CALENDARS.map((calendar) => ({
       name: `${calendar.year} Calendar`,
-      href: `/calendars/preview/${calendar.year}/${calendar.theme}`,
+      href: `/calendars/${calendar.year}/${calendar.theme}`,
     })),
     { name: "Habit Tracker", href: "/habit-tracker" },
   ],
   years: [
-    ...SupportedYears.slice(-4)
-      .reverse()
-      .map((year) => ({
-        name: year.toString(),
-        href: `/calendars/preview/${year}/simple`,
-      })),
+    ...AVAILABLE_CALENDARS.slice(0, 4).map((calendar) => ({
+      name: calendar.year.toString(),
+      href: `/calendars/${calendar.year}/simple`,
+    })),
     { name: "See all years →", href: "/calendars" },
   ],
   languages: [
     ...FEATURED_LANGUAGES.map((lang) => ({
       name: lang.name,
-      href: `/calendars/preview/${CURRENT_YEAR}/simple/${lang.code}`,
+      href: `/calendars/${CURRENT_YEAR}/simple/${lang.code}`,
     })),
     {
       name: `All ${SupportedLocales.length} languages →`,
@@ -34,9 +31,9 @@ const navigation = {
     },
   ],
   formats: [
-    { name: "A4 Calendars", href: "/calendars/formats" },
-    { name: "A5 Calendars", href: "/calendars/formats" },
-    { name: "Letter Calendars", href: "/calendars/formats" },
+    { name: "A4 Calendars", href: "/calendars/formats/a4" },
+    { name: "A5 Calendars", href: "/calendars/formats/a5" },
+    { name: "Letter Calendars", href: "/calendars/formats/letter" },
   ],
   legal: [
     { name: "Terms of Service", href: "/terms" },
@@ -194,10 +191,10 @@ export const Footer = () => {
         <nav aria-label="All calendars" className="sr-only">
           <h4>Printable calendars by year</h4>
           <ul>
-            {SupportedYears.map((year) => (
-              <li key={year}>
-                <Link href={`/calendars/preview/${year}/simple`}>
-                  {year} printable calendar PDF
+            {AVAILABLE_CALENDARS.map((calendar) => (
+              <li key={calendar.year}>
+                <Link href={`/calendars/${calendar.year}/simple`}>
+                  {calendar.year} printable calendar PDF
                 </Link>
               </li>
             ))}
@@ -208,7 +205,7 @@ export const Footer = () => {
             {SupportedLocales.map((locale) => (
               <li key={locale.code}>
                 <Link
-                  href={`/calendars/preview/${CURRENT_YEAR}/simple/${locale.code}`}
+                  href={`/calendars/${CURRENT_YEAR}/simple/${locale.code}`}
                 >
                   {locale.englishName} printable calendar
                 </Link>

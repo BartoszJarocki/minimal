@@ -18,6 +18,8 @@ import { NextSeo } from "next-seo";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSessionFromCookieHeader } from "../../lib/portal";
 import { UpgradeModal } from "../../components/UpgradeModal";
+import { ProductSchema, BreadcrumbSchema } from "../../components/seo";
+import Link from "next/link";
 
 export type HabitData = { id: number; title: string };
 
@@ -286,7 +288,7 @@ const HabitTrackerCreator = ({
     [handlePrint]
   );
 
-  const url = "https://useminimal.com";
+  const url = "https://useminimal.com/habit-tracker";
   const title = `Minimalist Habit Tracker | Minimal`;
   const description = `Create and print your own habit tracker. Available in ${SupportedLocales.length} languages.`;
 
@@ -313,6 +315,15 @@ const HabitTrackerCreator = ({
           handle: "@UseMinimal",
           cardType: "summary_large_image",
         }}
+      />
+      <ProductSchema
+        name="Minimalist Habit Tracker"
+        description={description}
+        url={url}
+        image={`https://useminimal.com/api/open-graph?type=habit-tracker`}
+      />
+      <BreadcrumbSchema
+        items={[{ name: "Habit Tracker", url }]}
       />
       <div className="flex h-full w-full overflow-hidden">
         <div className="flex-1 overflow-auto bg-black/5 p-8 print:overflow-hidden print:p-0">
@@ -469,6 +480,18 @@ const HabitTrackerCreator = ({
                 ))}
               </div>
             )}
+          </div>
+
+          <div className="mt-4 border-t border-black/10 pt-4">
+            <div className="mx-3 font-mono text-xs leading-loose">Related</div>
+            <div className="flex flex-col gap-1 px-3 text-sm">
+              <Link href="/habit-tracker/monthly" className="text-muted-foreground hover:text-foreground">
+                Monthly Habit Tracker
+              </Link>
+              <Link href="/habit-tracker/bullet-journal" className="text-muted-foreground hover:text-foreground">
+                Bullet Journal Style
+              </Link>
+            </div>
           </div>
 
           <Button

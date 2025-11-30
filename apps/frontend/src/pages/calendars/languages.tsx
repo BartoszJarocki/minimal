@@ -41,7 +41,7 @@ export default function LanguagesHub() {
               {SupportedLocales.map((locale) => (
                 <li key={locale.code}>
                   <Link
-                    href={`/calendars/preview/${CURRENT_YEAR}/simple/${locale.code}`}
+                    href={`/calendars/${CURRENT_YEAR}/simple/${locale.code}`}
                     className="flex items-center gap-3 p-3 hover:bg-secondary"
                   >
                     <span className="text-2xl">{locale.emoji}</span>

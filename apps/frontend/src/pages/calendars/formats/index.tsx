@@ -74,7 +74,7 @@ export default function FormatsHub() {
                 All calendars include both portrait and landscape orientations.
                 <br />
                 <Link
-                  href={`/calendars/preview/${CURRENT_YEAR}/simple`}
+                  href={`/calendars/${CURRENT_YEAR}/simple`}
                   className="underline"
                 >
                   View {CURRENT_YEAR} calendars →
