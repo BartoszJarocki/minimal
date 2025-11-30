@@ -11,7 +11,7 @@ export const P = ({
   return (
     <p
       className={cn(
-        "text-pretty text-left text-lg leading-relaxed text-muted-foreground",
+        "text-balance text-left text-lg leading-relaxed text-muted-foreground",
         className
       )}
     >

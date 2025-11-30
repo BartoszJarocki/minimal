@@ -20,7 +20,7 @@ const Terms = () => {
           url,
           images: [
             {
-              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              url: `${url}/api/open-graph?type=page&title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`,
               width: 1200,
               height: 630,
             },

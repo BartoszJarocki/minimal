@@ -46,7 +46,7 @@ export default function Preview({ theme, year, locale }: Props) {
           url,
           images: [
             {
-              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              url: `https://useminimal.com/api/open-graph?type=calendar&year=${year}`,
               width: 1200,
               height: 630,
             },

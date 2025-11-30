@@ -62,7 +62,7 @@ export default function Landing() {
           url,
           images: [
             {
-              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              url: `${url}/api/open-graph?type=landing`,
               width: 1200,
               height: 630,
             },

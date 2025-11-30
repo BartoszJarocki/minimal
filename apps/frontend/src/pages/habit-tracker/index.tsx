@@ -303,7 +303,7 @@ const HabitTrackerCreator = ({
           url,
           images: [
             {
-              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              url: `${url}/api/open-graph?type=habit-tracker`,
               width: 1200,
               height: 630,
             },

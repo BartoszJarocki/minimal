@@ -74,7 +74,7 @@ export default function CalendarPreview({
           url,
           images: [
             {
-              url: `${url}/api/open-graph?title=${title}&description=${description}`,
+              url: `https://useminimal.com/api/open-graph?type=calendar&year=${year}`,
               width: 1200,
               height: 630,
             },
@@ -213,6 +213,6 @@ export const parseQueryParams = (query: ParsedUrlQuery): Props => {
     year: year || DateTime.now().year,
     format: format || "a4",
     variant: variant || "portrait",
-    weekStartsOn,
+    ...(weekStartsOn !== undefined && { weekStartsOn }),
   };
 };
