@@ -74,7 +74,7 @@ export default function CalendarPreview({
           url,
           images: [
             {
-              url: `https://useminimal.com/api/open-graph?type=calendar&year=${year}`,
+              url: `https://useminimal.com/og/calendar-${year}.png`,
               width: 1200,
               height: 630,
             },
@@ -135,8 +135,8 @@ export default function CalendarPreview({
             </P>
 
             <P className="text-sm">
-              Download format: Zipped set of PDFs (A4 and A5 sizes in both
-              portrait and landscape orientations)
+              Download format: Zipped set of PDFs (A4, A5, and Letter sizes in
+              both portrait and landscape orientations)
             </P>
 
             <PrimaryCTA />

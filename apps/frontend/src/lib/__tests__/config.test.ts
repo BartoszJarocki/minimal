@@ -1,4 +1,4 @@
-import { getTitle, getDescription, BUY_URLS, AVAILABLE_CALENDARS } from '../config';
+import { getTitle, getDescription, AVAILABLE_CALENDARS } from '../config';
 
 describe('Configuration', () => {
   describe('getTitle', () => {
@@ -29,19 +29,6 @@ describe('Configuration', () => {
     });
   });
 
-  describe('BUY_URLS', () => {
-    it('should contain URLs for supported years', () => {
-      expect(BUY_URLS[2024]).toBeDefined();
-      expect(BUY_URLS[2025]).toBeDefined();
-    });
-
-    it('should have valid URL format', () => {
-      Object.values(BUY_URLS).forEach(url => {
-        expect(url).toMatch(/^https:\/\/bjarocki\.gumroad\.com\/l\//);
-      });
-    });
-  });
-
   describe('AVAILABLE_CALENDARS', () => {
     it('should have proper structure for each calendar', () => {
       AVAILABLE_CALENDARS.forEach(calendar => {
@@ -50,20 +37,12 @@ describe('Configuration', () => {
         expect(calendar).toHaveProperty('title');
         expect(calendar).toHaveProperty('description');
         expect(calendar).toHaveProperty('isVisible');
-        expect(calendar).toHaveProperty('buyLink');
-        
+
         expect(typeof calendar.theme).toBe('string');
         expect(typeof calendar.year).toBe('number');
         expect(typeof calendar.title).toBe('string');
         expect(typeof calendar.description).toBe('string');
         expect(typeof calendar.isVisible).toBe('boolean');
-        expect(typeof calendar.buyLink).toBe('string');
-      });
-    });
-
-    it('should have valid buy links', () => {
-      AVAILABLE_CALENDARS.forEach(calendar => {
-        expect(calendar.buyLink).toMatch(/^https:\/\//);
       });
     });
 

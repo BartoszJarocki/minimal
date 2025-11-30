@@ -11,6 +11,10 @@ const scaledStylesLookup = {
     portrait: "h-[320px] w-[224px]",
     landscape: "h-[224px] w-[320px]",
   },
+  letter: {
+    portrait: "h-[422px] w-[326px]",
+    landscape: "h-[326px] w-[422px]",
+  },
 };
 
 export const ScaledPreview = ({

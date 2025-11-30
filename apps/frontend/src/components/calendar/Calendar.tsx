@@ -10,7 +10,7 @@ export function addLeadingZeros(num: number, totalLength: number): string {
 
 export const SupportedYears = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
 
-export type Format = "a4" | "a5";
+export type Format = "a4" | "a5" | "letter";
 export type FormatVariant = "landscape" | "portrait";
 
 export const DayCell = ({

@@ -37,7 +37,7 @@ export default function Preview({ year }: Props) {
           url,
           images: [
             {
-              url: `https://useminimal.com/api/open-graph?type=calendar&year=${year}`,
+              url: `https://useminimal.com/og/calendar-${year}.png`,
               width: 1200,
               height: 630,
             },

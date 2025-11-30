@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import { ParsedUrlQuery } from "querystring";
-import React from "react";
+import React, { useState } from "react";
 import {
   SimpleYearCalendar,
   SimpleMonthCalendar,
@@ -18,6 +18,8 @@ import { PrimaryCTA } from "../../../../../components/landing/PrimaryCTA";
 import { joinComponents } from "../../../../../lib/utils";
 import { ThemeNameLookup } from "../../../../print";
 import { SupportedLocales, Theme } from "@minimal/config";
+import { InlineButton } from "../../../../../components/InlineButton";
+import type { Format, FormatVariant } from "../../../../../components/calendar/Calendar";
 
 interface Props {
   theme: Theme;
@@ -26,6 +28,10 @@ interface Props {
 }
 
 export default function Preview({ theme, year, locale }: Props) {
+  const [size, setSize] = useState<Format>("a4");
+  const [variant, setVariant] = useState<FormatVariant>("portrait");
+  const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(1);
+
   const date = DateTime.now().set({ year }).setLocale(locale);
   const url = `https://useminimal.com/calendars/preview/${year}/${theme}`;
   const title = `${ThemeNameLookup[theme]} printable calendar ${date.toFormat(
@@ -46,7 +52,7 @@ export default function Preview({ theme, year, locale }: Props) {
           url,
           images: [
             {
-              url: `https://useminimal.com/api/open-graph?type=calendar&year=${year}`,
+              url: `https://useminimal.com/og/calendar-${year}.png`,
               width: 1200,
               height: 630,
             },
@@ -61,27 +67,89 @@ export default function Preview({ theme, year, locale }: Props) {
       <Container>
         <main className="pb-24">
           <section className="max-w-3xl space-y-6">
-            <div className="overflow-x-auto px-2">
+            <H1>{title}</H1>
+
+            <div className="space-y-2">
+              <P className="text-sm">
+                Size:{" "}
+                <InlineButton
+                  onClick={() => setSize("a4")}
+                  className={size === "a4" ? "font-bold text-foreground" : ""}
+                >
+                  A4
+                </InlineButton>
+                {" / "}
+                <InlineButton
+                  onClick={() => setSize("a5")}
+                  className={size === "a5" ? "font-bold text-foreground" : ""}
+                >
+                  A5
+                </InlineButton>
+                {" / "}
+                <InlineButton
+                  onClick={() => setSize("letter")}
+                  className={size === "letter" ? "font-bold text-foreground" : ""}
+                >
+                  Letter
+                </InlineButton>
+              </P>
+
+              <P className="text-sm">
+                Orientation:{" "}
+                <InlineButton
+                  onClick={() => setVariant("portrait")}
+                  className={variant === "portrait" ? "font-bold text-foreground" : ""}
+                >
+                  Portrait
+                </InlineButton>
+                {" / "}
+                <InlineButton
+                  onClick={() => setVariant("landscape")}
+                  className={variant === "landscape" ? "font-bold text-foreground" : ""}
+                >
+                  Landscape
+                </InlineButton>
+              </P>
+
+              <P className="text-sm">
+                Week starts on:{" "}
+                <InlineButton
+                  onClick={() => setWeekStartsOn(1)}
+                  className={weekStartsOn === 1 ? "font-bold text-foreground" : ""}
+                >
+                  Monday
+                </InlineButton>
+                {" / "}
+                <InlineButton
+                  onClick={() => setWeekStartsOn(7)}
+                  className={weekStartsOn === 7 ? "font-bold text-foreground" : ""}
+                >
+                  Sunday
+                </InlineButton>
+              </P>
+            </div>
+
+            <div className="-mx-2 overflow-x-auto px-2">
               <div className="flex gap-4 py-4">
-                <ScaledPreview variant="portrait" format="a4">
+                <ScaledPreview variant={variant} format={size}>
                   <SimpleMonthCalendar
                     date={date}
-                    variant="portrait"
-                    size="a4"
+                    variant={variant}
+                    size={size}
+                    weekStartsOn={weekStartsOn}
                   />
                 </ScaledPreview>
 
-                <ScaledPreview variant="portrait" format="a4">
+                <ScaledPreview variant={variant} format={size}>
                   <SimpleYearCalendar
                     date={date}
-                    variant="portrait"
-                    size="a4"
+                    variant={variant}
+                    size={size}
+                    weekStartsOn={weekStartsOn}
                   />
                 </ScaledPreview>
               </div>
             </div>
-
-            <H1>{title}</H1>
 
             <P>
               Introducing the ultimate {date.toFormat("yyyy")}{" "}
@@ -125,8 +193,8 @@ export default function Preview({ theme, year, locale }: Props) {
             </P>
 
             <P className="text-sm">
-              Download format: Zipped set of PDFs (A4 and A5 sizes in both
-              portrait and landscape orientations)
+              Download format: Zipped set of PDFs (A4, A5, and Letter sizes in
+              both portrait and landscape orientations)
             </P>
 
             <PrimaryCTA />

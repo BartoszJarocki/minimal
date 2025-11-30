@@ -32,10 +32,11 @@ type Options = {
 
 // Utility Functions
 const getPaperDimensions = (format: PaperFormat, isLandscape = false) => {
-  // A4: 210x297mm, A5: 148x210mm at 96 DPI
+  // A4: 210x297mm, A5: 148x210mm at 96 DPI, Letter: 8.5x11" at 96 DPI
   const dimensions = {
     a4: { width: 794, height: 1123 },
     a5: { width: 559, height: 794 },
+    letter: { width: 816, height: 1056 },
   }[format] || { width: 794, height: 1123 };
 
   return isLandscape
@@ -313,12 +314,44 @@ const generateYearlyCalendar = async ({
   await page.close();
 };
 
+// OG Image Generation
+const generateOGImages = async (browser: Browser, years: number[], themes: Theme[]) => {
+  const ogDir = path.join(__dirname, '../../frontend/public/og');
+  await fs.promises.mkdir(ogDir, { recursive: true });
+
+  for (const year of years) {
+    for (const theme of themes) {
+      console.log(`Generating OG image for ${year} ${theme}`);
+
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1200, height: 630 });
+
+      const url = `http://localhost:3000/og-preview?year=${year}&theme=${theme}`;
+      await page.goto(url, { waitUntil: 'networkidle0' });
+
+      await page.screenshot({
+        path: path.join(ogDir, `calendar-${year}.png`),
+        fullPage: false,
+        omitBackground: false,
+      });
+
+      await page.close();
+      console.log(`Done generating OG image for ${year}`);
+    }
+  }
+};
+
 async function generateProducts() {
   const destDir = './generated';
   const years = [2026, 2027];
-  const formats: PaperFormat[] = ['a4', 'a5'];
+  const formats: PaperFormat[] = ['a4', 'a5', 'letter'];
   const themes: Theme[] = ['simple'];
   const weekStartOptions: WeekStartsOn[] = [1, 7]; // Monday and Sunday
+
+  // Generate OG images first (one browser instance)
+  const ogBrowser = await puppeteer.launch({ headless: true });
+  await generateOGImages(ogBrowser, years, themes);
+  await ogBrowser.close();
 
   for (const theme of themes) {
     // Clean previous output
