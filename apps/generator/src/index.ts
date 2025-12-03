@@ -12,6 +12,7 @@ import { SupportedLocale, SupportedLocales, Theme } from '@minimal/config';
 const args = process.argv.slice(2);
 const WITH_UPLOAD = args.includes('--with-upload');
 const UPLOAD_ONLY = args.includes('--upload-only');
+const OG_ONLY = args.includes('--og-only');
 
 // R2 Configuration
 const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID || '';
@@ -368,6 +369,7 @@ const generateOGImages = async (browser: Browser, years: number[], themes: Theme
 
       const url = `http://localhost:3000/og-preview?year=${year}&theme=${theme}`;
       await page.goto(url, { waitUntil: 'networkidle0' });
+      await page.evaluate(() => document.fonts.ready);
 
       await page.screenshot({
         path: path.join(ogDir, `calendar-${year}.png`),
@@ -423,7 +425,7 @@ async function generateProducts() {
   const themes: Theme[] = ['simple'];
   const weekStartOptions: WeekStartsOn[] = [1, 7]; // Monday and Sunday
 
-  console.log(`Mode: ${UPLOAD_ONLY ? 'upload-only' : WITH_UPLOAD ? 'generate + upload' : 'generate only'}`);
+  console.log(`Mode: ${UPLOAD_ONLY ? 'upload-only' : OG_ONLY ? 'og-only' : WITH_UPLOAD ? 'generate + upload' : 'generate only'}`);
 
   // Upload-only mode: skip generation
   if (UPLOAD_ONLY) {
@@ -438,6 +440,12 @@ async function generateProducts() {
   const ogBrowser = await puppeteer.launch({ headless: true });
   await generateOGImages(ogBrowser, years, themes);
   await ogBrowser.close();
+
+  // OG-only mode: skip calendar generation
+  if (OG_ONLY) {
+    console.log('OG images generated!');
+    return;
+  }
 
   for (const theme of themes) {
     // Clean previous output

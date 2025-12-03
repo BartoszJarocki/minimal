@@ -10,6 +10,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "generate": "turbo run generate",
+    "generate:og": "turbo run generate -- --og-only",
     "generate:upload-only": "turbo run generate -- --upload-only",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",

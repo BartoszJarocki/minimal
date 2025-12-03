@@ -6,6 +6,7 @@ import {
   SimpleYearCalendar,
 } from "../components/calendar/themes/Simple";
 import { Logo } from "../components/Logo";
+import { ScaledPreview } from "../components/ScaledPreview";
 
 interface Props {
   year: number;
@@ -22,29 +23,23 @@ export default function OGPreview({ year }: Props) {
     >
       {/* Left side - Calendar previews */}
       <div className="flex gap-6">
-        {/* Month calendar preview */}
-        <div className="h-[400px] w-[280px] overflow-hidden rounded-sm border border-black/10 bg-white shadow-lg">
-          <div className="origin-top-left scale-[0.35]">
-            <SimpleMonthCalendar
-              date={date}
-              variant="portrait"
-              size="a4"
-              weekStartsOn={1}
-            />
-          </div>
-        </div>
+        <ScaledPreview format="a4" variant="portrait" className="shadow-lg">
+          <SimpleMonthCalendar
+            date={date}
+            variant="portrait"
+            size="a4"
+            weekStartsOn={1}
+          />
+        </ScaledPreview>
 
-        {/* Year calendar preview */}
-        <div className="h-[400px] w-[280px] overflow-hidden rounded-sm border border-black/10 bg-white shadow-lg">
-          <div className="origin-top-left scale-[0.35]">
-            <SimpleYearCalendar
-              date={date}
-              variant="portrait"
-              size="a4"
-              weekStartsOn={1}
-            />
-          </div>
-        </div>
+        <ScaledPreview format="a4" variant="portrait" className="shadow-lg">
+          <SimpleYearCalendar
+            date={date}
+            variant="portrait"
+            size="a4"
+            weekStartsOn={1}
+          />
+        </ScaledPreview>
       </div>
 
       {/* Right side - Branding */}

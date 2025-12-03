@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "generate": "bun ./src/index.ts",
+    "generate:og": "bun ./src/index.ts --og-only",
     "typecheck": "echo 'Bun handles TypeScript natively'"
   },
   "dependencies": {
