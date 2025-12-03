@@ -184,10 +184,6 @@ export default function MonthlyCalendarPage({ content, currentYear }: Props) {
                 Weekly Calendar
               </Link>
               <span className="text-muted-foreground">|</span>
-              <Link href="/calendars/intent/blank" className="text-sm underline">
-                Blank Calendar
-              </Link>
-              <span className="text-muted-foreground">|</span>
               <Link href="/habit-tracker" className="text-sm underline">
                 Habit Tracker
               </Link>

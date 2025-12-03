@@ -39,9 +39,13 @@ export const HABIT_TRACKERS = [
 
 Settings.defaultLocale = "en-US";
 
+// Featured year - show next year starting November
+const now = DateTime.now();
+const featuredYear = now.month >= 11 ? now.year + 1 : now.year;
+
 export default function Landing() {
   const [date, setDate] = useState(
-    DateTime.now().set({ year: 2026, month: 1 })
+    DateTime.now().set({ year: featuredYear, month: 1 })
   );
   const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(7); // default Sunday for en
   const [showAllLanguages, setShowAllLanguages] = useState(false);
@@ -83,7 +87,7 @@ export default function Landing() {
       />
 
       <Container>
-        <main className="px-4 md:px-8">
+        <main>
           <div className="min-h-0 space-y-12 md:space-y-16">
             <section className="max-w-3xl space-y-4">
               <div className="pb-12">
@@ -99,9 +103,10 @@ export default function Landing() {
 
             <section className="space-y-8">
               {(() => {
-                const calendar = AVAILABLE_CALENDARS.filter(
-                  (cal) => cal.isVisible
-                )[0];
+                const calendar =
+                  AVAILABLE_CALENDARS.find(
+                    (c) => c.year === featuredYear && c.isVisible
+                  ) || AVAILABLE_CALENDARS.filter((c) => c.isVisible)[0];
                 return (
                   <section className="max-w-3xl">
                     <div className="flex flex-col gap-y-4">
@@ -276,76 +281,84 @@ export default function Landing() {
             </section>
 
             <section className="max-w-3xl space-y-6">
-              <H2>Browse by Type</H2>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-                <Link
-                  href="/calendars/intent/weekly"
-                  className="rounded-lg border p-4 text-center hover:bg-muted"
-                >
-                  <div className="text-sm font-medium">Weekly</div>
-                </Link>
-                <Link
-                  href="/calendars/intent/monthly"
-                  className="rounded-lg border p-4 text-center hover:bg-muted"
-                >
-                  <div className="text-sm font-medium">Monthly</div>
-                </Link>
-                <Link
-                  href="/calendars/intent/blank"
-                  className="rounded-lg border p-4 text-center hover:bg-muted"
-                >
-                  <div className="text-sm font-medium">Blank</div>
-                </Link>
-                <Link
-                  href="/calendars/intent/academic"
-                  className="rounded-lg border p-4 text-center hover:bg-muted"
-                >
-                  <div className="text-sm font-medium">Academic</div>
-                </Link>
-                <Link
-                  href="/calendars/intent/wall-planner"
-                  className="rounded-lg border p-4 text-center hover:bg-muted"
-                >
-                  <div className="text-sm font-medium">Wall Planner</div>
-                </Link>
+              <H2>Find your calendar</H2>
+
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">Products</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/calendars"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    Calendars
+                  </Link>
+                  <Link
+                    href="/habit-tracker"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    Habit Tracker
+                  </Link>
+                </div>
               </div>
 
-              <P className="text-sm font-medium">By Format</P>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href="/calendars/formats/a4"
-                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
-                >
-                  A4
-                </Link>
-                <Link
-                  href="/calendars/formats/a5"
-                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
-                >
-                  A5
-                </Link>
-                <Link
-                  href="/calendars/formats/letter"
-                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
-                >
-                  US Letter
-                </Link>
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">Calendar view</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/calendars/intent/weekly"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    Weekly
+                  </Link>
+                  <Link
+                    href="/calendars/intent/monthly"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    Monthly
+                  </Link>
+                </div>
               </div>
 
-              <P className="text-sm font-medium">By Week Start</P>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href="/calendars/week-start/monday"
-                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
-                >
-                  Monday Start
-                </Link>
-                <Link
-                  href="/calendars/week-start/sunday"
-                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
-                >
-                  Sunday Start
-                </Link>
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">Paper size</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/calendars/formats/a4"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    A4
+                  </Link>
+                  <Link
+                    href="/calendars/formats/a5"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    A5
+                  </Link>
+                  <Link
+                    href="/calendars/formats/letter"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    Letter
+                  </Link>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">Week starts</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/calendars/week-start/monday"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    Monday
+                  </Link>
+                  <Link
+                    href="/calendars/week-start/sunday"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    Sunday
+                  </Link>
+                </div>
               </div>
             </section>
 

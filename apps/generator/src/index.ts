@@ -1,9 +1,49 @@
+import 'dotenv/config';
+
 import puppeteer, { Browser, PaperFormat } from 'puppeteer';
 import { Info } from 'luxon';
 import fs from 'fs';
 import path from 'path';
 import AdmZip from 'adm-zip';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { SupportedLocale, SupportedLocales, Theme } from '@minimal/config';
+
+// CLI flags
+const args = process.argv.slice(2);
+const WITH_UPLOAD = args.includes('--with-upload');
+const UPLOAD_ONLY = args.includes('--upload-only');
+
+// R2 Configuration
+const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID || '';
+const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
+const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
+const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'minimal-downloads';
+
+const s3Client = new S3Client({
+  region: 'auto',
+  endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: R2_ACCESS_KEY_ID,
+    secretAccessKey: R2_SECRET_ACCESS_KEY,
+  },
+});
+
+async function uploadToR2(filePath: string, key: string): Promise<void> {
+  if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
+    throw new Error('R2 credentials not configured. Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY');
+  }
+
+  const fileContent = await fs.promises.readFile(filePath);
+
+  await s3Client.send(new PutObjectCommand({
+    Bucket: R2_BUCKET_NAME,
+    Key: key,
+    Body: fileContent,
+    ContentType: 'application/zip',
+  }));
+
+  console.log(`Uploaded ${key} to R2`);
+}
 
 // Types
 interface CalendarPaths {
@@ -341,12 +381,58 @@ const generateOGImages = async (browser: Browser, years: number[], themes: Theme
   }
 };
 
+async function createCombinedYearZip(destDir: string, theme: string, year: number, formats: PaperFormat[]) {
+  const distDir = path.join(destDir, theme, 'dist');
+  const combinedZipName = `calendars-${year}.zip`;
+  const combinedZipPath = path.join(distDir, combinedZipName);
+
+  const zip = new AdmZip();
+
+  for (const format of formats) {
+    const formatDir = path.join(destDir, theme, year.toString(), format);
+    if (fs.existsSync(formatDir)) {
+      zip.addLocalFolder(formatDir, format);
+    }
+  }
+
+  zip.writeZip(combinedZipPath);
+  console.log(`Created combined ZIP: ${combinedZipName}`);
+
+  return combinedZipPath;
+}
+
+async function uploadYearZips(destDir: string, theme: string, years: number[]) {
+  const distDir = path.join(destDir, theme, 'dist');
+
+  for (const year of years) {
+    const zipName = `calendars-${year}.zip`;
+    const zipPath = path.join(distDir, zipName);
+
+    if (fs.existsSync(zipPath)) {
+      await uploadToR2(zipPath, zipName);
+    } else {
+      console.warn(`ZIP not found: ${zipPath}`);
+    }
+  }
+}
+
 async function generateProducts() {
   const destDir = './generated';
   const years = [2026, 2027];
   const formats: PaperFormat[] = ['a4', 'a5', 'letter'];
   const themes: Theme[] = ['simple'];
   const weekStartOptions: WeekStartsOn[] = [1, 7]; // Monday and Sunday
+
+  console.log(`Mode: ${UPLOAD_ONLY ? 'upload-only' : WITH_UPLOAD ? 'generate + upload' : 'generate only'}`);
+
+  // Upload-only mode: skip generation
+  if (UPLOAD_ONLY) {
+    for (const theme of themes) {
+      await uploadYearZips(destDir, theme, years);
+    }
+    console.log('Upload complete!');
+    return;
+  }
 
   // Generate OG images first (one browser instance)
   const ogBrowser = await puppeteer.launch({ headless: true });
@@ -410,9 +496,19 @@ async function generateProducts() {
         });
       }
 
+      // Create combined year ZIP with all formats
+      await createCombinedYearZip(destDir, theme, year, formats);
+
       await browser.close();
     }
+
+    // Upload if --with-upload flag is set
+    if (WITH_UPLOAD) {
+      await uploadYearZips(destDir, theme, years);
+    }
   }
+
+  console.log('Generation complete!');
 }
 
 generateProducts().catch(console.error);

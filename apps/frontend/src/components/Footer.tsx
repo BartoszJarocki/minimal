@@ -67,7 +67,7 @@ export const Footer = () => {
       <h2 id="footer-heading" className="sr-only">
         Footer
       </h2>
-      <div className="px-4 pb-16 md:px-8">
+      <div className="pb-16">
         <div className="space-y-16">
           <div className="space-y-8">
             <Logo className="h-7 w-auto" />
