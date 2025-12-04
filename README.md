@@ -6,7 +6,7 @@ A modern, type-safe web application for generating beautiful minimalist printabl
 
 - **🗓️ Minimalist Calendars**: Generate clean, printable calendars for any year
 - **📊 Habit Trackers**: Create customizable habit tracking sheets
-- **🌍 Multi-language Support**: Available in 25+ languages
+- **🌍 Multi-language Support**: Available in 32 languages
 - **📄 Multiple Formats**: A4, A5, and Letter sizes in portrait/landscape
 - **🎨 Beautiful Design**: Clean, minimal aesthetic optimized for printing
 - **♿ Accessible**: ARIA labels, keyboard navigation, and screen reader support
@@ -65,7 +65,7 @@ SITE_URL=https://useminimal.com
 
 ```bash
 yarn dev          # Start all apps in development mode
-yarn build        # Build all apps for production
+yarn build        # Build all apps (includes sitemap generation)
 yarn lint         # Lint all apps
 yarn format       # Format code with Prettier
 yarn test         # Run all tests
@@ -114,9 +114,9 @@ yarn test:coverage
 
 ## 🌐 Supported Languages
 
-The application supports 25+ languages including:
+The application supports 32 languages:
 
-English, French, German, Spanish, Italian, Portuguese, Polish, Latvian, Norwegian, Czech, Ukrainian, Croatian, Slovak, Slovenian, Thai, Danish, Dutch, Finnish, Icelandic, Hungarian, Romanian, Swedish, Turkish, Russian, Korean, Hindi, Greek, Arabic, Hebrew, Japanese, Chinese
+English, French, German, Spanish, Italian, Portuguese, Polish, Latvian, Norwegian, Czech, Ukrainian, Croatian, Slovak, Slovenian, Thai, Danish, Dutch, Finnish, Icelandic, Hungarian, Romanian, Swedish, Turkish, Russian, Korean, Hindi, Greek, Persian, Arabic, Hebrew, Japanese, Chinese
 
 ## 🎨 Calendar Generation
 
@@ -132,12 +132,12 @@ English, French, German, Spanish, Italian, Portuguese, Polish, Latvian, Norwegia
 - **Formats**: A4, A5
 - **Orientations**: Portrait, Landscape  
 - **Types**: Monthly calendars, Yearly overviews, Habit trackers
-- **Languages**: 25+ locales with proper date formatting
+- **Languages**: 32 locales with proper date formatting
 
 ## 🛠️ Technology Stack
 
 ### Frontend
-- **Next.js 13** - React framework with App Router
+- **Next.js 16** - React framework
 - **TypeScript** - Type-safe development
 - **Tailwind CSS** - Utility-first styling
 - **Radix UI** - Accessible component primitives

@@ -14,6 +14,7 @@ const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 export const DOWNLOAD_FILES: Record<number, string> = {
   2026: "calendars-2026.zip",
   2027: "calendars-2027.zip",
+  2028: "calendars-2028.zip",
 };
 
 export function encodeSession(session: PortalSession): string {

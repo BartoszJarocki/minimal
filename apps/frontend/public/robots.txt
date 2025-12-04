@@ -1,0 +1,12 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /print
+Disallow: /api/
+Disallow: /portal
+
+# Host
+Host: https://useminimal.com
+
+# Sitemaps
+Sitemap: https://useminimal.com/sitemap.xml

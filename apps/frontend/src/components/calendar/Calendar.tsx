@@ -146,6 +146,7 @@ interface Props {
   bodyAs: React.ComponentType<{ children: React.ReactNode }>;
   footerAs?: React.ComponentType<{ date: DateTime }>;
   dayAs: React.ComponentType<{ children: React.ReactNode }>;
+  monthWrapperAs?: React.ComponentType<{ children: React.ReactNode }>;
   date: DateTime;
   weekStartsOn?: 1 | 7;
 }
@@ -158,6 +159,7 @@ export const YearCalendar = ({
   bodyAs,
   footerAs,
   dayAs,
+  monthWrapperAs,
   weekStartsOn = 1,
 }: Props) => {
   const Header = headerAs;
@@ -165,6 +167,7 @@ export const YearCalendar = ({
   const DayCell = dayAs;
   const Footer = footerAs;
   const MonthHeader = monthHeaderAs;
+  const MonthWrapper = monthWrapperAs || (({ children }: { children: React.ReactNode }) => <>{children}</>);
   const months = Info.months("long", {
     locale: date.locale || 'en',
     outputCalendar: date.outputCalendar || 'gregory',
@@ -185,13 +188,15 @@ export const YearCalendar = ({
             <div key={`year-cal-locale:${date.locale}-month:${i}`}>
               <MonthHeader date={monthDate} />
               <section className="mt-1 md:mt-2">
-                <MonthCalendar
-                  className="text-xs"
-                  date={monthDate}
-                  weekNames="narrow"
-                  dayAs={DayCell}
-                  weekStartsOn={weekStartsOn}
-                />
+                <MonthWrapper>
+                  <MonthCalendar
+                    className="text-xs"
+                    date={monthDate}
+                    weekNames="narrow"
+                    dayAs={DayCell}
+                    weekStartsOn={weekStartsOn}
+                  />
+                </MonthWrapper>
               </section>
             </div>
           );

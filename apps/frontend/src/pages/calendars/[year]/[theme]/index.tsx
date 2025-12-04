@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import {
   SimpleYearCalendar,
   SimpleMonthCalendar,
+  CalendarStyle,
 } from "../../../../components/calendar/themes/Simple";
 import { Container } from "../../../../components/Container";
 import { Footer } from "../../../../components/Footer";
@@ -37,6 +38,7 @@ export default function ThemePage({ theme, year, content }: Props) {
   const [size, setSize] = useState<Format>("a4");
   const [variant, setVariant] = useState<FormatVariant>("portrait");
   const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(1);
+  const [style, setStyle] = useState<CalendarStyle>("default");
 
   const date = DateTime.now().set({ year });
   const url = `https://useminimal.com/calendars/${year}/${theme}`;
@@ -150,6 +152,27 @@ export default function ThemePage({ theme, year, content }: Props) {
                   Sunday
                 </InlineButton>
               </P>
+
+              <P className="text-sm">
+                Style:{" "}
+                <InlineButton
+                  onClick={() => setStyle("default")}
+                  className={
+                    style === "default" ? "font-bold text-foreground" : ""
+                  }
+                >
+                  Simple
+                </InlineButton>
+                {" / "}
+                <InlineButton
+                  onClick={() => setStyle("frame")}
+                  className={
+                    style === "frame" ? "font-bold text-foreground" : ""
+                  }
+                >
+                  With Grid
+                </InlineButton>
+              </P>
             </div>
 
             <div className="-mx-2 overflow-x-auto px-2">
@@ -160,6 +183,7 @@ export default function ThemePage({ theme, year, content }: Props) {
                     variant={variant}
                     size={size}
                     weekStartsOn={weekStartsOn}
+                    style={style}
                   />
                 </ScaledPreview>
 
@@ -169,6 +193,7 @@ export default function ThemePage({ theme, year, content }: Props) {
                     variant={variant}
                     size={size}
                     weekStartsOn={weekStartsOn}
+                    style={style}
                   />
                 </ScaledPreview>
               </div>

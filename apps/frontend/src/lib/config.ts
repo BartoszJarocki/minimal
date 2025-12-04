@@ -36,26 +36,9 @@ export const getDescription = (year: number): string => {
   return `Yearly and monthly, minimalist ${year} printable calendar available in A4 and A5 formats in both portrait and landscape.`;
 };
 
-// Dynamic year visibility logic
+// Static year visibility
 function getVisibleYears(): number[] {
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth() + 1; // 1-indexed
-
-  const years: number[] = [];
-
-  // Previous year visible until March
-  const previousYear = currentYear - 1;
-  if (currentMonth <= 3) {
-    years.push(previousYear);
-  }
-
-  // Current + next 3 years
-  for (let i = 0; i <= 3; i++) {
-    years.push(currentYear + i);
-  }
-
-  return years;
+  return [2026, 2027, 2028];
 }
 
 // Generate AVAILABLE_CALENDARS dynamically
