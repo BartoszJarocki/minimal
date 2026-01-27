@@ -154,7 +154,7 @@ export default function ThemePage({ theme, year, content }: Props) {
 
             <div className="-mx-2 overflow-x-auto px-2">
               <div className="flex gap-4 py-4">
-                <ScaledPreview variant={variant} format={size}>
+                <ScaledPreview variant={variant} format={size} alt={`${year} monthly calendar preview`}>
                   <SimpleMonthCalendar
                     date={date}
                     variant={variant}
@@ -163,7 +163,7 @@ export default function ThemePage({ theme, year, content }: Props) {
                   />
                 </ScaledPreview>
 
-                <ScaledPreview variant={variant} format={size}>
+                <ScaledPreview variant={variant} format={size} alt={`${year} yearly calendar preview`}>
                   <SimpleYearCalendar
                     date={date}
                     variant={variant}

@@ -22,14 +22,20 @@ export const ScaledPreview = ({
   format,
   variant,
   children,
+  alt,
 }: {
   className?: string;
   format: Format;
   variant: FormatVariant;
   children: React.ReactNode;
+  alt?: string;
 }) => {
   return (
-    <div className={scaledStylesLookup[format][variant]}>
+    <div
+      className={scaledStylesLookup[format][variant]}
+      role="img"
+      aria-label={alt}
+    >
       <div
         className={cn(
           toPrintClassName(format, variant),

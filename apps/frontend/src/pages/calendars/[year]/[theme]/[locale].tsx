@@ -67,7 +67,7 @@ export default function LocalePage({
         description={content.metaDescription}
         canonical={url}
         openGraph={{
-          siteName: "Minimal",
+          siteName: "Use Minimal",
           title: content.pageTitle,
           description: content.metaDescription,
           url,
@@ -127,7 +127,7 @@ export default function LocalePage({
           <section className="mt-12 px-2">
             <H2>Yearly</H2>
             <div className="mt-4">
-              <ScaledPreview format="a4" variant="portrait">
+              <ScaledPreview format="a4" variant="portrait" alt={`${year} ${localeData.englishName} yearly calendar preview`}>
                 <YearCalendar
                   date={date}
                   variant="portrait"
@@ -155,6 +155,7 @@ export default function LocalePage({
                       format="a4"
                       variant="portrait"
                       className="flex-shrink-0"
+                      alt={`${localeData.englishName} ${date.set({ month: index + 1 }).toFormat("MMMM")} ${year} calendar`}
                     >
                       <MonthCalendar
                         date={date.set({ month: index + 1 })}
