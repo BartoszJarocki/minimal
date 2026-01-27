@@ -18,7 +18,7 @@ import { NextSeo } from "next-seo";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getSessionFromCookieHeader } from "../../lib/portal";
 import { UpgradeModal } from "../../components/UpgradeModal";
-import { ProductSchema, BreadcrumbSchema } from "../../components/seo";
+import { ProductSchema, BreadcrumbSchema, FAQSchema } from "../../components/seo";
 import Link from "next/link";
 
 export type HabitData = { id: number; title: string };
@@ -324,6 +324,26 @@ const HabitTrackerCreator = ({
       />
       <BreadcrumbSchema
         items={[{ name: "Habit Tracker", url }]}
+      />
+      <FAQSchema
+        items={[
+          {
+            question: "How do I use the habit tracker?",
+            answer: "Choose your year, language, and paper format, then add your habits. Click Print to generate a printable PDF you can use daily.",
+          },
+          {
+            question: "What paper sizes are supported?",
+            answer: "The habit tracker supports A4, A5, and US Letter paper sizes in portrait orientation.",
+          },
+          {
+            question: "Can I customize the habits?",
+            answer: "Yes, you can add, remove, and rename habits using the configuration panel on the right side of the page.",
+          },
+          {
+            question: "What languages are available?",
+            answer: `The habit tracker supports ${SupportedLocales.length} languages including English, German, French, Spanish, and many more.`,
+          },
+        ]}
       />
       <div className="flex h-full w-full overflow-hidden">
         <div className="flex-1 overflow-auto bg-black/5 p-8 print:overflow-hidden print:p-0">

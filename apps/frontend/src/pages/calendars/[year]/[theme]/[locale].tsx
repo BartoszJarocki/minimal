@@ -73,7 +73,7 @@ export default function LocalePage({
           url,
           images: [
             {
-              url: `https://useminimal.com/og/calendar-${year}.png`,
+              url: `https://useminimal.com/api/open-graph?type=calendar&year=${year}&locale=${locale}`,
               width: 1200,
               height: 630,
             },
@@ -89,7 +89,7 @@ export default function LocalePage({
         name={`${themeName} ${localeData.englishName} ${year} Calendar`}
         description={content.metaDescription}
         url={url}
-        image={`https://useminimal.com/og/calendar-${year}.png`}
+        image={`https://useminimal.com/api/open-graph?type=calendar&year=${year}&locale=${locale}`}
         inLanguage={locale}
       />
       <BreadcrumbSchema items={breadcrumbs} />

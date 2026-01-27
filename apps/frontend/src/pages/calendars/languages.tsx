@@ -6,6 +6,7 @@ import { H1 } from "../../components/H1";
 import { P } from "../../components/P";
 import { SupportedLocales } from "@minimal/config";
 import { AVAILABLE_CALENDARS } from "../../lib/config";
+import { BreadcrumbSchema } from "../../components/seo";
 
 const CURRENT_YEAR = Math.max(...AVAILABLE_CALENDARS.map((c) => c.year));
 
@@ -27,6 +28,12 @@ export default function LanguagesHub() {
           description,
           url,
         }}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Calendars", url: "https://useminimal.com/calendars" },
+          { name: "Languages", url: "https://useminimal.com/calendars/languages" },
+        ]}
       />
 
       <Container>

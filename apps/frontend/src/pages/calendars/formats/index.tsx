@@ -6,6 +6,7 @@ import { H1 } from "../../../components/H1";
 import { H2 } from "../../../components/H2";
 import { P } from "../../../components/P";
 import { AVAILABLE_CALENDARS } from "../../../lib/config";
+import { BreadcrumbSchema } from "../../../components/seo";
 
 const CURRENT_YEAR = Math.max(...AVAILABLE_CALENDARS.map((c) => c.year));
 
@@ -45,6 +46,12 @@ export default function FormatsHub() {
           description,
           url,
         }}
+      />
+      <BreadcrumbSchema
+        items={[
+          { name: "Calendars", url: "https://useminimal.com/calendars" },
+          { name: "Formats", url: "https://useminimal.com/calendars/formats" },
+        ]}
       />
 
       <Container>
