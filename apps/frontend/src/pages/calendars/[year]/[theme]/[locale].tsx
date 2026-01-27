@@ -11,7 +11,9 @@ import { H2 } from "../../../../components/H2";
 import { P } from "../../../../components/P";
 import { ScaledPreview } from "../../../../components/ScaledPreview";
 import { PrimaryCTA } from "../../../../components/landing/PrimaryCTA";
+import { InlineButton } from "../../../../components/InlineButton";
 import { ThemeLookup, ThemeNameLookup } from "../../../print";
+import { CalendarStyle } from "../../../../components/calendar/themes/Simple";
 import { SupportedLocales, SupportedLocale, Theme } from "@minimal/config";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../../../../lib/config";
 import { getPSEOContent, type PSEOPageContent } from "../../../../lib/pseoContent";
@@ -39,6 +41,7 @@ export default function LocalePage({
   localeData,
 }: Props) {
   const [showAllMonths, setShowAllMonths] = useState(false);
+  const [style, setStyle] = useState<CalendarStyle>("default");
 
   const YearCalendar = ThemeLookup["year"][theme];
   const MonthCalendar = ThemeLookup["month"][theme];
@@ -122,6 +125,27 @@ export default function LocalePage({
             )}
 
             <PrimaryCTA />
+
+            <P className="text-sm">
+              Style:{" "}
+              <InlineButton
+                onClick={() => setStyle("default")}
+                className={
+                  style === "default" ? "font-bold text-foreground" : ""
+                }
+              >
+                Simple
+              </InlineButton>
+              {" / "}
+              <InlineButton
+                onClick={() => setStyle("frame")}
+                className={
+                  style === "frame" ? "font-bold text-foreground" : ""
+                }
+              >
+                With Grid
+              </InlineButton>
+            </P>
           </section>
 
           <section className="mt-12 px-2">
@@ -133,6 +157,7 @@ export default function LocalePage({
                   variant="portrait"
                   size="a4"
                   weekStartsOn={effectiveWeekStartsOn}
+                  style={style}
                 />
               </ScaledPreview>
             </div>
@@ -162,6 +187,7 @@ export default function LocalePage({
                         variant="portrait"
                         size="a4"
                         weekStartsOn={effectiveWeekStartsOn}
+                        style={style}
                       />
                     </ScaledPreview>
                   </div>
@@ -259,20 +285,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const paths: { params: { year: string; theme: string; locale: string } }[] =
     [];
 
-  // Generate paths for featured languages + current year only to limit build time
-  // Other combinations use fallback: "blocking"
-  const currentYear = new Date().getFullYear();
-  const featuredLocales = FEATURED_LANGUAGES.map((l) => l.code);
-
   for (const cal of AVAILABLE_CALENDARS) {
     for (const theme of themes) {
-      // Pre-generate only current year with featured locales
-      const localesToGenerate =
-        cal.year === currentYear ? featuredLocales : featuredLocales.slice(0, 2);
-
-      for (const locale of localesToGenerate) {
+      for (const locale of SupportedLocales) {
         paths.push({
-          params: { year: String(cal.year), theme, locale },
+          params: { year: String(cal.year), theme, locale: locale.code },
         });
       }
     }

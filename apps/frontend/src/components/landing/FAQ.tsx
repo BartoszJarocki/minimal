@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
-const FAQ_ITEMS = [
+const FAQ_ITEMS: { question: string; answer: React.ReactNode }[] = [
   {
     question: "What file formats do I get?",
     answer: "PDF files, ready to print on any standard printer.",
@@ -22,7 +23,17 @@ const FAQ_ITEMS = [
   },
   {
     question: "How do I get the files?",
-    answer: "Instant download link after purchase. No waiting.",
+    answer: (
+      <>
+        After purchase, you'll receive an email from Polar (our payment
+        provider) with a link to your Polar account. There you'll find your
+        license number—use it to access our customer portal at{" "}
+        <Link href="/portal" className="underline hover:text-foreground">
+          useminimal.com/portal
+        </Link>{" "}
+        where all downloads and habit tracker creators are available.
+      </>
+    ),
   },
 ];
 

@@ -5,6 +5,7 @@ import { NextSeo } from "next-seo";
 import {
   SimpleMonthCalendar,
   SimpleYearCalendar,
+  CalendarStyle,
 } from "../components/calendar/themes/Simple";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -49,6 +50,7 @@ export default function Landing() {
   );
   const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(7); // default Sunday for en
   const [showAllLanguages, setShowAllLanguages] = useState(false);
+  const [style, setStyle] = useState<CalendarStyle>("default");
 
   const url = "https://useminimal.com";
   const title = `Printable calendars and habit trackers`;
@@ -141,6 +143,23 @@ export default function Landing() {
                       </P>
 
                       <P className="max-w-3xl text-sm">
+                        Style:{" "}
+                        <InlineButton
+                          onClick={() => setStyle("default")}
+                          className={style === "default" ? "font-bold" : ""}
+                        >
+                          Simple
+                        </InlineButton>
+                        {" / "}
+                        <InlineButton
+                          onClick={() => setStyle("frame")}
+                          className={style === "frame" ? "font-bold" : ""}
+                        >
+                          With Grid
+                        </InlineButton>
+                      </P>
+
+                      <P className="max-w-3xl text-sm">
                         Localized for {SupportedLocales.length} languages:{" "}
                         {(showAllLanguages
                           ? SupportedLocales
@@ -190,6 +209,7 @@ export default function Landing() {
                               variant="portrait"
                               size="a4"
                               weekStartsOn={weekStartsOn}
+                              style={style}
                             />
                           </CalendarErrorBoundary>
                         </ScaledPreview>
@@ -201,6 +221,7 @@ export default function Landing() {
                               variant="portrait"
                               size="a4"
                               weekStartsOn={weekStartsOn}
+                              style={style}
                             />
                           </CalendarErrorBoundary>
                         </ScaledPreview>

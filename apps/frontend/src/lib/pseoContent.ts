@@ -4,6 +4,7 @@ import { YEAR_OVERRIDES } from "./pseoContent/byYear";
 import { LOCALE_OVERRIDES } from "./pseoContent/byLocale";
 import { FORMAT_OVERRIDES } from "./pseoContent/byFormat";
 import { INTENT_OVERRIDES } from "./pseoContent/byIntent";
+import { STYLE_OVERRIDES } from "./pseoContent/byStyle";
 import { FAQ_BY_LOCALE } from "./pseoContent/faq";
 
 // Types
@@ -16,6 +17,7 @@ export type PSEOIntent =
 
 export type PSEOFormat = "a4" | "a5" | "letter";
 export type PSEOOrientation = "portrait" | "landscape";
+export type PSEOStyle = "simple" | "grid";
 
 export interface PSEOContentBlock {
   pageTitle: string;
@@ -42,6 +44,7 @@ export interface PSEODimensions {
   format?: PSEOFormat;
   orientation?: PSEOOrientation;
   intent?: PSEOIntent;
+  style?: PSEOStyle;
 }
 
 // Interpolate template strings with dimension values
@@ -112,6 +115,10 @@ export function getPSEOContent(dims: PSEODimensions): PSEOPageContent {
 
   if (dims.intent) {
     layers.push(INTENT_OVERRIDES[dims.intent] || {});
+  }
+
+  if (dims.style) {
+    layers.push(STYLE_OVERRIDES[dims.style] || {});
   }
 
   // Merge all layers

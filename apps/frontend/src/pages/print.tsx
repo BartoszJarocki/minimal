@@ -11,6 +11,7 @@ import {
 import {
   SimpleYearCalendar,
   SimpleMonthCalendar,
+  CalendarStyle,
 } from "../components/calendar/themes/Simple";
 import { SupportedLocales, Theme } from "@minimal/config";
 
@@ -20,7 +21,7 @@ export const ThemeNameLookup: Record<Theme, string> = {
   simple: "Simple",
 };
 
-type CalendarComponent = React.ComponentType<{ date: DateTime; variant: FormatVariant; size: Format; weekStartsOn?: 1 | 7 }>;
+type CalendarComponent = React.ComponentType<{ date: DateTime; variant: FormatVariant; size: Format; weekStartsOn?: 1 | 7; style?: CalendarStyle }>;
 
 export const ThemeLookup: Record<CalendarType, Record<Theme, CalendarComponent>> = {
   year: {
@@ -36,7 +37,7 @@ export const toPrintClassName = (format: Format, variant: FormatVariant) =>
 
 export default function Print() {
   const router = useRouter();
-  const { theme, locale, type, month, year, format, variant, weekStartsOn } =
+  const { theme, locale, type, month, year, format, variant, weekStartsOn, style } =
     parseQueryParams(router.query);
   const selectedLocale = SupportedLocales.find(
     (l) => l.code.toLowerCase() === locale.toLowerCase()
@@ -68,7 +69,7 @@ export default function Print() {
       )}
     >
       <NextSeo nofollow noindex />
-      <Calendar date={date} variant={variant} size={format} weekStartsOn={effectiveWeekStartsOn} />
+      <Calendar date={date} variant={variant} size={format} weekStartsOn={effectiveWeekStartsOn} style={style} />
     </div>
   );
 }
@@ -88,6 +89,8 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
   const variant = query.variant as FormatVariant | undefined;
   const weekStartsOnParam = query.weekStartsOn as string | undefined;
   const weekStartsOn = weekStartsOnParam === '7' ? 7 : weekStartsOnParam === '1' ? 1 : undefined;
+  const styleParam = query.style as string | undefined;
+  const style: CalendarStyle = styleParam === "frame" ? "frame" : "default";
 
   return {
     theme: theme || "simple",
@@ -98,5 +101,6 @@ export const parseQueryParams = (query: ParsedUrlQuery) => {
     format: format || "a4",
     variant: variant || "portrait",
     weekStartsOn,
+    style,
   };
 };

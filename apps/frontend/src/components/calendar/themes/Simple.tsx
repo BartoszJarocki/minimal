@@ -13,15 +13,19 @@ import {
 // Year Calendar
 // -----------------------------------------------
 
+export type CalendarStyle = "default" | "frame";
+
 interface SimpleYearCalendarProps {
   date: DateTime;
   variant: FormatVariant;
   size: Format;
   weekStartsOn?: 1 | 7;
+  style?: CalendarStyle;
 }
 
 export const SimpleYearCalendar = React.memo(
-  ({ date, variant, size, weekStartsOn = 1 }: SimpleYearCalendarProps) => {
+  ({ date, variant, size, weekStartsOn = 1, style = "default" }: SimpleYearCalendarProps) => {
+    const isFrame = style === "frame";
     const stylesLookup = useMemo(
       () => ({
         a4: {
@@ -109,7 +113,7 @@ export const SimpleYearCalendar = React.memo(
     };
 
     const YearCalendarHeader = ({ date }: { date: DateTime }) => {
-      return <div className={styles.yearHeader}>{date.toFormat("yyyy")}</div>;
+      return <div className={styles.yearHeader}>{date.year}</div>;
     };
 
     const YearCalendarDayCell = ({
@@ -120,9 +124,21 @@ export const SimpleYearCalendar = React.memo(
       children: React.ReactNode;
     }) => {
       return (
-        <DayCell className={clsx(styles.dayCell, className)}>
+        <DayCell className={clsx(styles.dayCell, isFrame && "border-r border-b border-foreground/20", className)}>
           {children}
         </DayCell>
+      );
+    };
+
+    const YearCalendarMonthWrapper = ({
+      children,
+    }: {
+      children: React.ReactNode;
+    }) => {
+      return isFrame ? (
+        <div className="border-t border-l border-foreground/20">{children}</div>
+      ) : (
+        <>{children}</>
       );
     };
 
@@ -149,6 +165,7 @@ export const SimpleYearCalendar = React.memo(
           bodyAs={YearCalendarMonthsGrid}
           dayAs={YearCalendarDayCell}
           weekStartsOn={weekStartsOn}
+          monthWrapperAs={YearCalendarMonthWrapper}
         />
       </div>
     );
@@ -165,10 +182,12 @@ interface SimpleMonthlyCalendarProps {
   variant: FormatVariant;
   size: Format;
   weekStartsOn?: 1 | 7;
+  style?: CalendarStyle;
 }
 
 export const SimpleMonthCalendar = React.memo(
-  ({ date, variant, size, weekStartsOn = 1 }: SimpleMonthlyCalendarProps) => {
+  ({ date, variant, size, weekStartsOn = 1, style = "default" }: SimpleMonthlyCalendarProps) => {
+    const isFrame = style === "frame";
     const stylesLookup = useMemo(
       () => ({
         a4: {
@@ -248,7 +267,7 @@ export const SimpleMonthCalendar = React.memo(
       children: React.ReactNode;
     }) => {
       return (
-        <DayCell className={clsx(styles.day, className)}>{children}</DayCell>
+        <DayCell className={clsx(styles.day, isFrame && "border-r border-b border-foreground/20", className)}>{children}</DayCell>
       );
     };
 
@@ -266,7 +285,7 @@ export const SimpleMonthCalendar = React.memo(
               : date.toFormat("MM")}
           </div>
           <div>
-            <div className={styles.yearName}>{date.toFormat("yyyy")}</div>
+            <div className={styles.yearName}>{date.year}</div>
             <div className={styles.monthName}>
               {variant === "landscape" ? date.monthLong : date.monthShort}
             </div>
@@ -274,7 +293,7 @@ export const SimpleMonthCalendar = React.memo(
         </div>
 
         <MonthCalendar
-          className={styles.month}
+          className={clsx(styles.month, isFrame && "[&>*:nth-child(-n+7)]:border-t [&>*:nth-child(7n+1)]:border-l border-foreground/20")}
           date={date}
           weekNames={"short"}
           dayAs={MonthCalendarDayCell}

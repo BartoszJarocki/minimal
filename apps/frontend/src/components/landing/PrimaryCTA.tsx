@@ -1,3 +1,4 @@
+import { track } from "@vercel/analytics";
 import { Button } from "../ui/button";
 import { LIFETIME_PRICE, POLAR_PRODUCT_ID } from "../../lib/config";
 
@@ -7,6 +8,7 @@ interface PrimaryCTAProps {
 
 export const PrimaryCTA = ({ variant = "hero" }: PrimaryCTAProps) => {
   const handleCheckout = () => {
+    track("buy_attempt", { variant });
     window.location.href = `/api/checkout?products=${POLAR_PRODUCT_ID}`;
   };
 
