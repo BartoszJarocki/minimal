@@ -14,22 +14,22 @@ This is a Turborepo monorepo for "Use Minimal" - a service that generates printa
 
 ```bash
 # Install dependencies
-yarn install
+pnpm install
 
 # Start all applications in development mode
-yarn dev
+pnpm dev
 
 # Build all applications
-yarn build
+pnpm build
 
 # Lint all applications
-yarn lint
+pnpm lint
 
 # Format code
-yarn format
+pnpm format
 
 # Generate calendar PDFs (requires frontend to be running)
-yarn generate
+pnpm generate
 ```
 
 ### App-specific commands
@@ -37,16 +37,16 @@ yarn generate
 **Frontend** (`apps/frontend`):
 ```bash
 cd apps/frontend
-yarn dev          # Start Next.js dev server on port 3000
-yarn build        # Build for production
-yarn start        # Start production server
-yarn lint         # ESLint check
+pnpm dev          # Start Next.js dev server on port 3000
+pnpm build        # Build for production
+pnpm start        # Start production server
+pnpm lint         # ESLint check
 ```
 
 **Generator** (`apps/generator`):
 ```bash
 cd apps/generator
-yarn generate     # Generate calendar PDFs using Puppeteer (requires frontend running)
+pnpm generate     # Generate calendar PDFs using Puppeteer (requires frontend running)
 ```
 
 ## Architecture
@@ -74,7 +74,7 @@ yarn generate     # Generate calendar PDFs using Puppeteer (requires frontend ru
 
 - **Frontend**: Next.js 13, React 18, TypeScript, Tailwind CSS, Luxon (date handling)
 - **Generator**: Puppeteer, Node.js, TypeScript
-- **Build**: Turborepo, Yarn workspaces
+- **Build**: Turborepo, pnpm workspaces
 - **UI**: Shadcn/ui components, Radix UI primitives
 
 ### Calendar System

@@ -31,7 +31,7 @@ This project is a **Turborepo monorepo** with the following structure:
 ### Prerequisites
 
 - Node.js 14+ 
-- Yarn 1.22+
+- pnpm 9+
 
 ### Installation
 
@@ -41,13 +41,13 @@ git clone <repository-url>
 cd minimal
 
 # Install dependencies
-yarn install
+pnpm install
 
 # Copy environment variables
 cp .env.example .env.local
 
 # Start development server
-yarn dev
+pnpm dev
 ```
 
 ### Environment Variables
@@ -64,14 +64,14 @@ SITE_URL=https://useminimal.com
 ### Root Commands
 
 ```bash
-yarn dev          # Start all apps in development mode
-yarn build        # Build all apps (includes sitemap generation)
-yarn lint         # Lint all apps
-yarn format       # Format code with Prettier
-yarn test         # Run all tests
-yarn test:watch   # Run tests in watch mode
-yarn test:coverage # Run tests with coverage report
-yarn generate     # Generate calendar PDFs (requires frontend running)
+pnpm dev          # Start all apps in development mode
+pnpm build        # Build all apps (includes sitemap generation)
+pnpm lint         # Lint all apps
+pnpm format       # Format code with Prettier
+pnpm test         # Run all tests
+pnpm test:watch   # Run tests in watch mode
+pnpm test:coverage # Run tests with coverage report
+pnpm generate     # Generate calendar PDFs (requires frontend running)
 ```
 
 ### App-specific Commands
@@ -79,17 +79,17 @@ yarn generate     # Generate calendar PDFs (requires frontend running)
 **Frontend** (`apps/frontend`):
 ```bash
 cd apps/frontend
-yarn dev          # Start Next.js dev server
-yarn build        # Build for production
-yarn test         # Run Jest tests
-yarn test:watch   # Run tests in watch mode
-yarn test:coverage # Run tests with coverage
+pnpm dev          # Start Next.js dev server
+pnpm build        # Build for production
+pnpm test         # Run Jest tests
+pnpm test:watch   # Run tests in watch mode
+pnpm test:coverage # Run tests with coverage
 ```
 
 **Generator** (`apps/generator`):
 ```bash
 cd apps/generator
-yarn generate     # Generate calendar PDFs
+pnpm generate     # Generate calendar PDFs
 ```
 
 ## 🧪 Testing
@@ -103,13 +103,13 @@ The project includes comprehensive testing setup:
 
 ```bash
 # Run all tests across the monorepo
-yarn test
+pnpm test
 
 # Run tests in watch mode
-yarn test:watch
+pnpm test:watch
 
 # Generate coverage report
-yarn test:coverage
+pnpm test:coverage
 ```
 
 ## 🌐 Supported Languages
@@ -207,7 +207,7 @@ vercel
 
 ```bash
 # Build all apps
-yarn build
+pnpm build
 
 # Deploy frontend app from apps/frontend/.next
 # Deploy generator as serverless function or container
