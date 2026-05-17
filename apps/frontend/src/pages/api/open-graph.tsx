@@ -68,7 +68,7 @@ export default async function OpenGraphImageHandler(req: NextRequest) {
             </div>
           </div>
           <div tw="text-3xl mt-6 text-[#1f1f1f]/70">
-            $29 once, yours forever.
+            $19 once, yours forever.
           </div>
         </div>
       ),
