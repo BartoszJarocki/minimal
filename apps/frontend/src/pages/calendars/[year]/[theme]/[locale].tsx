@@ -3,7 +3,6 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import Link from "next/link";
 import React, { useState } from "react";
-import type { Format, FormatVariant } from "../../../../components/calendar/Calendar";
 import { Container } from "../../../../components/Container";
 import { Footer } from "../../../../components/Footer";
 import { H1 } from "../../../../components/H1";
@@ -12,9 +11,15 @@ import { P } from "../../../../components/P";
 import { ScaledPreview } from "../../../../components/ScaledPreview";
 import { PrimaryCTA } from "../../../../components/landing/PrimaryCTA";
 import { InlineButton } from "../../../../components/InlineButton";
-import { ThemeLookup, ThemeNameLookup } from "../../../print";
-import { CalendarStyle } from "../../../../components/calendar/themes/Simple";
-import { SupportedLocales, SupportedLocale, Theme } from "@minimal/config";
+import {
+  SimpleYearCalendar,
+  SimpleMonthCalendar,
+} from "../../../../components/calendar/themes/Simple";
+import {
+  CalendarStyle,
+  SupportedLocales,
+  SupportedLocale,
+} from "@minimal/config";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../../../../lib/config";
 import { getPSEOContent, type PSEOPageContent } from "../../../../lib/pseoContent";
 import {
@@ -27,11 +32,13 @@ import {
 
 interface Props {
   locale: string;
-  theme: Theme;
+  theme: string;
   year: number;
   content: PSEOPageContent;
   localeData: SupportedLocale;
 }
+
+const THEME_NAME = "Simple";
 
 export default function LocalePage({
   theme,
@@ -43,9 +50,6 @@ export default function LocalePage({
   const [showAllMonths, setShowAllMonths] = useState(false);
   const [style, setStyle] = useState<CalendarStyle>("default");
 
-  const YearCalendar = ThemeLookup["year"][theme];
-  const MonthCalendar = ThemeLookup["month"][theme];
-
   const effectiveWeekStartsOn = localeData.weekStartsOn;
   const date = DateTime.now().set({ year }).reconfigure({
     locale,
@@ -54,7 +58,7 @@ export default function LocalePage({
   });
 
   const url = `https://useminimal.com/calendars/${year}/${theme}/${locale}`;
-  const themeName = ThemeNameLookup[theme];
+  const themeName = THEME_NAME;
 
   const breadcrumbs = buildCalendarBreadcrumbs({
     year,
@@ -151,10 +155,10 @@ export default function LocalePage({
           <section className="mt-12 px-2">
             <H2>Yearly</H2>
             <div className="mt-4">
-              <ScaledPreview format="a4" variant="portrait" alt={`${year} ${localeData.englishName} yearly calendar preview`}>
-                <YearCalendar
+              <ScaledPreview format="a4" orientation="portrait" alt={`${year} ${localeData.englishName} yearly calendar preview`}>
+                <SimpleYearCalendar
                   date={date}
-                  variant="portrait"
+                  orientation="portrait"
                   size="a4"
                   weekStartsOn={effectiveWeekStartsOn}
                   style={style}
@@ -178,13 +182,13 @@ export default function LocalePage({
                   <div key={`month-${index}`}>
                     <ScaledPreview
                       format="a4"
-                      variant="portrait"
+                      orientation="portrait"
                       className="flex-shrink-0"
                       alt={`${localeData.englishName} ${date.set({ month: index + 1 }).toFormat("MMMM")} ${year} calendar`}
                     >
-                      <MonthCalendar
+                      <SimpleMonthCalendar
                         date={date.set({ month: index + 1 })}
-                        variant="portrait"
+                        orientation="portrait"
                         size="a4"
                         weekStartsOn={effectiveWeekStartsOn}
                         style={style}
@@ -281,19 +285,11 @@ export default function LocalePage({
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const themes: Theme[] = ["simple"];
-  const paths: { params: { year: string; theme: string; locale: string } }[] =
-    [];
-
-  for (const cal of AVAILABLE_CALENDARS) {
-    for (const theme of themes) {
-      for (const locale of SupportedLocales) {
-        paths.push({
-          params: { year: String(cal.year), theme, locale: locale.code },
-        });
-      }
-    }
-  }
+  const paths = AVAILABLE_CALENDARS.flatMap((cal) =>
+    SupportedLocales.map((locale) => ({
+      params: { year: String(cal.year), theme: "simple", locale: locale.code },
+    }))
+  );
 
   return {
     paths,
@@ -303,7 +299,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const year = parseInt(params?.year as string, 10);
-  const theme = params?.theme as Theme;
+  const theme = params?.theme as string | undefined;
   const locale = params?.locale as string;
 
   if (isNaN(year) || !theme || !locale) {

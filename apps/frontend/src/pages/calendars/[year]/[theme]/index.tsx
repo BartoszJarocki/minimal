@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import {
   SimpleYearCalendar,
   SimpleMonthCalendar,
-  CalendarStyle,
 } from "../../../../components/calendar/themes/Simple";
 import { Container } from "../../../../components/Container";
 import { Footer } from "../../../../components/Footer";
@@ -14,10 +13,14 @@ import { H1 } from "../../../../components/H1";
 import { P } from "../../../../components/P";
 import { ScaledPreview } from "../../../../components/ScaledPreview";
 import { PrimaryCTA } from "../../../../components/landing/PrimaryCTA";
-import { ThemeNameLookup } from "../../../print";
-import { SupportedLocales, Theme } from "@minimal/config";
+import {
+  CalendarStyle,
+  Format,
+  Orientation,
+  SupportedLocales,
+  WeekStartsOn,
+} from "@minimal/config";
 import { InlineButton } from "../../../../components/InlineButton";
-import type { Format, FormatVariant } from "../../../../components/calendar/Calendar";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../../../../lib/config";
 import { getPSEOContent, type PSEOPageContent } from "../../../../lib/pseoContent";
 import {
@@ -29,20 +32,22 @@ import {
 import { H2 } from "../../../../components/H2";
 
 interface Props {
-  theme: Theme;
+  theme: string;
   year: number;
   content: PSEOPageContent;
 }
 
+const THEME_NAME = "Simple";
+
 export default function ThemePage({ theme, year, content }: Props) {
   const [size, setSize] = useState<Format>("a4");
-  const [variant, setVariant] = useState<FormatVariant>("portrait");
-  const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(1);
+  const [orientation, setOrientation] = useState<Orientation>("portrait");
+  const [weekStartsOn, setWeekStartsOn] = useState<WeekStartsOn>(1);
   const [style, setStyle] = useState<CalendarStyle>("default");
 
   const date = DateTime.now().set({ year });
   const url = `https://useminimal.com/calendars/${year}/${theme}`;
-  const themeName = ThemeNameLookup[theme];
+  const themeName = THEME_NAME;
 
   const breadcrumbs = buildCalendarBreadcrumbs({ year, theme });
 
@@ -114,18 +119,18 @@ export default function ThemePage({ theme, year, content }: Props) {
               <P className="text-sm">
                 Orientation:{" "}
                 <InlineButton
-                  onClick={() => setVariant("portrait")}
+                  onClick={() => setOrientation("portrait")}
                   className={
-                    variant === "portrait" ? "font-bold text-foreground" : ""
+                    orientation === "portrait" ? "font-bold text-foreground" : ""
                   }
                 >
                   Portrait
                 </InlineButton>
                 {" / "}
                 <InlineButton
-                  onClick={() => setVariant("landscape")}
+                  onClick={() => setOrientation("landscape")}
                   className={
-                    variant === "landscape" ? "font-bold text-foreground" : ""
+                    orientation === "landscape" ? "font-bold text-foreground" : ""
                   }
                 >
                   Landscape
@@ -177,20 +182,20 @@ export default function ThemePage({ theme, year, content }: Props) {
 
             <div className="-mx-2 overflow-x-auto px-2">
               <div className="flex gap-4 py-4">
-                <ScaledPreview variant={variant} format={size} alt={`${year} monthly calendar preview`}>
+                <ScaledPreview orientation={orientation} format={size} alt={`${year} monthly calendar preview`}>
                   <SimpleMonthCalendar
                     date={date}
-                    variant={variant}
+                    orientation={orientation}
                     size={size}
                     weekStartsOn={weekStartsOn}
                     style={style}
                   />
                 </ScaledPreview>
 
-                <ScaledPreview variant={variant} format={size} alt={`${year} yearly calendar preview`}>
+                <ScaledPreview orientation={orientation} format={size} alt={`${year} yearly calendar preview`}>
                   <SimpleYearCalendar
                     date={date}
-                    variant={variant}
+                    orientation={orientation}
                     size={size}
                     weekStartsOn={weekStartsOn}
                     style={style}
@@ -320,16 +325,9 @@ export default function ThemePage({ theme, year, content }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const themes: Theme[] = ["simple"];
-  const paths: { params: { year: string; theme: string } }[] = [];
-
-  for (const cal of AVAILABLE_CALENDARS) {
-    for (const theme of themes) {
-      paths.push({
-        params: { year: String(cal.year), theme },
-      });
-    }
-  }
+  const paths = AVAILABLE_CALENDARS.map((cal) => ({
+    params: { year: String(cal.year), theme: "simple" },
+  }));
 
   return {
     paths,
@@ -339,7 +337,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const year = parseInt(params?.year as string, 10);
-  const theme = params?.theme as Theme;
+  const theme = params?.theme as string | undefined;
 
   if (isNaN(year) || !theme) {
     return { notFound: true };

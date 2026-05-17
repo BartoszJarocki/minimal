@@ -7,8 +7,7 @@ import { Container } from "../../../components/Container";
 import { Footer } from "../../../components/Footer";
 import { H1 } from "../../../components/H1";
 import { P } from "../../../components/P";
-import { ThemeNameLookup } from "../../print";
-import { SupportedLocales, Theme } from "@minimal/config";
+import { SupportedLocales } from "@minimal/config";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../../../lib/config";
 import { getPSEOContent, type PSEOPageContent } from "../../../lib/pseoContent";
 import {
@@ -24,7 +23,9 @@ interface Props {
   content: PSEOPageContent;
 }
 
-const THEMES: Theme[] = ["simple"];
+const THEMES: { slug: string; name: string }[] = [
+  { slug: "simple", name: "Simple" },
+];
 
 export default function YearPage({ year, content }: Props) {
   const date = DateTime.now().set({ year });
@@ -85,11 +86,11 @@ export default function YearPage({ year, content }: Props) {
             <div className="space-y-1">
               {THEMES.map((theme) => (
                 <Link
-                  key={theme}
-                  href={`/calendars/${year}/${theme}`}
+                  key={theme.slug}
+                  href={`/calendars/${year}/${theme.slug}`}
                   className="block underline"
                 >
-                  {year} {ThemeNameLookup[theme]} calendar
+                  {year} {theme.name} calendar
                 </Link>
               ))}
             </div>

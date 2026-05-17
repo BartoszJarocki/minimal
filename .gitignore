@@ -31,4 +31,7 @@ yarn-error.log*
 # turbo
 .turbo
 
+# typescript incremental build artifacts
+*.tsbuildinfo
+
 generated/

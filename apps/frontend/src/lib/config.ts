@@ -2,10 +2,6 @@ export const SSR_CACHE_CONFIG = `public, max-age=${60 * 10}, s-maxage=${
   60 * 10
 }, stale-while-revalidate=${10}`;
 
-// Polar integration
-export const POLAR_PRODUCT_ID = process.env.NEXT_PUBLIC_POLAR_PRODUCT_ID || "";
-export const LIFETIME_PRICE = "$29";
-
 export const FEATURED_LANGUAGES = [
   { code: "en", name: "English" },
   { code: "es", name: "Spanish" },
@@ -53,18 +49,3 @@ export const AVAILABLE_CALENDARS = getVisibleYears()
   }))
   .reverse();
 
-// Redirect helper - uses NEW consolidated routes (not /preview)
-export function getRedirectForYear(year: number): string | null {
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-
-  // Previous year after March -> redirect to current year
-  if (year === currentYear - 1 && currentMonth > 3) {
-    return `/calendars/${currentYear}/simple`;
-  }
-  // Older years -> redirect to current year
-  if (year < currentYear - 1) {
-    return `/calendars/${currentYear}/simple`;
-  }
-  return null;
-}

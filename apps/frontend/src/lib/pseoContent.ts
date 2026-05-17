@@ -29,6 +29,8 @@ export interface PSEOContentBlock {
   cta: string;
 }
 
+export type PSEOContentOverride = Partial<PSEOContentBlock>;
+
 export interface FAQEntry {
   question: string;
   answer: string;
@@ -36,6 +38,32 @@ export interface FAQEntry {
 
 export interface PSEOPageContent extends PSEOContentBlock {
   faq: FAQEntry[];
+}
+
+// Keys that must be non-empty after merge. `printTips` may be empty.
+const REQUIRED_STRING_KEYS = [
+  "pageTitle",
+  "metaDescription",
+  "h1",
+  "bestFor",
+  "cta",
+] as const;
+
+function assertComplete(block: PSEOContentBlock, dims: PSEODimensions): void {
+  for (const key of REQUIRED_STRING_KEYS) {
+    if (!block[key]) {
+      throw new Error(
+        `pSEO content missing required field "${key}" for dims ${JSON.stringify(
+          dims
+        )}`
+      );
+    }
+  }
+  if (block.bullets.length === 0) {
+    throw new Error(
+      `pSEO content missing bullets for dims ${JSON.stringify(dims)}`
+    );
+  }
 }
 
 export interface PSEODimensions {
@@ -65,21 +93,15 @@ export function interpolate(
     .replace(/\{\{orientation\}\}/g, dims.orientation || "portrait");
 }
 
-// Deep merge content blocks (later values override earlier)
+// Later layers override earlier. Empty strings / empty arrays are skipped so
+// override files only need to declare the keys they want to change.
 function mergeContent(
-  ...blocks: Partial<PSEOContentBlock>[]
+  base: PSEOContentBlock,
+  ...overrides: PSEOContentOverride[]
 ): PSEOContentBlock {
-  const result: PSEOContentBlock = {
-    pageTitle: "",
-    metaDescription: "",
-    h1: "",
-    bullets: [],
-    bestFor: "",
-    printTips: [],
-    cta: "",
-  };
+  const result: PSEOContentBlock = { ...base, bullets: [...base.bullets], printTips: [...base.printTips] };
 
-  for (const block of blocks) {
+  for (const block of overrides) {
     if (block.pageTitle) result.pageTitle = block.pageTitle;
     if (block.metaDescription) result.metaDescription = block.metaDescription;
     if (block.h1) result.h1 = block.h1;
@@ -97,69 +119,31 @@ export function getFAQ(locale: string): FAQEntry[] {
   return FAQ_BY_LOCALE[locale] || FAQ_BY_LOCALE["default"] || DEFAULT_FAQ;
 }
 
-// Main content resolver - merges layers by priority
-// Priority: default < year < locale < format < intent
+// Priority: default < year < locale < format < intent < style
 export function getPSEOContent(dims: PSEODimensions): PSEOPageContent {
   const localeData = SupportedLocales.find((l) => l.code === dims.locale);
 
-  // Gather all applicable overrides
-  const layers: Partial<PSEOContentBlock>[] = [
-    DEFAULT_CONTENT,
+  const overrides: PSEOContentOverride[] = [
     YEAR_OVERRIDES[String(dims.year)] || {},
     LOCALE_OVERRIDES[dims.locale] || {},
   ];
 
-  if (dims.format) {
-    layers.push(FORMAT_OVERRIDES[dims.format] || {});
-  }
+  if (dims.format) overrides.push(FORMAT_OVERRIDES[dims.format] || {});
+  if (dims.intent) overrides.push(INTENT_OVERRIDES[dims.intent] || {});
+  if (dims.style) overrides.push(STYLE_OVERRIDES[dims.style] || {});
 
-  if (dims.intent) {
-    layers.push(INTENT_OVERRIDES[dims.intent] || {});
-  }
+  const merged = mergeContent(DEFAULT_CONTENT, ...overrides);
+  assertComplete(merged, dims);
 
-  if (dims.style) {
-    layers.push(STYLE_OVERRIDES[dims.style] || {});
-  }
-
-  // Merge all layers
-  const merged = mergeContent(...layers);
-
-  // Interpolate templates with actual values
-  const content: PSEOContentBlock = {
+  return {
     pageTitle: interpolate(merged.pageTitle, dims, localeData),
     metaDescription: interpolate(merged.metaDescription, dims, localeData),
     h1: interpolate(merged.h1, dims, localeData),
     bullets: merged.bullets.map((b) => interpolate(b, dims, localeData)),
     bestFor: interpolate(merged.bestFor, dims, localeData),
-    printTips: (merged.printTips || []).map((t) => interpolate(t, dims, localeData)),
+    printTips: merged.printTips.map((t) => interpolate(t, dims, localeData)),
     cta: interpolate(merged.cta, dims, localeData),
-  };
-
-  return {
-    ...content,
     faq: getFAQ(dims.locale),
   };
 }
 
-// Check if year should redirect (expired)
-export function shouldRedirectYear(year: number): boolean {
-  const currentYear = new Date().getFullYear();
-  const currentMonth = new Date().getMonth() + 1;
-
-  // Previous year after March should redirect
-  if (year === currentYear - 1 && currentMonth > 3) {
-    return true;
-  }
-
-  // Years older than previous should redirect
-  if (year < currentYear - 1) {
-    return true;
-  }
-
-  return false;
-}
-
-// Get canonical redirect target for expired year
-export function getYearRedirectTarget(year: number): number {
-  return new Date().getFullYear();
-}

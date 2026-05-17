@@ -2,105 +2,61 @@ import clsx from "clsx";
 import { DateTime } from "luxon";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
 import React from "react";
-import {
-  Format,
-  FormatVariant,
-} from "../components/calendar/Calendar";
 import {
   SimpleYearCalendar,
   SimpleMonthCalendar,
-  CalendarStyle,
 } from "../components/calendar/themes/Simple";
-import { SupportedLocales, Theme } from "@minimal/config";
+import {
+  Format,
+  Orientation,
+  parseVariant,
+  resolveLocale,
+} from "@minimal/config";
 
-export type CalendarType = "year" | "month";
-
-export const ThemeNameLookup: Record<Theme, string> = {
-  simple: "Simple",
-};
-
-type CalendarComponent = React.ComponentType<{ date: DateTime; variant: FormatVariant; size: Format; weekStartsOn?: 1 | 7; style?: CalendarStyle }>;
-
-export const ThemeLookup: Record<CalendarType, Record<Theme, CalendarComponent>> = {
-  year: {
-    simple: SimpleYearCalendar,
-  },
-  month: {
-    simple: SimpleMonthCalendar,
-  },
-};
-
-export const toPrintClassName = (format: Format, variant: FormatVariant) =>
-  `paper-${format}-${variant}`;
+export const toPrintClassName = (format: Format, orientation: Orientation) =>
+  `paper-${format}-${orientation}`;
 
 export default function Print() {
   const router = useRouter();
-  const { theme, locale, type, month, year, format, variant, weekStartsOn, style } =
-    parseQueryParams(router.query);
-  const selectedLocale = SupportedLocales.find(
-    (l) => l.code.toLowerCase() === locale.toLowerCase()
-  );
-  // Use URL param if provided, otherwise use locale default
-  const effectiveWeekStartsOn = (weekStartsOn ?? selectedLocale?.weekStartsOn ?? 1) as 1 | 7;
+  const variant = parseVariant(router.query);
+  const locale = resolveLocale(variant.locale);
 
-  if (!selectedLocale) {
+  if (!locale) {
     return (
       <div className="p-4 text-center">
         <h1 className="text-2xl font-bold">Locale not found</h1>
-        <p>The locale &quot;{locale}&quot; is not supported.</p>
+        <p>The locale &quot;{variant.locale}&quot; is not supported.</p>
       </div>
     );
   }
 
-  const date = DateTime.now().set({ year, month }).reconfigure({
-    locale,
-    outputCalendar: selectedLocale.outputCalendar,
-    numberingSystem: selectedLocale.numberingSystem,
-  });
-  const Calendar = ThemeLookup[type][theme];
+  const date = DateTime.now()
+    .set({ year: variant.year, month: variant.month })
+    .reconfigure({
+      locale: variant.locale,
+      outputCalendar: locale.outputCalendar,
+      numberingSystem: locale.numberingSystem,
+    });
+
+  const Calendar =
+    variant.type === "year" ? SimpleYearCalendar : SimpleMonthCalendar;
 
   return (
     <div
       className={clsx(
-        toPrintClassName(format, variant),
+        toPrintClassName(variant.format, variant.orientation),
         "bg-white text-foreground"
       )}
     >
       <NextSeo nofollow noindex />
-      <Calendar date={date} variant={variant} size={format} weekStartsOn={effectiveWeekStartsOn} style={style} />
+      <Calendar
+        date={date}
+        orientation={variant.orientation}
+        size={variant.format}
+        weekStartsOn={variant.weekStartsOn}
+        style={variant.style}
+      />
     </div>
   );
 }
-
-/**
- * Example url: /print?theme=simple-minimalist&locale=en-US&type=year&month=1&year=2021&format=a4&variant=portrait&weekStartsOn=1
- * @param query
- * @returns
- */
-export const parseQueryParams = (query: ParsedUrlQuery) => {
-  const theme = query.theme as Theme | undefined;
-  const locale = query.locale as string | undefined;
-  const type = query.type as CalendarType;
-  const month = query.month ? parseInt(query.month as string, 10) : undefined;
-  const year = query.year ? parseInt(query.year as string, 10) : undefined;
-  const format = query.format as Format | undefined;
-  const variant = query.variant as FormatVariant | undefined;
-  const weekStartsOnParam = query.weekStartsOn as string | undefined;
-  const weekStartsOn = weekStartsOnParam === '7' ? 7 : weekStartsOnParam === '1' ? 1 : undefined;
-  const styleParam = query.style as string | undefined;
-  const style: CalendarStyle = styleParam === "frame" ? "frame" : "default";
-
-  return {
-    theme: theme || "simple",
-    locale: locale || "en",
-    type: type || "year",
-    month: month || 1,
-    year: year || DateTime.now().year,
-    format: format || "a4",
-    variant: variant || "portrait",
-    weekStartsOn,
-    style,
-  };
-};

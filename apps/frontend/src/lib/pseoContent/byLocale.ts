@@ -1,6 +1,6 @@
-import type { PSEOContentBlock } from "../pseoContent";
+import type { PSEOContentOverride } from "../pseoContent";
 
-type ContentOverrideMap = Record<string, Partial<PSEOContentBlock>>;
+type ContentOverrideMap = Record<string, PSEOContentOverride>;
 
 // Only featured languages (en, es, de, fr, pt, it) get full translations
 // Others use English with interpolated language names

@@ -6,25 +6,22 @@ import {
   YearCalendar,
   MonthCalendar,
   addLeadingZeros,
-  FormatVariant,
-  Format,
 } from "../Calendar";
+import { CalendarStyle, Format, Orientation, WeekStartsOn } from "@minimal/config";
 
 // Year Calendar
 // -----------------------------------------------
 
-export type CalendarStyle = "default" | "frame";
-
 interface SimpleYearCalendarProps {
   date: DateTime;
-  variant: FormatVariant;
+  orientation: Orientation;
   size: Format;
-  weekStartsOn?: 1 | 7;
+  weekStartsOn?: WeekStartsOn;
   style?: CalendarStyle;
 }
 
 export const SimpleYearCalendar = React.memo(
-  ({ date, variant, size, weekStartsOn = 1, style = "default" }: SimpleYearCalendarProps) => {
+  ({ date, orientation, size, weekStartsOn = 1, style = "default" }: SimpleYearCalendarProps) => {
     const isFrame = style === "frame";
     const stylesLookup = useMemo(
       () => ({
@@ -100,8 +97,8 @@ export const SimpleYearCalendar = React.memo(
     );
 
     const styles = useMemo(
-      () => stylesLookup[size][variant],
-      [stylesLookup, size, variant]
+      () => stylesLookup[size][orientation],
+      [stylesLookup, size, orientation]
     );
 
     const YearCalendarMonthsGrid = ({
@@ -149,7 +146,7 @@ export const SimpleYearCalendar = React.memo(
             {addLeadingZeros(date.month, 2)}
           </span>
           <span className="ml-auto">
-            {variant === "landscape" ? date.monthLong : date.monthShort}
+            {orientation === "landscape" ? date.monthLong : date.monthShort}
           </span>
         </div>
       );
@@ -179,14 +176,14 @@ SimpleYearCalendar.displayName = "SimpleYearCalendar";
 
 interface SimpleMonthlyCalendarProps {
   date: DateTime;
-  variant: FormatVariant;
+  orientation: Orientation;
   size: Format;
-  weekStartsOn?: 1 | 7;
+  weekStartsOn?: WeekStartsOn;
   style?: CalendarStyle;
 }
 
 export const SimpleMonthCalendar = React.memo(
-  ({ date, variant, size, weekStartsOn = 1, style = "default" }: SimpleMonthlyCalendarProps) => {
+  ({ date, orientation, size, weekStartsOn = 1, style = "default" }: SimpleMonthlyCalendarProps) => {
     const isFrame = style === "frame";
     const stylesLookup = useMemo(
       () => ({
@@ -255,8 +252,8 @@ export const SimpleMonthCalendar = React.memo(
     );
 
     const styles = useMemo(
-      () => stylesLookup[size][variant],
-      [stylesLookup, size, variant]
+      () => stylesLookup[size][orientation],
+      [stylesLookup, size, orientation]
     );
 
     const MonthCalendarDayCell = ({
@@ -276,7 +273,7 @@ export const SimpleMonthCalendar = React.memo(
         <div
           className={clsx(
             "flex items-end justify-between",
-            variant === "landscape" && "mx-8"
+            orientation === "landscape" && "mx-8"
           )}
         >
           <div className={styles.monthName}>
@@ -287,7 +284,7 @@ export const SimpleMonthCalendar = React.memo(
           <div>
             <div className={styles.yearName}>{date.year}</div>
             <div className={styles.monthName}>
-              {variant === "landscape" ? date.monthLong : date.monthShort}
+              {orientation === "landscape" ? date.monthLong : date.monthShort}
             </div>
           </div>
         </div>

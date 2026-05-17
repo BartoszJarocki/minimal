@@ -1,9 +1,9 @@
 import { Checkout } from "@polar-sh/nextjs";
-
-const baseUrl = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
+import { env } from "../../../lib/env";
+import { serverEnv } from "../../../lib/env.server";
 
 export const GET = Checkout({
-  accessToken: process.env.POLAR_ACCESS_TOKEN!,
-  successUrl: `${baseUrl}/portal?success=true`,
-  server: process.env.NODE_ENV === "production" ? "production" : "sandbox",
+  accessToken: serverEnv.polarAccessToken(),
+  successUrl: `${env.siteUrl}/portal?success=true`,
+  server: env.isProduction ? "production" : "sandbox",
 });

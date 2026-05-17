@@ -1,6 +1,6 @@
 import { cn } from "../lib/utils";
 import { toPrintClassName } from "../pages/print";
-import { Format, FormatVariant } from "./calendar/Calendar";
+import { Format, Orientation } from "@minimal/config";
 
 const scaledStylesLookup = {
   a4: {
@@ -20,25 +20,25 @@ const scaledStylesLookup = {
 export const ScaledPreview = ({
   className,
   format,
-  variant,
+  orientation,
   children,
   alt,
 }: {
   className?: string;
   format: Format;
-  variant: FormatVariant;
+  orientation: Orientation;
   children: React.ReactNode;
   alt?: string;
 }) => {
   return (
     <div
-      className={scaledStylesLookup[format][variant]}
+      className={scaledStylesLookup[format][orientation]}
       role="img"
       aria-label={alt}
     >
       <div
         className={cn(
-          toPrintClassName(format, variant),
+          toPrintClassName(format, orientation),
           "m-auto origin-top-left scale-[40%] overflow-hidden bg-white p-4 text-foreground shadow-card transition-shadow hover:shadow-lg",
           className
         )}

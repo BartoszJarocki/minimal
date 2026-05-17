@@ -14,7 +14,7 @@ import { CalendarErrorBoundary } from "../../../components/ErrorBoundary";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../../../lib/config";
 import { getPSEOContent, type PSEOPageContent } from "../../../lib/pseoContent";
 import { ProductSchema, BreadcrumbSchema } from "../../../components/seo";
-import type { Format } from "../../../components/calendar/Calendar";
+import type { Format } from "@minimal/config";
 
 const FORMAT_INFO: Record<
   string,
@@ -141,11 +141,11 @@ export default function FormatDetailPage({
           <section className="mt-12 px-2">
             <H2>Preview ({formatInfo.displayName})</H2>
             <div className="mt-4">
-              <ScaledPreview format={format as Format} variant="portrait">
+              <ScaledPreview format={format as Format} orientation="portrait">
                 <CalendarErrorBoundary>
                   <SimpleYearCalendar
                     date={date}
-                    variant="portrait"
+                    orientation="portrait"
                     size={format as Format}
                     weekStartsOn={1}
                   />

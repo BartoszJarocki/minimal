@@ -8,8 +8,6 @@ export type SupportedLocale = {
   weekStartsOn: 1 | 7; // 1=Monday, 7=Sunday (Luxon convention)
 };
 
-export type Theme = "simple";
-
 export const SupportedLocales: SupportedLocale[] = [
   {
     code: "en",

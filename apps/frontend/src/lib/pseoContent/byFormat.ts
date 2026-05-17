@@ -1,6 +1,6 @@
-import type { PSEOContentBlock } from "../pseoContent";
+import type { PSEOContentOverride } from "../pseoContent";
 
-type ContentOverrideMap = Record<string, Partial<PSEOContentBlock>>;
+type ContentOverrideMap = Record<string, PSEOContentOverride>;
 
 export const FORMAT_OVERRIDES: ContentOverrideMap = {
   a4: {

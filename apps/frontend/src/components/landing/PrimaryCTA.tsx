@@ -1,17 +1,11 @@
-import { track } from "@vercel/analytics";
 import { Button } from "../ui/button";
-import { LIFETIME_PRICE, POLAR_PRODUCT_ID } from "../../lib/config";
+import { LIFETIME_PRODUCT, startCheckout } from "../../lib/lifetimeProduct";
 
 interface PrimaryCTAProps {
   variant?: "hero" | "bottom";
 }
 
 export const PrimaryCTA = ({ variant = "hero" }: PrimaryCTAProps) => {
-  const handleCheckout = () => {
-    track("buy_attempt", { variant });
-    window.location.href = `/api/checkout?products=${POLAR_PRODUCT_ID}`;
-  };
-
   return (
     <section>
       <div className="max-w-2xl space-y-6">
@@ -31,10 +25,10 @@ export const PrimaryCTA = ({ variant = "hero" }: PrimaryCTAProps) => {
           <Button
             variant="cta"
             size="cta"
-            onClick={handleCheckout}
+            onClick={() => startCheckout(variant)}
             className="flex flex-col"
           >
-            <span>Get lifetime access — {LIFETIME_PRICE}</span>
+            <span>Get lifetime access — {LIFETIME_PRODUCT.displayPrice}</span>
             <span className="font-mono text-xs font-normal opacity-80">
               One-time payment, no subscription
             </span>

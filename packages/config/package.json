@@ -1,8 +1,8 @@
 {
   "name": "@minimal/config",
   "version": "0.2.0",
-  "main": "./config.ts",
-  "types": "./config.ts",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "license": "MIT",
   "devDependencies": {
     "eslint": "^7.32.0",

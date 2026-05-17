@@ -8,10 +8,8 @@ import { H1 } from "../../../components/H1";
 import { H2 } from "../../../components/H2";
 import { P } from "../../../components/P";
 import { ScaledPreview } from "../../../components/ScaledPreview";
-import {
-  SimpleYearCalendar,
-  CalendarStyle,
-} from "../../../components/calendar/themes/Simple";
+import { SimpleYearCalendar } from "../../../components/calendar/themes/Simple";
+import { CalendarStyle } from "@minimal/config";
 import { PrimaryCTA } from "../../../components/landing/PrimaryCTA";
 import { CalendarErrorBoundary } from "../../../components/ErrorBoundary";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../../../lib/config";
@@ -97,11 +95,11 @@ export default function StylePage({ content, currentYear, style }: Props) {
           <section className="mt-12 px-2">
             <H2>Preview</H2>
             <div className="mt-4">
-              <ScaledPreview format="a4" variant="portrait">
+              <ScaledPreview format="a4" orientation="portrait">
                 <CalendarErrorBoundary>
                   <SimpleYearCalendar
                     date={date}
-                    variant="portrait"
+                    orientation="portrait"
                     size="a4"
                     weekStartsOn={1}
                     style={calendarStyle}

@@ -8,6 +8,7 @@
     "generate": "turbo run generate",
     "generate:og": "turbo run generate -- --og-only",
     "generate:upload-only": "turbo run generate -- --upload-only",
+    "generate:custom": "pnpm --filter generator run generate --",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

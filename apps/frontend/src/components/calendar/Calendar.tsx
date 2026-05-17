@@ -1,17 +1,16 @@
 import clsx from "clsx";
 import { DateTime, Info, StringUnitLength } from "luxon";
 import React, { useCallback, useMemo } from "react";
-
-export const WEEK_LENGTH = 7;
+import {
+  WeekStartsOn,
+  leadingBlankCount,
+  trailingBlankCount,
+  rotateWeekdays,
+} from "@minimal/config";
 
 export function addLeadingZeros(num: number, totalLength: number): string {
   return String(num).padStart(totalLength, "0");
 }
-
-export const SupportedYears = [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030];
-
-export type Format = "a4" | "a5" | "letter";
-export type FormatVariant = "landscape" | "portrait";
 
 export const DayCell = ({
   className,
@@ -44,7 +43,7 @@ interface MonthCalendarProps {
   date: DateTime;
   weekNames: StringUnitLength;
   locale?: string;
-  weekStartsOn?: 1 | 7; // 1=Monday, 7=Sunday (Luxon convention)
+  weekStartsOn?: WeekStartsOn;
 }
 
 export const MonthCalendar = React.memo(({
@@ -68,27 +67,20 @@ export const MonthCalendar = React.memo(({
     </CellComponent>
   ), [CellComponent, locale, date.month]);
 
-  // calculate how many blank cells are at the start
-  // Luxon weekday: 1=Mon, 7=Sun
-  // For Monday start (1): offset = weekday - 1 (Mon=0, Sun=6)
-  // For Sunday start (7): offset = weekday % 7 (Sun=0, Mon=1, Sat=6)
   const firstDayOfTheMonth = date.startOf("month");
   const blanksBefore: JSX.Element[] = [];
-  const blanksBeforeCount = weekStartsOn === 7
-    ? firstDayOfTheMonth.weekday % 7
-    : firstDayOfTheMonth.weekday - 1;
+  const blanksBeforeCount = leadingBlankCount(firstDayOfTheMonth.weekday, weekStartsOn);
   for (let i = 0; i < blanksBeforeCount; i++) {
     blanksBefore.push(
       createEmptyCell(firstDayOfTheMonth.minus({ days: blanksBeforeCount - i }))
     );
   }
 
-  // create a table with all the days of the month
   let daysInMonth: JSX.Element[] = [];
   const daysInCurrentMonth = date.daysInMonth || 31;
   for (let day = 1; day <= daysInCurrentMonth; day++) {
     daysInMonth.push(
-      <CellComponent 
+      <CellComponent
         key={`locale:${locale}-month:${date.month}-day:${day}`}
         role="gridcell"
       >
@@ -98,31 +90,23 @@ export const MonthCalendar = React.memo(({
     );
   }
 
-  // calculate how many blank cells are at the end
   const lastDayInMonth = date.endOf("month");
-  const lastDayOffset = weekStartsOn === 7
-    ? lastDayInMonth.weekday % 7
-    : lastDayInMonth.weekday - 1;
   const blanksAfter: JSX.Element[] = [];
-  const blanksAfterCount = 6 - lastDayOffset;
+  const blanksAfterCount = trailingBlankCount(lastDayInMonth.weekday, weekStartsOn);
   for (let i = 1; i <= blanksAfterCount; i++) {
     blanksAfter.push(createEmptyCell(lastDayInMonth.plus({ days: i })));
   }
 
   return (
-    <RootComponent 
+    <RootComponent
       className={clsx(className, "grid grid-cols-7")}
       role="grid"
       aria-label={`Calendar for ${date.monthLong} ${date.year}`}
     >
-      {useMemo(() => {
-        const weekdays = Info.weekdays(weekNames, { locale });
-        // Rotate: move Sunday to front when weekStartsOn=7
-        const orderedWeekdays = weekStartsOn === 7
-          ? [weekdays[6], ...weekdays.slice(0, 6)]
-          : weekdays;
-        return orderedWeekdays;
-      }, [weekNames, locale, weekStartsOn]).map((day, i) => (
+      {useMemo(
+        () => rotateWeekdays(Info.weekdays(weekNames, { locale }), weekStartsOn),
+        [weekNames, locale, weekStartsOn]
+      ).map((day, i) => (
         <CellComponent
           key={`locale:${locale}-month:${date.month}-weekday:${i}`}
           className="font-semibold"
@@ -148,7 +132,7 @@ interface Props {
   dayAs: React.ComponentType<{ children: React.ReactNode }>;
   monthWrapperAs?: React.ComponentType<{ children: React.ReactNode }>;
   date: DateTime;
-  weekStartsOn?: 1 | 7;
+  weekStartsOn?: WeekStartsOn;
 }
 
 export const YearCalendar = ({

@@ -92,11 +92,11 @@ export default function WeeklyCalendarPage({ content, currentYear }: Props) {
           <section className="mt-12 px-2">
             <H2>Preview</H2>
             <div className="mt-4">
-              <ScaledPreview format="a4" variant="portrait">
+              <ScaledPreview format="a4" orientation="portrait">
                 <CalendarErrorBoundary>
                   <SimpleYearCalendar
                     date={date}
-                    variant="portrait"
+                    orientation="portrait"
                     size="a4"
                     weekStartsOn={1}
                   />

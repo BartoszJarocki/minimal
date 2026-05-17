@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { polar } from "../../../lib/polar";
+import { serverEnv } from "../../../lib/env.server";
 import {
   setSessionCookie,
   createSession,
@@ -25,7 +26,10 @@ export default async function handler(
     return res.status(400).json({ success: false, error: "License key required" });
   }
 
-  if (!process.env.POLAR_ORGANIZATION_ID) {
+  let organizationId: string;
+  try {
+    organizationId = serverEnv.polarOrganizationId();
+  } catch (err) {
     console.error("POLAR_ORGANIZATION_ID env var not set");
     return res.status(500).json({ success: false, error: "Server configuration error" });
   }
@@ -33,7 +37,7 @@ export default async function handler(
   try {
     const result = await polar.customerPortal.licenseKeys.validate({
       key: key.trim(),
-      organizationId: process.env.POLAR_ORGANIZATION_ID,
+      organizationId,
     });
 
     if (result.status !== "granted") {

@@ -5,8 +5,8 @@ import { NextSeo } from "next-seo";
 import {
   SimpleMonthCalendar,
   SimpleYearCalendar,
-  CalendarStyle,
 } from "../components/calendar/themes/Simple";
+import { CalendarStyle, WeekStartsOn } from "@minimal/config";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Container } from "../components/Container";
@@ -20,7 +20,8 @@ import Link from "next/link";
 import { ScaledPreview } from "../components/ScaledPreview";
 import { SupportedLocales } from "@minimal/config";
 import { SimpleHabitTracker } from "./habit-tracker";
-import { AVAILABLE_CALENDARS, LIFETIME_PRICE } from "../lib/config";
+import { AVAILABLE_CALENDARS } from "../lib/config";
+import { LIFETIME_PRODUCT } from "../lib/lifetimeProduct";
 import { CalendarErrorBoundary } from "../components/ErrorBoundary";
 import { SocialProof } from "../components/landing/SocialProof";
 import { ValueProp } from "../components/landing/ValueProp";
@@ -48,13 +49,13 @@ export default function Landing() {
   const [date, setDate] = useState(
     DateTime.now().set({ year: featuredYear, month: 1 })
   );
-  const [weekStartsOn, setWeekStartsOn] = useState<1 | 7>(7); // default Sunday for en
+  const [weekStartsOn, setWeekStartsOn] = useState<WeekStartsOn>(7); // default Sunday for en
   const [showAllLanguages, setShowAllLanguages] = useState(false);
   const [style, setStyle] = useState<CalendarStyle>("default");
 
   const url = "https://useminimal.com";
   const title = `Printable calendars and habit trackers`;
-  const description = `${LIFETIME_PRICE} once, yours forever. Clean, ink-light PDFs in ${SupportedLocales.length} languages. A4, A5 & Letter, portrait & landscape.`;
+  const description = `${LIFETIME_PRODUCT.displayPrice} once, yours forever. Clean, ink-light PDFs in ${SupportedLocales.length} languages. A4, A5 & Letter, portrait & landscape.`;
 
   return (
     <>
@@ -202,11 +203,11 @@ export default function Landing() {
 
                     <div className="-mx-2 overflow-x-auto px-2">
                       <div className="flex gap-4 py-4">
-                        <ScaledPreview format="a4" variant="portrait">
+                        <ScaledPreview format="a4" orientation="portrait">
                           <CalendarErrorBoundary>
                             <SimpleMonthCalendar
                               date={date.set({ year: calendar.year, month: 1 })}
-                              variant="portrait"
+                              orientation="portrait"
                               size="a4"
                               weekStartsOn={weekStartsOn}
                               style={style}
@@ -214,11 +215,11 @@ export default function Landing() {
                           </CalendarErrorBoundary>
                         </ScaledPreview>
 
-                        <ScaledPreview format="a4" variant="portrait">
+                        <ScaledPreview format="a4" orientation="portrait">
                           <CalendarErrorBoundary>
                             <SimpleYearCalendar
                               date={date.set({ year: calendar.year, month: 1 })}
-                              variant="portrait"
+                              orientation="portrait"
                               size="a4"
                               weekStartsOn={weekStartsOn}
                               style={style}
@@ -281,7 +282,7 @@ export default function Landing() {
 
                     <div className="-mx-2 overflow-x-auto px-2">
                       <div className="flex gap-4 py-4">
-                        <ScaledPreview format="a4" variant="portrait">
+                        <ScaledPreview format="a4" orientation="portrait">
                           <CalendarErrorBoundary>
                             <SimpleHabitTracker
                               className="paper-padding-15mm"

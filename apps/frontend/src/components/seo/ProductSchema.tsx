@@ -1,5 +1,5 @@
 import { JsonLd } from "./JsonLd";
-import { LIFETIME_PRICE } from "../../lib/config";
+import { LIFETIME_PRODUCT } from "../../lib/lifetimeProduct";
 
 interface ProductSchemaProps {
   name: string;
@@ -16,9 +16,6 @@ export const ProductSchema = ({
   image,
   inLanguage,
 }: ProductSchemaProps) => {
-  // Extract numeric price from "$29"
-  const price = LIFETIME_PRICE.replace(/[^0-9.]/g, "");
-
   const data = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -29,8 +26,8 @@ export const ProductSchema = ({
     ...(inLanguage && { inLanguage }),
     offers: {
       "@type": "Offer",
-      price,
-      priceCurrency: "USD",
+      price: LIFETIME_PRODUCT.priceAmount,
+      priceCurrency: LIFETIME_PRODUCT.priceCurrency,
       availability: "https://schema.org/InStock",
       url,
     },

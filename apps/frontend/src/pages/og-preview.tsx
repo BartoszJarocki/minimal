@@ -23,19 +23,19 @@ export default function OGPreview({ year }: Props) {
     >
       {/* Left side - Calendar previews */}
       <div className="flex gap-6">
-        <ScaledPreview format="a4" variant="portrait" className="shadow-lg">
+        <ScaledPreview format="a4" orientation="portrait" className="shadow-lg">
           <SimpleMonthCalendar
             date={date}
-            variant="portrait"
+            orientation="portrait"
             size="a4"
             weekStartsOn={1}
           />
         </ScaledPreview>
 
-        <ScaledPreview format="a4" variant="portrait" className="shadow-lg">
+        <ScaledPreview format="a4" orientation="portrait" className="shadow-lg">
           <SimpleYearCalendar
             date={date}
-            variant="portrait"
+            orientation="portrait"
             size="a4"
             weekStartsOn={1}
           />

@@ -1,434 +1,79 @@
 import 'dotenv/config';
 
-import puppeteer, { Browser, PaperFormat } from 'puppeteer';
+import puppeteer, { Browser, PaperFormat, Page } from 'puppeteer';
 import { Info } from 'luxon';
 import fs from 'fs';
 import path from 'path';
 import AdmZip from 'adm-zip';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { SupportedLocale, SupportedLocales, Theme } from '@minimal/config';
+import { defineCommand, runMain } from 'citty';
+import {
+  CALENDAR_STYLES,
+  CalendarStyle,
+  CalendarType,
+  Format,
+  FORMATS,
+  Orientation,
+  SupportedLocale,
+  SupportedLocales,
+  WEEK_STARTS_OPTIONS,
+  WeekStartsOn,
+  printUrl,
+} from '@minimal/config';
+import { env } from './env';
 
-// CLI flags
-const args = process.argv.slice(2);
-const WITH_UPLOAD = args.includes('--with-upload');
-const UPLOAD_ONLY = args.includes('--upload-only');
-const OG_ONLY = args.includes('--og-only');
+const FRONTEND_URL = env.frontendUrl;
+const THEME_SLUG = 'simple';
+const DEFAULT_YEARS = [2026, 2027, 2028];
 
-// R2 Configuration
-const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID || '';
-const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
-const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
-const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'minimal-downloads';
+type RunMode = 'generate' | 'generate-and-upload' | 'upload-only' | 'og-only';
 
-const s3Client = new S3Client({
-  region: 'auto',
-  endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: R2_ACCESS_KEY_ID,
-    secretAccessKey: R2_SECRET_ACCESS_KEY,
-  },
-});
+interface RunOptions {
+  mode: RunMode;
+  years: number[];
+  locales: SupportedLocale[];
+  formats: Format[];
+}
+
+// --- R2 / upload ---------------------------------------------------------
+
+let s3: { client: S3Client; bucket: string } | null = null;
+function getS3() {
+  if (s3) return s3;
+  const r2 = env.r2();
+  s3 = {
+    client: new S3Client({
+      region: 'auto',
+      endpoint: `https://${r2.accountId}.r2.cloudflarestorage.com`,
+      credentials: {
+        accessKeyId: r2.accessKeyId,
+        secretAccessKey: r2.secretAccessKey,
+      },
+    }),
+    bucket: r2.bucketName,
+  };
+  return s3;
+}
 
 async function uploadToR2(filePath: string, key: string): Promise<void> {
-  if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {
-    throw new Error('R2 credentials not configured. Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY');
-  }
-
+  const { client, bucket } = getS3();
   const fileContent = await fs.promises.readFile(filePath);
-
-  await s3Client.send(new PutObjectCommand({
-    Bucket: R2_BUCKET_NAME,
-    Key: key,
-    Body: fileContent,
-    ContentType: 'application/zip',
-  }));
-
+  await client.send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: fileContent,
+      ContentType: 'application/zip',
+    })
+  );
   console.log(`Uploaded ${key} to R2`);
 }
 
-// Types
-interface CalendarPaths {
-  root: string;
-  pdf: {
-    portrait: string;
-    landscape: string;
-  };
-  preview: {
-    portrait: string;
-    landscape: string;
-  };
-}
-
-type WeekStartsOn = 1 | 7; // 1=Monday, 7=Sunday
-type CalendarStyle = 'default' | 'frame';
-
-const styleOptions: CalendarStyle[] = ['default', 'frame'];
-
-type Options = {
-  browser: Browser;
-  year: number;
-  destDir: string;
-  theme: string;
-  locale: SupportedLocale;
-  format: PaperFormat;
-  weekStartsOn: WeekStartsOn;
-  style: CalendarStyle;
-};
-
-// Utility Functions
-const getPaperDimensions = (format: PaperFormat, isLandscape = false) => {
-  // A4: 210x297mm, A5: 148x210mm at 96 DPI, Letter: 8.5x11" at 96 DPI
-  const dimensions = {
-    a4: { width: 794, height: 1123 },
-    a5: { width: 559, height: 794 },
-    letter: { width: 816, height: 1056 },
-  }[format] || { width: 794, height: 1123 };
-
-  return isLandscape
-    ? { width: dimensions.height, height: dimensions.width }
-    : dimensions;
-};
-
-const getWeekStartLabel = (weekStartsOn: WeekStartsOn) =>
-  weekStartsOn === 7 ? 'sunday-start' : 'monday-start';
-
-const getStyleLabel = (style: CalendarStyle) =>
-  style === 'frame' ? 'grid' : 'simple';
-
-const getCalendarPaths = (
-  baseDir: string,
-  theme: string,
-  year: number,
-  locale: string,
-  format: string,
-  type: 'monthly' | 'yearly',
-  weekStartsOn: WeekStartsOn,
-  style: CalendarStyle
-): CalendarPaths => {
-  const weekStartLabel = getWeekStartLabel(weekStartsOn);
-  const styleLabel = getStyleLabel(style);
-  const root = path.join(baseDir, theme, year.toString(), format, locale, weekStartLabel, styleLabel, type);
-
-  return {
-    root,
-    pdf: {
-      portrait: path.join(root, 'pdf', 'portrait'),
-      landscape: path.join(root, 'pdf', 'landscape'),
-    },
-    preview: {
-      portrait: path.join(root, 'preview', 'portrait'),
-      landscape: path.join(root, 'preview', 'landscape'),
-    },
-  };
-};
-
-const getFilename = (
-  type: 'monthly' | 'yearly',
-  monthIndex?: number,
-  monthName?: string
-) => {
-  if (type === 'monthly' && monthIndex && monthName) {
-    return {
-      pdf: `${monthIndex.toString().padStart(2, '0')}-${monthName}.pdf`,
-      preview: `${monthIndex.toString().padStart(2, '0')}-${monthName}.png`,
-    };
-  }
-  return {
-    pdf: 'calendar.pdf',
-    preview: 'calendar.png',
-  };
-};
-
-const createZipArchive = ({
-  folderPathToZip,
-  zippedFilePath,
-}: {
-  folderPathToZip: string;
-  zippedFilePath: string;
-}) => {
-  const zip = new AdmZip();
-  zip.addLocalFolder(folderPathToZip);
-  zip.writeZip(zippedFilePath);
-  console.log(`Zipped ${folderPathToZip} into ${zippedFilePath} successfully.`);
-};
-
-interface BuildUrlParams {
-  theme: string;
-  locale: SupportedLocale;
-  type: 'month' | 'year';
-  year: number;
-  month: number;
-  format: PaperFormat;
-  variant: 'portrait' | 'landscape';
-  weekStartsOn: WeekStartsOn;
-  style: CalendarStyle;
-}
-
-const buildUrl = ({
-  theme,
-  locale,
-  type,
-  year,
-  month,
-  format,
-  variant,
-  weekStartsOn,
-  style,
-}: BuildUrlParams) => {
-  return `http://localhost:3000/print?theme=${theme}&locale=${locale.code}&type=${type}&year=${year}&month=${month}&format=${format}&variant=${variant}&weekStartsOn=${weekStartsOn}&style=${style}`;
-};
-
-const generateMonthlyCalendar = async ({
-  browser,
-  year,
-  destDir,
-  theme,
-  locale,
-  format,
-  weekStartsOn,
-  style,
-}: Options) => {
-  const type = 'month';
-  const allMonths = Info.months('long', { locale: locale.code });
-
-  const paths = getCalendarPaths(
-    destDir,
-    theme,
-    year,
-    locale.code,
-    format,
-    'monthly',
-    weekStartsOn,
-    style
-  );
-
-  await Promise.all([
-    fs.promises.mkdir(paths.pdf.portrait, { recursive: true }),
-    fs.promises.mkdir(paths.pdf.landscape, { recursive: true }),
-    fs.promises.mkdir(paths.preview.portrait, { recursive: true }),
-    fs.promises.mkdir(paths.preview.landscape, { recursive: true }),
-  ]);
-
-  const allMonthsPdfs = allMonths.map(async (month, i) => {
-    const page = await browser.newPage();
-    const monthIndex = i + 1;
-    const files = getFilename('monthly', monthIndex, month);
-
-    // Portrait
-    const portraitDimensions = getPaperDimensions(format);
-    await page.setViewport(portraitDimensions);
-
-    const portraitUrl = buildUrl({
-      theme,
-      locale,
-      type,
-      year,
-      month: monthIndex,
-      format,
-      variant: 'portrait',
-      weekStartsOn,
-      style,
-    });
-
-    await page.goto(portraitUrl, { waitUntil: 'networkidle0' });
-    await page.pdf({
-      format,
-      path: path.join(paths.pdf.portrait, files.pdf),
-      pageRanges: '1-1',
-      printBackground: true,
-    });
-    await page.screenshot({
-      path: path.join(paths.preview.portrait, files.preview),
-      fullPage: false,
-      omitBackground: false,
-    });
-
-    // Landscape
-    const landscapeDimensions = getPaperDimensions(format, true);
-    await page.setViewport(landscapeDimensions);
-
-    const landscapeUrl = buildUrl({
-      theme,
-      locale,
-      type,
-      year,
-      month: monthIndex,
-      format,
-      variant: 'landscape',
-      weekStartsOn,
-      style,
-    });
-
-    await page.goto(landscapeUrl, { waitUntil: 'networkidle0' });
-    await page.pdf({
-      format,
-      path: path.join(paths.pdf.landscape, files.pdf),
-      landscape: true,
-      pageRanges: '1-1',
-      printBackground: true,
-    });
-    await page.screenshot({
-      path: path.join(paths.preview.landscape, files.preview),
-      fullPage: false,
-      omitBackground: false,
-    });
-
-    await page.close();
-  });
-
-  return Promise.all(allMonthsPdfs);
-};
-
-const generateYearlyCalendar = async ({
-  browser,
-  destDir,
-  year,
-  theme,
-  locale,
-  format,
-  weekStartsOn,
-  style,
-}: Options) => {
-  const type = 'year';
-  const page = await browser.newPage();
-
-  const paths = getCalendarPaths(
-    destDir,
-    theme,
-    year,
-    locale.code,
-    format,
-    'yearly',
-    weekStartsOn,
-    style
-  );
-
-  await Promise.all([
-    fs.promises.mkdir(paths.pdf.portrait, { recursive: true }),
-    fs.promises.mkdir(paths.pdf.landscape, { recursive: true }),
-    fs.promises.mkdir(paths.preview.portrait, { recursive: true }),
-    fs.promises.mkdir(paths.preview.landscape, { recursive: true }),
-  ]);
-
-  const files = getFilename('yearly');
-
-  // Portrait
-  const portraitDimensions = getPaperDimensions(format);
-  await page.setViewport(portraitDimensions);
-
-  const portraitUrl = buildUrl({
-    theme,
-    locale,
-    type,
-    year,
-    month: 1,
-    format,
-    variant: 'portrait',
-    weekStartsOn,
-    style,
-  });
-
-  await page.goto(portraitUrl, { waitUntil: 'networkidle0' });
-  await page.pdf({
-    format,
-    path: path.join(paths.pdf.portrait, files.pdf),
-    pageRanges: '1-1',
-    printBackground: true,
-  });
-  await page.screenshot({
-    path: path.join(paths.preview.portrait, files.preview),
-    fullPage: false,
-    omitBackground: false,
-  });
-
-  // Landscape
-  const landscapeDimensions = getPaperDimensions(format, true);
-  await page.setViewport(landscapeDimensions);
-
-  const landscapeUrl = buildUrl({
-    theme,
-    locale,
-    type,
-    year,
-    month: 1,
-    format,
-    variant: 'landscape',
-    weekStartsOn,
-    style,
-  });
-
-  await page.goto(landscapeUrl, { waitUntil: 'networkidle0' });
-  await page.pdf({
-    format,
-    path: path.join(paths.pdf.landscape, files.pdf),
-    landscape: true,
-    pageRanges: '1-1',
-    printBackground: true,
-  });
-  await page.screenshot({
-    path: path.join(paths.preview.landscape, files.preview),
-    fullPage: false,
-    omitBackground: false,
-  });
-
-  await page.close();
-};
-
-// OG Image Generation
-const generateOGImages = async (browser: Browser, years: number[], themes: Theme[]) => {
-  const ogDir = path.join(__dirname, '../../frontend/public/og');
-  await fs.promises.mkdir(ogDir, { recursive: true });
-
-  for (const year of years) {
-    for (const theme of themes) {
-      console.log(`Generating OG image for ${year} ${theme}`);
-
-      const page = await browser.newPage();
-      await page.setViewport({ width: 1200, height: 630 });
-
-      const url = `http://localhost:3000/og-preview?year=${year}&theme=${theme}`;
-      await page.goto(url, { waitUntil: 'networkidle0' });
-      await page.evaluate(() => document.fonts.ready);
-
-      await page.screenshot({
-        path: path.join(ogDir, `calendar-${year}.png`),
-        fullPage: false,
-        omitBackground: false,
-      });
-
-      await page.close();
-      console.log(`Done generating OG image for ${year}`);
-    }
-  }
-};
-
-async function createCombinedYearZip(destDir: string, theme: string, year: number, formats: PaperFormat[]) {
-  const distDir = path.join(destDir, theme, 'dist');
-  const combinedZipName = `calendars-${year}.zip`;
-  const combinedZipPath = path.join(distDir, combinedZipName);
-
-  const zip = new AdmZip();
-
-  for (const format of formats) {
-    const formatDir = path.join(destDir, theme, year.toString(), format);
-    if (fs.existsSync(formatDir)) {
-      zip.addLocalFolder(formatDir, format);
-    }
-  }
-
-  zip.writeZip(combinedZipPath);
-  console.log(`Created combined ZIP: ${combinedZipName}`);
-
-  return combinedZipPath;
-}
-
-async function uploadYearZips(destDir: string, theme: string, years: number[]) {
-  const distDir = path.join(destDir, theme, 'dist');
-
+async function uploadYearZips(baseDir: string, years: number[]) {
+  const distDir = path.join(baseDir, THEME_SLUG, 'dist');
   for (const year of years) {
     const zipName = `calendars-${year}.zip`;
     const zipPath = path.join(distDir, zipName);
-
     if (fs.existsSync(zipPath)) {
       await uploadToR2(zipPath, zipName);
     } else {
@@ -437,110 +82,405 @@ async function uploadYearZips(destDir: string, theme: string, years: number[]) {
   }
 }
 
-async function generateProducts() {
-  const destDir = './generated';
-  const years = [2026, 2027, 2028];
-  const formats: PaperFormat[] = ['a4', 'a5', 'letter'];
-  const themes: Theme[] = ['simple'];
-  const weekStartOptions: WeekStartsOn[] = [1, 7]; // Monday and Sunday
+// --- paths & filenames ---------------------------------------------------
 
-  console.log(`Mode: ${UPLOAD_ONLY ? 'upload-only' : OG_ONLY ? 'og-only' : WITH_UPLOAD ? 'generate + upload' : 'generate only'}`);
+const paperDimensions: Record<Format, { width: number; height: number }> = {
+  a4: { width: 794, height: 1123 },
+  a5: { width: 559, height: 794 },
+  letter: { width: 816, height: 1056 },
+};
 
-  // Upload-only mode: skip generation
-  if (UPLOAD_ONLY) {
-    for (const theme of themes) {
-      await uploadYearZips(destDir, theme, years);
+const viewportFor = (format: Format, orientation: Orientation) => {
+  const { width, height } = paperDimensions[format];
+  return orientation === 'landscape'
+    ? { width: height, height: width }
+    : { width, height };
+};
+
+const weekStartLabel = (weekStartsOn: WeekStartsOn) =>
+  weekStartsOn === 7 ? 'sunday-start' : 'monday-start';
+
+const styleLabel = (style: CalendarStyle) => (style === 'frame' ? 'grid' : 'simple');
+
+const typeFolder = (type: CalendarType) => (type === 'month' ? 'monthly' : 'yearly');
+
+interface OutputPaths {
+  pdfDir: string;
+  previewDir: string;
+}
+
+const outputPaths = (
+  baseDir: string,
+  year: number,
+  locale: string,
+  format: Format,
+  type: CalendarType,
+  orientation: Orientation,
+  weekStartsOn: WeekStartsOn,
+  style: CalendarStyle
+): OutputPaths => {
+  const root = path.join(
+    baseDir,
+    THEME_SLUG,
+    String(year),
+    format,
+    locale,
+    weekStartLabel(weekStartsOn),
+    styleLabel(style),
+    typeFolder(type)
+  );
+  return {
+    pdfDir: path.join(root, 'pdf', orientation),
+    previewDir: path.join(root, 'preview', orientation),
+  };
+};
+
+const filenamesFor = (type: CalendarType, monthIndex: number, monthName: string) => {
+  if (type === 'month') {
+    const prefix = `${String(monthIndex).padStart(2, '0')}-${monthName}`;
+    return { pdf: `${prefix}.pdf`, preview: `${prefix}.png` };
+  }
+  return { pdf: 'calendar.pdf', preview: 'calendar.png' };
+};
+
+// --- rendering -----------------------------------------------------------
+
+interface RenderArgs {
+  page: Page;
+  baseDir: string;
+  year: number;
+  month: number;
+  monthName: string;
+  type: CalendarType;
+  locale: SupportedLocale;
+  format: Format;
+  orientation: Orientation;
+  weekStartsOn: WeekStartsOn;
+  style: CalendarStyle;
+}
+
+async function renderOne({
+  page,
+  baseDir,
+  year,
+  month,
+  monthName,
+  type,
+  locale,
+  format,
+  orientation,
+  weekStartsOn,
+  style,
+}: RenderArgs) {
+  const paths = outputPaths(
+    baseDir,
+    year,
+    locale.code,
+    format,
+    type,
+    orientation,
+    weekStartsOn,
+    style
+  );
+  await Promise.all([
+    fs.promises.mkdir(paths.pdfDir, { recursive: true }),
+    fs.promises.mkdir(paths.previewDir, { recursive: true }),
+  ]);
+
+  const files = filenamesFor(type, month, monthName);
+  const url = printUrl(FRONTEND_URL, {
+    type,
+    year,
+    month,
+    locale: locale.code,
+    format,
+    orientation,
+    weekStartsOn,
+    style,
+  });
+
+  await page.setViewport(viewportFor(format, orientation));
+  await page.goto(url, { waitUntil: 'networkidle0' });
+  // Wait for the calendar to be in the DOM and for fonts to finish loading —
+  // page.pdf() in Puppeteer's new headless mode otherwise fires before paint.
+  await page.waitForSelector('[role="grid"]', { visible: true });
+  await page.evaluate(() => document.fonts.ready);
+  await page.pdf({
+    format: format as PaperFormat,
+    path: path.join(paths.pdfDir, files.pdf),
+    landscape: orientation === 'landscape',
+    pageRanges: '1-1',
+    printBackground: true,
+  });
+  await page.screenshot({
+    path: path.join(paths.previewDir, files.preview),
+    fullPage: false,
+    omitBackground: false,
+  });
+}
+
+interface BatchArgs {
+  browser: Browser;
+  baseDir: string;
+  year: number;
+  locale: SupportedLocale;
+  format: Format;
+  weekStartsOn: WeekStartsOn;
+  style: CalendarStyle;
+}
+
+async function renderMonthly({ browser, ...rest }: BatchArgs) {
+  const months = Info.months('long', { locale: rest.locale.code });
+  await Promise.all(
+    months.map(async (monthName, i) => {
+      const page = await browser.newPage();
+      try {
+        for (const orientation of ['portrait', 'landscape'] as const) {
+          await renderOne({
+            page,
+            ...rest,
+            month: i + 1,
+            monthName,
+            type: 'month',
+            orientation,
+          });
+        }
+      } finally {
+        await page.close();
+      }
+    })
+  );
+}
+
+async function renderYearly({ browser, ...rest }: BatchArgs) {
+  const page = await browser.newPage();
+  try {
+    for (const orientation of ['portrait', 'landscape'] as const) {
+      await renderOne({
+        page,
+        ...rest,
+        month: 1,
+        monthName: '',
+        type: 'year',
+        orientation,
+      });
     }
+  } finally {
+    await page.close();
+  }
+}
+
+// --- zipping & OG --------------------------------------------------------
+
+function createZipArchive(folderPathToZip: string, zippedFilePath: string) {
+  const zip = new AdmZip();
+  zip.addLocalFolder(folderPathToZip);
+  zip.writeZip(zippedFilePath);
+  console.log(`Zipped ${folderPathToZip} → ${zippedFilePath}`);
+}
+
+async function createCombinedYearZip(baseDir: string, year: number, formats: Format[]) {
+  const distDir = path.join(baseDir, THEME_SLUG, 'dist');
+  const combinedZipPath = path.join(distDir, `calendars-${year}.zip`);
+  const zip = new AdmZip();
+
+  for (const format of formats) {
+    const formatDir = path.join(baseDir, THEME_SLUG, String(year), format);
+    if (fs.existsSync(formatDir)) {
+      zip.addLocalFolder(formatDir, format);
+    }
+  }
+  zip.writeZip(combinedZipPath);
+  console.log(`Created combined ZIP: calendars-${year}.zip`);
+}
+
+async function generateOGImages(browser: Browser, years: number[]) {
+  const ogDir = path.join(__dirname, '../../frontend/public/og');
+  await fs.promises.mkdir(ogDir, { recursive: true });
+
+  for (const year of years) {
+    console.log(`Generating OG image for ${year} ${THEME_SLUG}`);
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1200, height: 630 });
+    const url = `${FRONTEND_URL}/og-preview?year=${year}&theme=${THEME_SLUG}`;
+    await page.goto(url, { waitUntil: 'networkidle0' });
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({
+      path: path.join(ogDir, `calendar-${year}.png`),
+      fullPage: false,
+      omitBackground: false,
+    });
+    await page.close();
+  }
+}
+
+// --- orchestration -------------------------------------------------------
+
+async function runGenerate({ mode, years, locales, formats }: RunOptions): Promise<void> {
+  const baseDir = './generated';
+  console.log(`Mode: ${mode}`);
+  console.log(
+    `Years: ${years.join(',')} | Locales: ${locales.length} | Formats: ${formats.join(',')}`
+  );
+
+  if (mode === 'upload-only') {
+    await uploadYearZips(baseDir, years);
     console.log('Upload complete!');
     return;
   }
 
-  // Generate OG images first (one browser instance)
   const ogBrowser = await puppeteer.launch({ headless: true });
-  await generateOGImages(ogBrowser, years, themes);
+  await generateOGImages(ogBrowser, years);
   await ogBrowser.close();
 
-  // OG-only mode: skip calendar generation
-  if (OG_ONLY) {
+  if (mode === 'og-only') {
     console.log('OG images generated!');
     return;
   }
 
-  for (const theme of themes) {
-    // Clean previous output
-    const themeDir = path.join(destDir, theme);
-    await fs.promises.rm(themeDir, { recursive: true, force: true });
+  const themeDir = path.join(baseDir, THEME_SLUG);
+  await fs.promises.rm(themeDir, { recursive: true, force: true });
+  const distDir = path.join(themeDir, 'dist');
+  await fs.promises.mkdir(distDir, { recursive: true });
 
-    // Create dist directory for zip files
-    const distDir = path.join(destDir, theme, 'dist');
-    await fs.promises.mkdir(distDir, { recursive: true });
+  for (const year of years) {
+    const browser = await puppeteer.launch({ headless: true });
 
-    for (const year of years) {
-      const browser = await puppeteer.launch({
-        headless: true,
-      });
-
-      for (const format of formats) {
-        for (const locale of SupportedLocales) {
-          for (const weekStartsOn of weekStartOptions) {
-            for (const style of styleOptions) {
-              const weekStartLabel = getWeekStartLabel(weekStartsOn);
-              const styleLabel = getStyleLabel(style);
-              console.log(
-                `Generating calendar - [${year}, ${theme}, ${locale.englishName}, ${format}, ${weekStartLabel}, ${styleLabel}]`
-              );
-
-              await Promise.all([
-                generateMonthlyCalendar({
-                  browser,
-                  destDir,
-                  year,
-                  theme,
-                  locale,
-                  format,
-                  weekStartsOn,
-                  style,
-                }),
-                generateYearlyCalendar({
-                  browser,
-                  year,
-                  destDir,
-                  theme,
-                  locale,
-                  format,
-                  weekStartsOn,
-                  style,
-                }),
-              ]);
-
-              console.log(`Done generating ${locale.englishName} ${format} ${weekStartLabel} ${styleLabel}`);
-            }
+    for (const format of formats) {
+      for (const locale of locales) {
+        for (const weekStartsOn of WEEK_STARTS_OPTIONS) {
+          for (const style of CALENDAR_STYLES) {
+            console.log(
+              `Generating [${year}, ${locale.englishName}, ${format}, ${weekStartLabel(
+                weekStartsOn
+              )}, ${styleLabel(style)}]`
+            );
+            const batch: BatchArgs = {
+              browser,
+              baseDir,
+              year,
+              locale,
+              format,
+              weekStartsOn,
+              style,
+            };
+            await Promise.all([renderMonthly(batch), renderYearly(batch)]);
           }
         }
-
-        // Create format-specific zip with all languages and week start variants
-        const zipName = `${theme}-${year}-${format}.zip`;
-        const sourceDir = path.join(destDir, theme, year.toString(), format);
-
-        createZipArchive({
-          folderPathToZip: sourceDir,
-          zippedFilePath: path.join(distDir, zipName),
-        });
       }
 
-      // Create combined year ZIP with all formats
-      await createCombinedYearZip(destDir, theme, year, formats);
-
-      await browser.close();
+      const sourceDir = path.join(themeDir, String(year), format);
+      createZipArchive(sourceDir, path.join(distDir, `${THEME_SLUG}-${year}-${format}.zip`));
     }
 
-    // Upload if --with-upload flag is set
-    if (WITH_UPLOAD) {
-      await uploadYearZips(destDir, theme, years);
-    }
+    await createCombinedYearZip(baseDir, year, formats);
+    await browser.close();
+  }
+
+  if (mode === 'generate-and-upload') {
+    await uploadYearZips(baseDir, years);
   }
 
   console.log('Generation complete!');
 }
 
-generateProducts().catch(console.error);
+// --- CLI -----------------------------------------------------------------
+
+function parseYears(input: string | undefined): number[] {
+  if (!input) return DEFAULT_YEARS;
+  const years = input.split(',').map((y) => parseInt(y.trim(), 10));
+  const invalid = years.filter((y) => !Number.isFinite(y));
+  if (invalid.length > 0) {
+    throw new Error(`--year: invalid value(s): ${invalid.join(',')}`);
+  }
+  return years;
+}
+
+function parseLocales(input: string | undefined): SupportedLocale[] {
+  if (!input) return SupportedLocales;
+  const codes = input.split(',').map((c) => c.trim());
+  const matched = SupportedLocales.filter((l) => codes.includes(l.code));
+  const unknown = codes.filter((c) => !SupportedLocales.some((l) => l.code === c));
+  if (unknown.length > 0) {
+    throw new Error(
+      `--locale: unknown code(s): ${unknown.join(
+        ','
+      )}. Valid: ${SupportedLocales.map((l) => l.code).join(',')}`
+    );
+  }
+  return matched;
+}
+
+function parseFormats(input: string | undefined): Format[] {
+  if (!input) return [...FORMATS];
+  const requested = input.split(',').map((f) => f.trim());
+  const unknown = requested.filter((f) => !FORMATS.includes(f as Format));
+  if (unknown.length > 0) {
+    throw new Error(
+      `--format: unknown value(s): ${unknown.join(',')}. Valid: ${FORMATS.join(',')}`
+    );
+  }
+  return FORMATS.filter((f) => requested.includes(f));
+}
+
+function pickMode(args: {
+  'upload-only': boolean;
+  'og-only': boolean;
+  'with-upload': boolean;
+}): RunMode {
+  const flags = [args['upload-only'], args['og-only'], args['with-upload']].filter(Boolean);
+  if (flags.length > 1) {
+    throw new Error('--upload-only, --og-only, and --with-upload are mutually exclusive');
+  }
+  if (args['upload-only']) return 'upload-only';
+  if (args['og-only']) return 'og-only';
+  if (args['with-upload']) return 'generate-and-upload';
+  return 'generate';
+}
+
+const main = defineCommand({
+  meta: {
+    name: 'generate',
+    description: 'Render printable calendars to PDF + preview PNGs, optionally upload to R2.',
+  },
+  args: {
+    year: {
+      type: 'string',
+      description: `Comma-separated years (default: ${DEFAULT_YEARS.join(',')})`,
+    },
+    locale: {
+      type: 'string',
+      description: 'Comma-separated locale codes (default: all supported)',
+    },
+    format: {
+      type: 'string',
+      description: `Comma-separated paper formats: ${FORMATS.join(',')} (default: all)`,
+    },
+    'with-upload': {
+      type: 'boolean',
+      default: false,
+      description: 'Upload zips to R2 after generating',
+    },
+    'upload-only': {
+      type: 'boolean',
+      default: false,
+      description: 'Skip generation; upload existing zips only',
+    },
+    'og-only': {
+      type: 'boolean',
+      default: false,
+      description: 'Skip calendar generation; render OG images only',
+    },
+  },
+  async run({ args }) {
+    const options: RunOptions = {
+      mode: pickMode(args),
+      years: parseYears(args.year),
+      locales: parseLocales(args.locale),
+      formats: parseFormats(args.format),
+    };
+    await runGenerate(options);
+  },
+});
+
+runMain(main);

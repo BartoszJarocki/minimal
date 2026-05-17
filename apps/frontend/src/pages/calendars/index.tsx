@@ -76,11 +76,11 @@ export default function CalendarsHub() {
                     className="group space-y-4"
                   >
                     <div className="overflow-hidden">
-                      <ScaledPreview format="a4" variant="portrait">
+                      <ScaledPreview format="a4" orientation="portrait">
                         <CalendarErrorBoundary>
                           <SimpleYearCalendar
                             date={date}
-                            variant="portrait"
+                            orientation="portrait"
                             size="a4"
                           />
                         </CalendarErrorBoundary>
