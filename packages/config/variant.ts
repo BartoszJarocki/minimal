@@ -5,12 +5,20 @@ export type Format = "a4" | "a5" | "letter";
 export type Orientation = "portrait" | "landscape";
 export type CalendarStyle = "default" | "frame";
 export type WeekStartsOn = 1 | 7;
+export type Theme = "editorial" | "mono" | "pixel";
 
 export const CALENDAR_TYPES: CalendarType[] = ["year", "month"];
 export const FORMATS: Format[] = ["a4", "a5", "letter"];
 export const ORIENTATIONS: Orientation[] = ["portrait", "landscape"];
 export const CALENDAR_STYLES: CalendarStyle[] = ["default", "frame"];
 export const WEEK_STARTS_OPTIONS: WeekStartsOn[] = [1, 7];
+export const THEMES: Theme[] = ["editorial", "mono", "pixel"];
+
+// Legacy theme slugs accepted by parseVariant for backwards compatibility.
+// Old URLs (and indexed pages) use "simple" as the slug for what is now "editorial".
+const LEGACY_THEME_ALIASES: Record<string, Theme> = {
+  simple: "editorial",
+};
 
 export const SUPPORTED_YEARS = [
   2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030,
@@ -29,6 +37,7 @@ export interface CalendarVariant {
   orientation: Orientation;
   weekStartsOn: WeekStartsOn;
   style: CalendarStyle;
+  theme: Theme;
 }
 
 const isOneOf = <T extends string>(allowed: readonly T[], v: unknown): v is T =>
@@ -45,6 +54,7 @@ export interface ParseInput {
   orientation?: unknown;
   weekStartsOn?: unknown;
   style?: unknown;
+  theme?: unknown;
 }
 
 export interface ParseOptions {
@@ -168,7 +178,33 @@ export function parseVariant(
     style = "default";
   }
 
-  return { type, year, month, locale, format, orientation, weekStartsOn, style };
+  let theme: Theme;
+  if (isOneOf(THEMES, input.theme)) {
+    theme = input.theme;
+  } else if (typeof input.theme === "string" && input.theme in LEGACY_THEME_ALIASES) {
+    // Tolerant mode: accept legacy slug. Strict mode: still fail.
+    if (strict) {
+      fail(strict, "theme", input.theme);
+    }
+    theme = LEGACY_THEME_ALIASES[input.theme];
+  } else if (input.theme === undefined) {
+    theme = "editorial";
+  } else {
+    fail(strict, "theme", input.theme);
+    theme = "editorial";
+  }
+
+  return {
+    type,
+    year,
+    month,
+    locale,
+    format,
+    orientation,
+    weekStartsOn,
+    style,
+    theme,
+  };
 }
 
 export function variantToQuery(v: CalendarVariant): Record<string, string> {
@@ -181,6 +217,7 @@ export function variantToQuery(v: CalendarVariant): Record<string, string> {
     orientation: v.orientation,
     weekStartsOn: String(v.weekStartsOn),
     style: v.style,
+    theme: v.theme,
   };
 }
 

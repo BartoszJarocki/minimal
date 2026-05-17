@@ -8,5 +8,6 @@ function optional(name: string, fallback = ""): string {
 export const env = {
   siteUrl: optional("NEXT_PUBLIC_URL", "http://localhost:3000"),
   polarProductId: optional("NEXT_PUBLIC_POLAR_PRODUCT_ID"),
+  gumroadUrl: optional("NEXT_PUBLIC_GUMROAD_URL", "https://bjarocki.gumroad.com"),
   isProduction: process.env.NODE_ENV === "production",
 };

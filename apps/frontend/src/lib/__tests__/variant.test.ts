@@ -18,6 +18,7 @@ const canonical: CalendarVariant = {
   orientation: "landscape",
   weekStartsOn: 7,
   style: "frame",
+  theme: "pixel",
 };
 
 describe("parseVariant / variantToQuery round-trip", () => {
@@ -43,6 +44,25 @@ describe("parseVariant defaults (tolerant mode)", () => {
     expect(v.orientation).toBe("portrait");
     expect(v.weekStartsOn).toBe(1);
     expect(v.style).toBe("default");
+    expect(v.theme).toBe("editorial");
+  });
+
+  it("accepts known themes", () => {
+    expect(parseVariant({ theme: "pixel" }).theme).toBe("pixel");
+    expect(parseVariant({ theme: "editorial" }).theme).toBe("editorial");
+    expect(parseVariant({ theme: "mono" }).theme).toBe("mono");
+  });
+
+  it("coerces unknown theme to editorial", () => {
+    expect(parseVariant({ theme: "wireframe" }).theme).toBe("editorial");
+  });
+
+  it("accepts legacy 'simple' as editorial alias", () => {
+    expect(parseVariant({ theme: "simple" }).theme).toBe("editorial");
+  });
+
+  it("rejects legacy 'simple' in strict mode", () => {
+    expect(() => parseVariant({ theme: "simple" }, { strict: true })).toThrow(/theme/);
   });
 
   it("coerces invalid format to a4", () => {
@@ -91,6 +111,10 @@ describe("parseVariant strict mode", () => {
 
   it("throws on unknown locale", () => {
     expect(() => parseVariant({ locale: "klingon" }, { strict: true })).toThrow(/locale/);
+  });
+
+  it("throws on unknown theme", () => {
+    expect(() => parseVariant({ theme: "wireframe" }, { strict: true })).toThrow(/theme/);
   });
 
   it("does not throw on omitted fields (uses defaults)", () => {

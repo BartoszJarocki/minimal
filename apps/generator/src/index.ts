@@ -4,6 +4,7 @@ import puppeteer, { Browser, PaperFormat, Page } from 'puppeteer';
 import { Info } from 'luxon';
 import fs from 'fs';
 import path from 'path';
+import { spawn } from 'child_process';
 import AdmZip from 'adm-zip';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { defineCommand, runMain } from 'citty';
@@ -16,6 +17,8 @@ import {
   Orientation,
   SupportedLocale,
   SupportedLocales,
+  Theme,
+  THEMES,
   WEEK_STARTS_OPTIONS,
   WeekStartsOn,
   printUrl,
@@ -23,7 +26,6 @@ import {
 import { env } from './env';
 
 const FRONTEND_URL = env.frontendUrl;
-const THEME_SLUG = 'simple';
 const DEFAULT_YEARS = [2026, 2027, 2028];
 
 type RunMode = 'generate' | 'generate-and-upload' | 'upload-only' | 'og-only';
@@ -33,6 +35,8 @@ interface RunOptions {
   years: number[];
   locales: SupportedLocale[];
   formats: Format[];
+  themes: Theme[];
+  withGumroadUpload: boolean;
 }
 
 // --- R2 / upload ---------------------------------------------------------
@@ -69,15 +73,86 @@ async function uploadToR2(filePath: string, key: string): Promise<void> {
   console.log(`Uploaded ${key} to R2`);
 }
 
-async function uploadYearZips(baseDir: string, years: number[]) {
-  const distDir = path.join(baseDir, THEME_SLUG, 'dist');
+async function uploadYearZips(baseDir: string, themes: Theme[], years: number[]) {
+  for (const theme of themes) {
+    const distDir = path.join(baseDir, theme, 'dist');
+    for (const year of years) {
+      const zipName = `${theme}-calendars-${year}.zip`;
+      const zipPath = path.join(distDir, zipName);
+      if (fs.existsSync(zipPath)) {
+        await uploadToR2(zipPath, zipName);
+      } else {
+        console.warn(`ZIP not found: ${zipPath}`);
+      }
+    }
+  }
+}
+
+// --- Gumroad upload ------------------------------------------------------
+
+function spawnGumroad(args: string[], accessToken: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const child = spawn('gumroad', args, {
+      stdio: ['ignore', 'inherit', 'inherit'],
+      env: { ...process.env, GUMROAD_ACCESS_TOKEN: accessToken },
+    });
+    child.on('error', (err) => reject(err));
+    child.on('exit', (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`gumroad ${args.join(' ')} exited with code ${code}`));
+    });
+  });
+}
+
+/**
+ * Push all theme zips for the given years to their per-year Gumroad products.
+ * One Gumroad product per year, multiple files per product (one per theme).
+ * Silently skipped if Gumroad env isn't configured.
+ */
+async function uploadYearZipsToGumroad(
+  baseDir: string,
+  themes: Theme[],
+  years: number[]
+) {
+  const gumroad = env.gumroad();
+  if (!gumroad) {
+    console.warn('Gumroad env not configured (GUMROAD_ACCESS_TOKEN + GUMROAD_PRODUCTS_JSON) — skipping Gumroad upload.');
+    return;
+  }
+
   for (const year of years) {
-    const zipName = `calendars-${year}.zip`;
-    const zipPath = path.join(distDir, zipName);
-    if (fs.existsSync(zipPath)) {
-      await uploadToR2(zipPath, zipName);
-    } else {
-      console.warn(`ZIP not found: ${zipPath}`);
+    const productId = gumroad.productsByYear[String(year)];
+    if (!productId) {
+      console.warn(`No Gumroad product configured for ${year} — skipping.`);
+      continue;
+    }
+    for (const theme of themes) {
+      const zipName = `${theme}-calendars-${year}.zip`;
+      const zipPath = path.join(baseDir, theme, 'dist', zipName);
+      if (!fs.existsSync(zipPath)) {
+        console.warn(`ZIP not found: ${zipPath}`);
+        continue;
+      }
+      console.log(`Uploading ${zipName} to Gumroad product ${productId}`);
+      try {
+        // The CLI's `products update --file` does upload + attach in one
+        // shot. (As of gumroad-cli 0.8.0 this can fail with "File(s)
+        // cli-upload-... no longer exist" — track upstream.)
+        await spawnGumroad(
+          [
+            'products',
+            'update',
+            productId,
+            '--file',
+            zipPath,
+            '--file-name',
+            zipName,
+          ],
+          gumroad.accessToken
+        );
+      } catch (err) {
+        console.error(`Gumroad upload failed for ${zipName}:`, err);
+      }
     }
   }
 }
@@ -111,6 +186,7 @@ interface OutputPaths {
 
 const outputPaths = (
   baseDir: string,
+  theme: Theme,
   year: number,
   locale: string,
   format: Format,
@@ -121,7 +197,7 @@ const outputPaths = (
 ): OutputPaths => {
   const root = path.join(
     baseDir,
-    THEME_SLUG,
+    theme,
     String(year),
     format,
     locale,
@@ -148,6 +224,7 @@ const filenamesFor = (type: CalendarType, monthIndex: number, monthName: string)
 interface RenderArgs {
   page: Page;
   baseDir: string;
+  theme: Theme;
   year: number;
   month: number;
   monthName: string;
@@ -162,6 +239,7 @@ interface RenderArgs {
 async function renderOne({
   page,
   baseDir,
+  theme,
   year,
   month,
   monthName,
@@ -174,6 +252,7 @@ async function renderOne({
 }: RenderArgs) {
   const paths = outputPaths(
     baseDir,
+    theme,
     year,
     locale.code,
     format,
@@ -197,12 +276,15 @@ async function renderOne({
     orientation,
     weekStartsOn,
     style,
+    theme,
   });
 
   await page.setViewport(viewportFor(format, orientation));
-  await page.goto(url, { waitUntil: 'networkidle0' });
-  // Wait for the calendar to be in the DOM and for fonts to finish loading —
-  // page.pdf() in Puppeteer's new headless mode otherwise fires before paint.
+  // 'load' fires once the page (and its CSS/JS) has finished loading; the
+  // explicit selector + fonts.ready waits below cover the real paint signal.
+  // 'networkidle0' was over-cautious — Next dev's HMR websocket prevents it
+  // from ever firing, and even in prod it adds ~500ms per render.
+  await page.goto(url, { waitUntil: 'load' });
   await page.waitForSelector('[role="grid"]', { visible: true });
   await page.evaluate(() => document.fonts.ready);
   await page.pdf({
@@ -222,6 +304,7 @@ async function renderOne({
 interface BatchArgs {
   browser: Browser;
   baseDir: string;
+  theme: Theme;
   year: number;
   locale: SupportedLocale;
   format: Format;
@@ -229,11 +312,24 @@ interface BatchArgs {
   style: CalendarStyle;
 }
 
+// Bump per-page timeout from Puppeteer's 30s default. Twelve concurrent
+// page.goto's against `next dev` regularly exceed 30s on first compile of
+// a new locale; against `next start` this is just headroom and costs nothing
+// on the happy path.
+const PAGE_TIMEOUT_MS = 60_000;
+
+async function newPage(browser: Browser) {
+  const page = await browser.newPage();
+  page.setDefaultTimeout(PAGE_TIMEOUT_MS);
+  page.setDefaultNavigationTimeout(PAGE_TIMEOUT_MS);
+  return page;
+}
+
 async function renderMonthly({ browser, ...rest }: BatchArgs) {
   const months = Info.months('long', { locale: rest.locale.code });
   await Promise.all(
     months.map(async (monthName, i) => {
-      const page = await browser.newPage();
+      const page = await newPage(browser);
       try {
         for (const orientation of ['portrait', 'landscape'] as const) {
           await renderOne({
@@ -253,7 +349,7 @@ async function renderMonthly({ browser, ...rest }: BatchArgs) {
 }
 
 async function renderYearly({ browser, ...rest }: BatchArgs) {
-  const page = await browser.newPage();
+  const page = await newPage(browser);
   try {
     for (const orientation of ['portrait', 'landscape'] as const) {
       await renderOne({
@@ -279,58 +375,74 @@ function createZipArchive(folderPathToZip: string, zippedFilePath: string) {
   console.log(`Zipped ${folderPathToZip} → ${zippedFilePath}`);
 }
 
-async function createCombinedYearZip(baseDir: string, year: number, formats: Format[]) {
-  const distDir = path.join(baseDir, THEME_SLUG, 'dist');
-  const combinedZipPath = path.join(distDir, `calendars-${year}.zip`);
+async function createCombinedYearZip(
+  baseDir: string,
+  theme: Theme,
+  year: number,
+  formats: Format[]
+) {
+  const distDir = path.join(baseDir, theme, 'dist');
+  const combinedZipPath = path.join(distDir, `${theme}-calendars-${year}.zip`);
   const zip = new AdmZip();
 
   for (const format of formats) {
-    const formatDir = path.join(baseDir, THEME_SLUG, String(year), format);
+    const formatDir = path.join(baseDir, theme, String(year), format);
     if (fs.existsSync(formatDir)) {
       zip.addLocalFolder(formatDir, format);
     }
   }
   zip.writeZip(combinedZipPath);
-  console.log(`Created combined ZIP: calendars-${year}.zip`);
+  console.log(`Created combined ZIP: ${theme}-calendars-${year}.zip`);
 }
 
-async function generateOGImages(browser: Browser, years: number[]) {
+async function generateOGImages(browser: Browser, themes: Theme[], years: number[]) {
   const ogDir = path.join(__dirname, '../../frontend/public/og');
   await fs.promises.mkdir(ogDir, { recursive: true });
 
-  for (const year of years) {
-    console.log(`Generating OG image for ${year} ${THEME_SLUG}`);
-    const page = await browser.newPage();
-    await page.setViewport({ width: 1200, height: 630 });
-    const url = `${FRONTEND_URL}/og-preview?year=${year}&theme=${THEME_SLUG}`;
-    await page.goto(url, { waitUntil: 'networkidle0' });
-    await page.evaluate(() => document.fonts.ready);
-    await page.screenshot({
-      path: path.join(ogDir, `calendar-${year}.png`),
-      fullPage: false,
-      omitBackground: false,
-    });
-    await page.close();
+  for (const theme of themes) {
+    for (const year of years) {
+      console.log(`Generating OG image for ${year} ${theme}`);
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1200, height: 630 });
+      const url = `${FRONTEND_URL}/og-preview?year=${year}&theme=${theme}`;
+      await page.goto(url, { waitUntil: 'load' });
+      await page.evaluate(() => document.fonts.ready);
+      await page.screenshot({
+        path: path.join(ogDir, `calendar-${year}-${theme}.png`),
+        fullPage: false,
+        omitBackground: false,
+      });
+      await page.close();
+    }
   }
 }
 
 // --- orchestration -------------------------------------------------------
 
-async function runGenerate({ mode, years, locales, formats }: RunOptions): Promise<void> {
+async function runGenerate({
+  mode,
+  years,
+  locales,
+  formats,
+  themes,
+  withGumroadUpload,
+}: RunOptions): Promise<void> {
   const baseDir = './generated';
   console.log(`Mode: ${mode}`);
   console.log(
-    `Years: ${years.join(',')} | Locales: ${locales.length} | Formats: ${formats.join(',')}`
+    `Themes: ${themes.join(',')} | Years: ${years.join(',')} | Locales: ${locales.length} | Formats: ${formats.join(',')}`
   );
+  if (withGumroadUpload) console.log('Gumroad upload: enabled');
 
   if (mode === 'upload-only') {
-    await uploadYearZips(baseDir, years);
+    await uploadYearZips(baseDir, themes, years);
+    if (withGumroadUpload) await uploadYearZipsToGumroad(baseDir, themes, years);
     console.log('Upload complete!');
     return;
   }
 
   const ogBrowser = await puppeteer.launch({ headless: true });
-  await generateOGImages(ogBrowser, years);
+  await generateOGImages(ogBrowser, themes, years);
   await ogBrowser.close();
 
   if (mode === 'og-only') {
@@ -338,47 +450,53 @@ async function runGenerate({ mode, years, locales, formats }: RunOptions): Promi
     return;
   }
 
-  const themeDir = path.join(baseDir, THEME_SLUG);
-  await fs.promises.rm(themeDir, { recursive: true, force: true });
-  const distDir = path.join(themeDir, 'dist');
-  await fs.promises.mkdir(distDir, { recursive: true });
+  for (const theme of themes) {
+    const themeDir = path.join(baseDir, theme);
+    await fs.promises.rm(themeDir, { recursive: true, force: true });
+    const distDir = path.join(themeDir, 'dist');
+    await fs.promises.mkdir(distDir, { recursive: true });
 
-  for (const year of years) {
-    const browser = await puppeteer.launch({ headless: true });
+    for (const year of years) {
+      const browser = await puppeteer.launch({ headless: true });
 
-    for (const format of formats) {
-      for (const locale of locales) {
-        for (const weekStartsOn of WEEK_STARTS_OPTIONS) {
-          for (const style of CALENDAR_STYLES) {
-            console.log(
-              `Generating [${year}, ${locale.englishName}, ${format}, ${weekStartLabel(
-                weekStartsOn
-              )}, ${styleLabel(style)}]`
-            );
-            const batch: BatchArgs = {
-              browser,
-              baseDir,
-              year,
-              locale,
-              format,
-              weekStartsOn,
-              style,
-            };
-            await Promise.all([renderMonthly(batch), renderYearly(batch)]);
+      for (const format of formats) {
+        for (const locale of locales) {
+          for (const weekStartsOn of WEEK_STARTS_OPTIONS) {
+            for (const style of CALENDAR_STYLES) {
+              console.log(
+                `Generating [${theme}, ${year}, ${locale.englishName}, ${format}, ${weekStartLabel(
+                  weekStartsOn
+                )}, ${styleLabel(style)}]`
+              );
+              const batch: BatchArgs = {
+                browser,
+                baseDir,
+                theme,
+                year,
+                locale,
+                format,
+                weekStartsOn,
+                style,
+              };
+              await Promise.all([renderMonthly(batch), renderYearly(batch)]);
+            }
           }
         }
+
+        const sourceDir = path.join(themeDir, String(year), format);
+        createZipArchive(sourceDir, path.join(distDir, `${theme}-${year}-${format}.zip`));
       }
 
-      const sourceDir = path.join(themeDir, String(year), format);
-      createZipArchive(sourceDir, path.join(distDir, `${THEME_SLUG}-${year}-${format}.zip`));
+      await createCombinedYearZip(baseDir, theme, year, formats);
+      await browser.close();
     }
-
-    await createCombinedYearZip(baseDir, year, formats);
-    await browser.close();
   }
 
   if (mode === 'generate-and-upload') {
-    await uploadYearZips(baseDir, years);
+    await uploadYearZips(baseDir, themes, years);
+  }
+  if (withGumroadUpload) {
+    await uploadYearZipsToGumroad(baseDir, themes, years);
   }
 
   console.log('Generation complete!');
@@ -409,6 +527,18 @@ function parseLocales(input: string | undefined): SupportedLocale[] {
     );
   }
   return matched;
+}
+
+function parseThemes(input: string | undefined): Theme[] {
+  if (!input) return [...THEMES];
+  const requested = input.split(',').map((t) => t.trim());
+  const unknown = requested.filter((t) => !THEMES.includes(t as Theme));
+  if (unknown.length > 0) {
+    throw new Error(
+      `--theme: unknown value(s): ${unknown.join(',')}. Valid: ${THEMES.join(',')}`
+    );
+  }
+  return THEMES.filter((t) => requested.includes(t));
 }
 
 function parseFormats(input: string | undefined): Format[] {
@@ -456,6 +586,10 @@ const main = defineCommand({
       type: 'string',
       description: `Comma-separated paper formats: ${FORMATS.join(',')} (default: all)`,
     },
+    theme: {
+      type: 'string',
+      description: `Comma-separated themes: ${THEMES.join(',')} (default: all)`,
+    },
     'with-upload': {
       type: 'boolean',
       default: false,
@@ -471,6 +605,12 @@ const main = defineCommand({
       default: false,
       description: 'Skip calendar generation; render OG images only',
     },
+    'with-gumroad-upload': {
+      type: 'boolean',
+      default: false,
+      description:
+        'Push theme zips to Gumroad per-year products (requires GUMROAD_ACCESS_TOKEN + GUMROAD_PRODUCTS_JSON)',
+    },
   },
   async run({ args }) {
     const options: RunOptions = {
@@ -478,6 +618,8 @@ const main = defineCommand({
       years: parseYears(args.year),
       locales: parseLocales(args.locale),
       formats: parseFormats(args.format),
+      themes: parseThemes(args.theme),
+      withGumroadUpload: args['with-gumroad-upload'] === true,
     };
     await runGenerate(options);
   },

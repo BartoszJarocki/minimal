@@ -9,7 +9,8 @@ import { H2 } from "../../../components/H2";
 import { P } from "../../../components/P";
 import { ScaledPreview } from "../../../components/ScaledPreview";
 import { SimpleYearCalendar } from "../../../components/calendar/themes/Simple";
-import { CalendarStyle } from "@minimal/config";
+import { CalendarStyle, THEMES } from "@minimal/config";
+import { THEME_LABELS } from "../../../components/calendar/themes";
 import { PrimaryCTA } from "../../../components/landing/PrimaryCTA";
 import { CalendarErrorBoundary } from "../../../components/ErrorBoundary";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../../../lib/config";
@@ -115,7 +116,7 @@ export default function StylePage({ content, currentYear, style }: Props) {
               {AVAILABLE_CALENDARS.map((cal) => (
                 <Link
                   key={cal.year}
-                  href={`/calendars/${cal.year}/simple`}
+                  href={`/calendars/${cal.year}/editorial`}
                   className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
                 >
                   {cal.year}
@@ -130,7 +131,7 @@ export default function StylePage({ content, currentYear, style }: Props) {
               {FEATURED_LANGUAGES.map((lang) => (
                 <Link
                   key={lang.code}
-                  href={`/calendars/${currentYear}/simple/${lang.code}`}
+                  href={`/calendars/${currentYear}/editorial/${lang.code}`}
                   className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
                 >
                   {lang.name}
@@ -160,6 +161,21 @@ export default function StylePage({ content, currentYear, style }: Props) {
               >
                 US Letter
               </Link>
+            </div>
+          </section>
+
+          <section className="mt-8 space-y-4">
+            <H2>Browse by Theme</H2>
+            <div className="flex flex-wrap gap-2">
+              {THEMES.map((t) => (
+                <Link
+                  key={t}
+                  href={`/calendars/theme/${t}`}
+                  className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                >
+                  {THEME_LABELS[t]}
+                </Link>
+              ))}
             </div>
           </section>
 

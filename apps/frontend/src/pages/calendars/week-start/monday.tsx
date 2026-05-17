@@ -107,7 +107,7 @@ export default function MondayStartPage({ currentYear, mondayLocales }: Props) {
               {mondayLocales.map((locale) => (
                 <Link
                   key={locale.code}
-                  href={`/calendars/${currentYear}/simple/${locale.code}`}
+                  href={`/calendars/${currentYear}/editorial/${locale.code}`}
                   className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
                 >
                   {locale.emoji} {locale.englishName}
@@ -122,7 +122,7 @@ export default function MondayStartPage({ currentYear, mondayLocales }: Props) {
               {AVAILABLE_CALENDARS.map((cal) => (
                 <Link
                   key={cal.year}
-                  href={`/calendars/${cal.year}/simple`}
+                  href={`/calendars/${cal.year}/editorial`}
                   className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
                 >
                   {cal.year}

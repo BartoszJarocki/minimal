@@ -2,6 +2,7 @@ import { Logo } from "./Logo";
 import Link from "next/link";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../lib/config";
 import { SupportedLocales } from "@minimal/config";
+import { env } from "../lib/env";
 
 const CURRENT_YEAR = Math.max(...AVAILABLE_CALENDARS.map((c) => c.year));
 
@@ -16,14 +17,14 @@ const navigation = {
   years: [
     ...AVAILABLE_CALENDARS.slice(0, 4).map((calendar) => ({
       name: calendar.year.toString(),
-      href: `/calendars/${calendar.year}/simple`,
+      href: `/calendars/${calendar.year}/editorial`,
     })),
     { name: "See all years →", href: "/calendars" },
   ],
   languages: [
     ...FEATURED_LANGUAGES.map((lang) => ({
       name: lang.name,
-      href: `/calendars/${CURRENT_YEAR}/simple/${lang.code}`,
+      href: `/calendars/${CURRENT_YEAR}/editorial/${lang.code}`,
     })),
     {
       name: `All ${SupportedLocales.length} languages →`,
@@ -73,6 +74,18 @@ export const Footer = () => {
             <Logo className="h-7 w-auto" />
             <p className="max-w-xs text-sm leading-6 text-muted-foreground">
               Minimalist printable calendars and habit trackers.
+            </p>
+            <p className="max-w-xs text-sm leading-6 text-muted-foreground">
+              Also on{" "}
+              <a
+                href={env.gumroadUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-foreground"
+              >
+                Gumroad
+              </a>{" "}
+              — yearly packs from $9.90.
             </p>
             <div className="flex space-x-6">
               {navigation.social.map((item) => (
@@ -193,7 +206,7 @@ export const Footer = () => {
           <ul>
             {AVAILABLE_CALENDARS.map((calendar) => (
               <li key={calendar.year}>
-                <Link href={`/calendars/${calendar.year}/simple`}>
+                <Link href={`/calendars/${calendar.year}/editorial`}>
                   {calendar.year} printable calendar PDF
                 </Link>
               </li>
@@ -205,7 +218,7 @@ export const Footer = () => {
             {SupportedLocales.map((locale) => (
               <li key={locale.code}>
                 <Link
-                  href={`/calendars/${CURRENT_YEAR}/simple/${locale.code}`}
+                  href={`/calendars/${CURRENT_YEAR}/editorial/${locale.code}`}
                 >
                   {locale.englishName} printable calendar
                 </Link>

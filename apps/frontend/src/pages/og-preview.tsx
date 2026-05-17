@@ -62,7 +62,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   query,
 }) => {
   const year = query.year ? parseInt(query.year as string, 10) : 2027;
-  const theme = (query.theme as string) || "simple";
+  const theme = (query.theme as string) || "editorial";
 
   return {
     props: { year, theme },

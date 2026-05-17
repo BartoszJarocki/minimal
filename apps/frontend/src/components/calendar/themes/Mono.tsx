@@ -1,0 +1,321 @@
+import clsx from "clsx";
+import { DateTime } from "luxon";
+import React, { useMemo } from "react";
+import {
+  DayCell,
+  YearCalendar,
+  MonthCalendar,
+  addLeadingZeros,
+} from "../Calendar";
+import { CalendarStyle, Format, Orientation, WeekStartsOn } from "@minimal/config";
+
+// Mono theme — Geist Mono throughout. Terminal/print-out aesthetic.
+// Layout mirrors Simple; substitutes font-mono and tightens borders to
+// hairlines for a Unix-tool feel.
+
+// Year Calendar -----------------------------------------------------------
+
+interface MonoYearCalendarProps {
+  date: DateTime;
+  orientation: Orientation;
+  size: Format;
+  weekStartsOn?: WeekStartsOn;
+  style?: CalendarStyle;
+}
+
+export const MonoYearCalendar = React.memo(
+  ({ date, orientation, size, weekStartsOn = 1, style = "default" }: MonoYearCalendarProps) => {
+    const isFrame = style === "frame";
+    const stylesLookup = useMemo(
+      () => ({
+        a4: {
+          portrait: {
+            root: "flex items-end text-foreground font-mono",
+            yearRoot: "p-8 basis-[73%]",
+            yearHeader:
+              "text-vertical-rl mb-8 ml-auto basis-[27%] translate-x-14 rotate-180 self-end text-end text-[144px] font-mono font-medium leading-none tracking-tight tabular-nums",
+            monthHeader:
+              "flex items-center px-1 text-2xl font-mono font-medium leading-none tracking-tight uppercase",
+            monthsGrid: "grid grid-cols-2 gap-4",
+            dayCell:
+              "flex items-center justify-center text-center text-[12px] font-mono tabular-nums",
+          },
+          landscape: {
+            root: "flex flex-col p-14 text-foreground font-mono",
+            yearRoot: "",
+            yearHeader:
+              "mb-4 ml-auto self-end text-end text-[96px] font-mono font-medium leading-none tracking-tight tabular-nums",
+            monthHeader:
+              "flex items-center px-1 text-2xl font-mono font-medium leading-tight tracking-tight uppercase",
+            monthsGrid: "grid grid-cols-4 gap-4",
+            dayCell:
+              "flex items-center justify-center text-center text-[12px] font-mono tabular-nums",
+          },
+        },
+        a5: {
+          portrait: {
+            root: "flex items-end text-foreground font-mono",
+            yearRoot: "p-6 basis-[71%]",
+            yearHeader:
+              "text-vertical-rl mb-4 ml-auto basis-[29%] translate-x-14 rotate-180 self-end text-end text-[96px] font-mono font-medium leading-none tracking-tight tabular-nums",
+            monthHeader:
+              "flex items-center px-1 font-mono font-medium leading-none tracking-tight uppercase",
+            monthsGrid: "grid grid-cols-2 gap-3",
+            dayCell:
+              "flex items-center justify-center text-center text-[8px] font-mono tabular-nums",
+          },
+          landscape: {
+            root: "flex flex-col p-8 text-foreground font-mono",
+            yearRoot: "",
+            yearHeader:
+              "mb-4 ml-auto self-end text-end text-[44px] font-mono font-medium leading-none tracking-tight tabular-nums",
+            monthHeader:
+              "flex items-center px-1 text-xl font-mono font-medium leading-none tracking-tight uppercase",
+            monthsGrid: "grid grid-cols-4 gap-4",
+            dayCell:
+              "flex items-center justify-center text-center text-[8px] font-mono tabular-nums",
+          },
+        },
+        letter: {
+          portrait: {
+            root: "flex items-end text-foreground font-mono",
+            yearRoot: "p-6 basis-[70%]",
+            yearHeader:
+              "text-vertical-rl mb-6 ml-auto basis-[30%] translate-x-24 rotate-180 self-end text-end text-[120px] font-mono font-medium leading-none tracking-tight tabular-nums",
+            monthHeader:
+              "flex items-center px-1 text-xl font-mono font-medium leading-none tracking-tight uppercase",
+            monthsGrid: "grid grid-cols-2 gap-2",
+            dayCell:
+              "flex items-center justify-center text-center text-[10px] font-mono tabular-nums leading-none",
+          },
+          landscape: {
+            root: "flex flex-col p-10 text-foreground font-mono",
+            yearRoot: "",
+            yearHeader:
+              "mb-4 ml-auto self-end text-end text-[72px] font-mono font-medium leading-none tracking-tight tabular-nums",
+            monthHeader:
+              "flex items-center px-1 text-xl font-mono font-medium leading-tight tracking-tight uppercase",
+            monthsGrid: "grid grid-cols-4 gap-3",
+            dayCell:
+              "flex items-center justify-center text-center text-[11px] font-mono tabular-nums",
+          },
+        },
+      }),
+      []
+    );
+
+    const styles = useMemo(
+      () => stylesLookup[size][orientation],
+      [stylesLookup, size, orientation]
+    );
+
+    const YearCalendarMonthsGrid = ({
+      children,
+    }: {
+      children: React.ReactNode;
+    }) => <div className={styles.monthsGrid}>{children}</div>;
+
+    const YearCalendarHeader = ({ date }: { date: DateTime }) => (
+      <div className={styles.yearHeader}>{date.year}</div>
+    );
+
+    const YearCalendarDayCell = ({
+      className,
+      children,
+    }: {
+      className?: string;
+      children: React.ReactNode;
+    }) => (
+      <DayCell
+        className={clsx(
+          styles.dayCell,
+          isFrame && "border-r border-b border-foreground/30 border-dashed",
+          className
+        )}
+      >
+        {children}
+      </DayCell>
+    );
+
+    const YearCalendarMonthWrapper = ({
+      children,
+    }: {
+      children: React.ReactNode;
+    }) =>
+      isFrame ? (
+        <div className="border-t border-l border-foreground/30 border-dashed">
+          {children}
+        </div>
+      ) : (
+        <>{children}</>
+      );
+
+    const YearCalendarMonthHeader = ({ date }: { date: DateTime }) => (
+      <div className={styles.monthHeader}>
+        <span className="mr-2">{addLeadingZeros(date.month, 2)}</span>
+        <span className="ml-auto">
+          {orientation === "landscape" ? date.monthLong : date.monthShort}
+        </span>
+      </div>
+    );
+
+    return (
+      <div className={styles.root}>
+        <YearCalendarHeader date={date} />
+        <YearCalendar
+          className={clsx(styles.yearRoot)}
+          date={date}
+          monthHeaderAs={YearCalendarMonthHeader}
+          bodyAs={YearCalendarMonthsGrid}
+          dayAs={YearCalendarDayCell}
+          weekStartsOn={weekStartsOn}
+          monthWrapperAs={YearCalendarMonthWrapper}
+        />
+      </div>
+    );
+  }
+);
+
+MonoYearCalendar.displayName = "MonoYearCalendar";
+
+// Month Calendar ----------------------------------------------------------
+
+interface MonoMonthlyCalendarProps {
+  date: DateTime;
+  orientation: Orientation;
+  size: Format;
+  weekStartsOn?: WeekStartsOn;
+  style?: CalendarStyle;
+}
+
+export const MonoMonthCalendar = React.memo(
+  ({ date, orientation, size, weekStartsOn = 1, style = "default" }: MonoMonthlyCalendarProps) => {
+    const isFrame = style === "frame";
+    const stylesLookup = useMemo(
+      () => ({
+        a4: {
+          portrait: {
+            root: "flex h-full w-full flex-col p-12 font-mono",
+            monthName:
+              "text-[112px] font-mono font-medium leading-normal tracking-tight tabular-nums uppercase",
+            yearName:
+              "text-2xl font-mono leading-none tracking-tight opacity-50 text-end tabular-nums",
+            day: "flex p-3 text-center items-center justify-center font-mono tabular-nums",
+            month: "pb-6 text-xl",
+          },
+          landscape: {
+            root: "flex h-full w-full flex-col p-12 font-mono",
+            monthName:
+              "text-[64px] font-mono font-medium leading-normal tracking-tight tabular-nums uppercase",
+            yearName:
+              "text-2xl font-mono leading-none tracking-tight opacity-50 text-end tabular-nums",
+            day: "flex p-3 text-center items-center justify-center font-mono tabular-nums",
+            month: "py-6 text-xl",
+          },
+        },
+        a5: {
+          portrait: {
+            root: "flex h-full w-full flex-col p-10 font-mono",
+            monthName:
+              "text-[89px] font-mono font-medium leading-none tracking-tight tabular-nums uppercase",
+            yearName:
+              "text-xl font-mono leading-none tracking-tight opacity-50 text-end tabular-nums",
+            day: "flex p-1 text-center items-center justify-center font-mono tabular-nums",
+            month: "py-2 text-md",
+          },
+          landscape: {
+            root: "flex h-full w-full flex-col p-4 font-mono",
+            monthName:
+              "text-[44px] font-mono font-medium leading-none tracking-tight tabular-nums uppercase",
+            yearName:
+              "text-lg font-mono leading-none tracking-tight opacity-50 text-end tabular-nums",
+            day: "flex p-2 text-center items-center justify-center font-mono tabular-nums",
+            month: "py-2 text-md",
+          },
+        },
+        letter: {
+          portrait: {
+            root: "flex h-full w-full flex-col p-10 font-mono",
+            monthName:
+              "text-[96px] font-mono font-medium leading-normal tracking-tight tabular-nums uppercase",
+            yearName:
+              "text-xl font-mono leading-none tracking-tight opacity-50 text-end tabular-nums",
+            day: "flex p-2 text-center items-center justify-center font-mono tabular-nums",
+            month: "pb-4 text-lg",
+          },
+          landscape: {
+            root: "flex h-full w-full flex-col p-10 font-mono",
+            monthName:
+              "text-[56px] font-mono font-medium leading-normal tracking-tight tabular-nums uppercase",
+            yearName:
+              "text-xl font-mono leading-none tracking-tight opacity-50 text-end tabular-nums",
+            day: "flex p-2 text-center items-center justify-center font-mono tabular-nums",
+            month: "py-4 text-lg",
+          },
+        },
+      }),
+      []
+    );
+
+    const styles = useMemo(
+      () => stylesLookup[size][orientation],
+      [stylesLookup, size, orientation]
+    );
+
+    const MonthCalendarDayCell = ({
+      className,
+      children,
+    }: {
+      className?: string;
+      children: React.ReactNode;
+    }) => (
+      <DayCell
+        className={clsx(
+          styles.day,
+          isFrame && "border-r border-b border-foreground/30 border-dashed",
+          className
+        )}
+      >
+        {children}
+      </DayCell>
+    );
+
+    return (
+      <div className={clsx(styles.root)}>
+        <div
+          className={clsx(
+            "flex items-end justify-between",
+            orientation === "landscape" && "mx-8"
+          )}
+        >
+          <div className={styles.monthName}>
+            {date.numberingSystem === "latn"
+              ? addLeadingZeros(date.month, 2)
+              : date.toFormat("MM")}
+          </div>
+          <div>
+            <div className={styles.yearName}>{date.year}</div>
+            <div className={styles.monthName}>
+              {orientation === "landscape" ? date.monthLong : date.monthShort}
+            </div>
+          </div>
+        </div>
+
+        <MonthCalendar
+          className={clsx(
+            styles.month,
+            isFrame &&
+              "[&>*:nth-child(-n+7)]:border-t [&>*:nth-child(7n+1)]:border-l border-foreground/30 border-dashed"
+          )}
+          date={date}
+          weekNames={"short"}
+          dayAs={MonthCalendarDayCell}
+          locale={date.locale || "en"}
+          weekStartsOn={weekStartsOn}
+        />
+      </div>
+    );
+  }
+);
+
+MonoMonthCalendar.displayName = "MonoMonthCalendar";

@@ -4,9 +4,9 @@ import { NextSeo } from "next-seo";
 import Link from "next/link";
 import React, { useState } from "react";
 import {
-  SimpleYearCalendar,
-  SimpleMonthCalendar,
-} from "../../../../components/calendar/themes/Simple";
+  THEME_COMPONENTS,
+  THEME_LABELS,
+} from "../../../../components/calendar/themes";
 import { Container } from "../../../../components/Container";
 import { Footer } from "../../../../components/Footer";
 import { H1 } from "../../../../components/H1";
@@ -18,6 +18,8 @@ import {
   Format,
   Orientation,
   SupportedLocales,
+  Theme,
+  THEMES,
   WeekStartsOn,
 } from "@minimal/config";
 import { InlineButton } from "../../../../components/InlineButton";
@@ -32,12 +34,10 @@ import {
 import { H2 } from "../../../../components/H2";
 
 interface Props {
-  theme: string;
+  theme: Theme;
   year: number;
   content: PSEOPageContent;
 }
-
-const THEME_NAME = "Simple";
 
 export default function ThemePage({ theme, year, content }: Props) {
   const [size, setSize] = useState<Format>("a4");
@@ -47,7 +47,9 @@ export default function ThemePage({ theme, year, content }: Props) {
 
   const date = DateTime.now().set({ year });
   const url = `https://useminimal.com/calendars/${year}/${theme}`;
-  const themeName = THEME_NAME;
+  const themeName = THEME_LABELS[theme];
+  const MonthCalendar = THEME_COMPONENTS[theme].month;
+  const YearCalendar = THEME_COMPONENTS[theme].year;
 
   const breadcrumbs = buildCalendarBreadcrumbs({ year, theme });
 
@@ -166,7 +168,7 @@ export default function ThemePage({ theme, year, content }: Props) {
                     style === "default" ? "font-bold text-foreground" : ""
                   }
                 >
-                  Simple
+                  Clean
                 </InlineButton>
                 {" / "}
                 <InlineButton
@@ -178,12 +180,29 @@ export default function ThemePage({ theme, year, content }: Props) {
                   With Grid
                 </InlineButton>
               </P>
+
+              <P className="text-sm">
+                Theme:{" "}
+                {THEMES.map((t, i) => (
+                  <React.Fragment key={t}>
+                    {i > 0 && " / "}
+                    <Link
+                      href={`/calendars/${year}/${t}`}
+                      className={
+                        theme === t ? "font-bold text-foreground" : "underline"
+                      }
+                    >
+                      {THEME_LABELS[t]}
+                    </Link>
+                  </React.Fragment>
+                ))}
+              </P>
             </div>
 
             <div className="-mx-2 overflow-x-auto px-2">
               <div className="flex gap-4 py-4">
                 <ScaledPreview orientation={orientation} format={size} alt={`${year} monthly calendar preview`}>
-                  <SimpleMonthCalendar
+                  <MonthCalendar
                     date={date}
                     orientation={orientation}
                     size={size}
@@ -193,7 +212,7 @@ export default function ThemePage({ theme, year, content }: Props) {
                 </ScaledPreview>
 
                 <ScaledPreview orientation={orientation} format={size} alt={`${year} yearly calendar preview`}>
-                  <SimpleYearCalendar
+                  <YearCalendar
                     date={date}
                     orientation={orientation}
                     size={size}
@@ -325,9 +344,11 @@ export default function ThemePage({ theme, year, content }: Props) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = AVAILABLE_CALENDARS.map((cal) => ({
-    params: { year: String(cal.year), theme: "simple" },
-  }));
+  const paths = AVAILABLE_CALENDARS.flatMap((cal) =>
+    THEMES.map((theme) => ({
+      params: { year: String(cal.year), theme },
+    }))
+  );
 
   return {
     paths,
@@ -337,11 +358,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const year = parseInt(params?.year as string, 10);
-  const theme = params?.theme as string | undefined;
+  const themeParam = params?.theme as string | undefined;
 
-  if (isNaN(year) || !theme) {
+  if (isNaN(year) || !themeParam || !THEMES.includes(themeParam as Theme)) {
     return { notFound: true };
   }
+  const theme = themeParam as Theme;
 
   const content = getPSEOContent({ year, locale: "en" });
 

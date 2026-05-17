@@ -4,14 +4,28 @@ import { H1 } from "../H1";
 import { H2 } from "../H2";
 import { P } from "../P";
 import type { PortalSession } from "../../lib/portal";
-import { DOWNLOAD_FILES } from "../../lib/portal";
+import { DOWNLOAD_YEARS, downloadKey } from "../../lib/portal";
+import { Theme, THEMES } from "@minimal/config";
+import { THEME_LABELS } from "../calendar/themes";
 
 interface Props {
   session: PortalSession;
 }
 
+const THEME_FONT: Record<Theme, string> = {
+  editorial: "font-sans",
+  mono: "font-mono",
+  pixel: "font-pixel",
+};
+
+const THEME_BLURB: Record<Theme, string> = {
+  editorial: "Geist Sans. Refined editorial feel.",
+  mono: "Geist Mono. Terminal print-out.",
+  pixel: "Geist Pixel Square headers. Retro display.",
+};
+
 export function PortalContent({ session }: Props) {
-  const years = Object.keys(DOWNLOAD_FILES).map(Number).sort((a, b) => b - a);
+  const years = [...DOWNLOAD_YEARS].sort((a, b) => b - a);
 
   return (
     <section className="max-w-2xl space-y-12">
@@ -22,28 +36,43 @@ export function PortalContent({ session }: Props) {
         </P>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         <H2>Calendars</H2>
-        <div className="space-y-4">
-          {years.map((year) => (
-            <div
-              key={year}
-              className="flex items-center justify-between border-b pb-4"
-            >
-              <div>
-                <p className="font-medium">{year} Calendar Pack</p>
-                <p className="text-sm text-muted-foreground">
-                  All formats, all languages
-                </p>
-              </div>
-              <Button variant="default" asChild>
-                <a href={`/api/portal/download?file=${DOWNLOAD_FILES[year]}`}>
-                  Download
-                </a>
-              </Button>
+        <P className="text-sm text-muted-foreground">
+          Each pack contains all paper sizes, languages, week-start variants,
+          and styles for that year + theme.
+        </P>
+        {years.map((year) => (
+          <div key={year} className="space-y-3">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              {year}
+            </p>
+            <div className="divide-y divide-foreground/10 border-y border-foreground/10">
+              {THEMES.map((theme) => (
+                <div
+                  key={theme}
+                  className="flex items-center justify-between gap-4 py-4"
+                >
+                  <div className="min-w-0">
+                    <p className={`${THEME_FONT[theme]} text-lg font-medium`}>
+                      {THEME_LABELS[theme]}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {THEME_BLURB[theme]}
+                    </p>
+                  </div>
+                  <Button variant="default" asChild>
+                    <a
+                      href={`/api/portal/download?file=${downloadKey(theme, year)}`}
+                    >
+                      Download
+                    </a>
+                  </Button>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
       <div className="space-y-6">

@@ -1,10 +1,11 @@
-import { SupportedLocale, SupportedLocales } from "@minimal/config";
+import { SupportedLocale, SupportedLocales, Theme } from "@minimal/config";
 import { DEFAULT_CONTENT, DEFAULT_FAQ } from "./pseoContent/defaults";
 import { YEAR_OVERRIDES } from "./pseoContent/byYear";
 import { LOCALE_OVERRIDES } from "./pseoContent/byLocale";
 import { FORMAT_OVERRIDES } from "./pseoContent/byFormat";
 import { INTENT_OVERRIDES } from "./pseoContent/byIntent";
 import { STYLE_OVERRIDES } from "./pseoContent/byStyle";
+import { THEME_OVERRIDES } from "./pseoContent/byTheme";
 import { FAQ_BY_LOCALE } from "./pseoContent/faq";
 
 // Types
@@ -73,6 +74,7 @@ export interface PSEODimensions {
   orientation?: PSEOOrientation;
   intent?: PSEOIntent;
   style?: PSEOStyle;
+  theme?: Theme;
 }
 
 // Interpolate template strings with dimension values
@@ -119,7 +121,7 @@ export function getFAQ(locale: string): FAQEntry[] {
   return FAQ_BY_LOCALE[locale] || FAQ_BY_LOCALE["default"] || DEFAULT_FAQ;
 }
 
-// Priority: default < year < locale < format < intent < style
+// Priority: default < year < locale < format < intent < style < theme
 export function getPSEOContent(dims: PSEODimensions): PSEOPageContent {
   const localeData = SupportedLocales.find((l) => l.code === dims.locale);
 
@@ -131,6 +133,7 @@ export function getPSEOContent(dims: PSEODimensions): PSEOPageContent {
   if (dims.format) overrides.push(FORMAT_OVERRIDES[dims.format] || {});
   if (dims.intent) overrides.push(INTENT_OVERRIDES[dims.intent] || {});
   if (dims.style) overrides.push(STYLE_OVERRIDES[dims.style] || {});
+  if (dims.theme) overrides.push(THEME_OVERRIDES[dims.theme] || {});
 
   const merged = mergeContent(DEFAULT_CONTENT, ...overrides);
   assertComplete(merged, dims);

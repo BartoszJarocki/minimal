@@ -1,27 +1,27 @@
 import clsx from "clsx";
 import { DateTime } from "luxon";
 import { NextSeo } from "next-seo";
-import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
 import React from "react";
+import { THEME_COMPONENTS } from "../components/calendar/themes";
 import {
-  SimpleYearCalendar,
-  SimpleMonthCalendar,
-} from "../components/calendar/themes/Simple";
-import {
+  CalendarVariant,
   Format,
   Orientation,
   parseVariant,
   resolveLocale,
+  SupportedLocale,
 } from "@minimal/config";
 
 export const toPrintClassName = (format: Format, orientation: Orientation) =>
   `paper-${format}-${orientation}`;
 
-export default function Print() {
-  const router = useRouter();
-  const variant = parseVariant(router.query);
-  const locale = resolveLocale(variant.locale);
+interface PrintProps {
+  variant: CalendarVariant;
+  locale: SupportedLocale | null;
+}
 
+export default function Print({ variant, locale }: PrintProps) {
   if (!locale) {
     return (
       <div className="p-4 text-center">
@@ -39,8 +39,7 @@ export default function Print() {
       numberingSystem: locale.numberingSystem,
     });
 
-  const Calendar =
-    variant.type === "year" ? SimpleYearCalendar : SimpleMonthCalendar;
+  const Calendar = THEME_COMPONENTS[variant.theme][variant.type];
 
   return (
     <div
@@ -60,3 +59,16 @@ export default function Print() {
     </div>
   );
 }
+
+// Resolve the variant on the server so the first byte of HTML already reflects
+// the URL params. Without this, `useRouter().query` is empty during SSR and
+// every render falls back to defaults (editorial / portrait / a4) — the page
+// only repaints with the real variant after client hydration, which loses the
+// race against puppeteer's PDF capture.
+export const getServerSideProps: GetServerSideProps<PrintProps> = async ({
+  query,
+}) => {
+  const variant = parseVariant(query);
+  const locale = resolveLocale(variant.locale) ?? null;
+  return { props: { variant, locale } };
+};

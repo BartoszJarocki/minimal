@@ -12,13 +12,15 @@ import { ScaledPreview } from "../../../../components/ScaledPreview";
 import { PrimaryCTA } from "../../../../components/landing/PrimaryCTA";
 import { InlineButton } from "../../../../components/InlineButton";
 import {
-  SimpleYearCalendar,
-  SimpleMonthCalendar,
-} from "../../../../components/calendar/themes/Simple";
+  THEME_COMPONENTS,
+  THEME_LABELS,
+} from "../../../../components/calendar/themes";
 import {
   CalendarStyle,
   SupportedLocales,
   SupportedLocale,
+  Theme,
+  THEMES,
 } from "@minimal/config";
 import { AVAILABLE_CALENDARS, FEATURED_LANGUAGES } from "../../../../lib/config";
 import { getPSEOContent, type PSEOPageContent } from "../../../../lib/pseoContent";
@@ -32,13 +34,11 @@ import {
 
 interface Props {
   locale: string;
-  theme: string;
+  theme: Theme;
   year: number;
   content: PSEOPageContent;
   localeData: SupportedLocale;
 }
-
-const THEME_NAME = "Simple";
 
 export default function LocalePage({
   theme,
@@ -49,6 +49,8 @@ export default function LocalePage({
 }: Props) {
   const [showAllMonths, setShowAllMonths] = useState(false);
   const [style, setStyle] = useState<CalendarStyle>("default");
+  const MonthCalendar = THEME_COMPONENTS[theme].month;
+  const YearCalendar = THEME_COMPONENTS[theme].year;
 
   const effectiveWeekStartsOn = localeData.weekStartsOn;
   const date = DateTime.now().set({ year }).reconfigure({
@@ -58,7 +60,7 @@ export default function LocalePage({
   });
 
   const url = `https://useminimal.com/calendars/${year}/${theme}/${locale}`;
-  const themeName = THEME_NAME;
+  const themeName = THEME_LABELS[theme];
 
   const breadcrumbs = buildCalendarBreadcrumbs({
     year,
@@ -80,7 +82,7 @@ export default function LocalePage({
           url,
           images: [
             {
-              url: `https://useminimal.com/api/open-graph?type=calendar&year=${year}&locale=${locale}`,
+              url: `https://useminimal.com/api/open-graph?type=calendar&year=${year}&theme=${theme}&locale=${locale}`,
               width: 1200,
               height: 630,
             },
@@ -96,7 +98,7 @@ export default function LocalePage({
         name={`${themeName} ${localeData.englishName} ${year} Calendar`}
         description={content.metaDescription}
         url={url}
-        image={`https://useminimal.com/api/open-graph?type=calendar&year=${year}&locale=${locale}`}
+        image={`https://useminimal.com/api/open-graph?type=calendar&year=${year}&theme=${theme}&locale=${locale}`}
         inLanguage={locale}
       />
       <BreadcrumbSchema items={breadcrumbs} />
@@ -138,7 +140,7 @@ export default function LocalePage({
                   style === "default" ? "font-bold text-foreground" : ""
                 }
               >
-                Simple
+                Clean
               </InlineButton>
               {" / "}
               <InlineButton
@@ -150,13 +152,30 @@ export default function LocalePage({
                 With Grid
               </InlineButton>
             </P>
+
+            <P className="text-sm">
+              Theme:{" "}
+              {THEMES.map((t, i) => (
+                <React.Fragment key={t}>
+                  {i > 0 && " / "}
+                  <Link
+                    href={`/calendars/${year}/${t}/${locale}`}
+                    className={
+                      theme === t ? "font-bold text-foreground" : "underline"
+                    }
+                  >
+                    {THEME_LABELS[t]}
+                  </Link>
+                </React.Fragment>
+              ))}
+            </P>
           </section>
 
           <section className="mt-12 px-2">
             <H2>Yearly</H2>
             <div className="mt-4">
               <ScaledPreview format="a4" orientation="portrait" alt={`${year} ${localeData.englishName} yearly calendar preview`}>
-                <SimpleYearCalendar
+                <YearCalendar
                   date={date}
                   orientation="portrait"
                   size="a4"
@@ -186,7 +205,7 @@ export default function LocalePage({
                       className="flex-shrink-0"
                       alt={`${localeData.englishName} ${date.set({ month: index + 1 }).toFormat("MMMM")} ${year} calendar`}
                     >
-                      <SimpleMonthCalendar
+                      <MonthCalendar
                         date={date.set({ month: index + 1 })}
                         orientation="portrait"
                         size="a4"
@@ -286,9 +305,11 @@ export default function LocalePage({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = AVAILABLE_CALENDARS.flatMap((cal) =>
-    SupportedLocales.map((locale) => ({
-      params: { year: String(cal.year), theme: "simple", locale: locale.code },
-    }))
+    THEMES.flatMap((theme) =>
+      SupportedLocales.map((locale) => ({
+        params: { year: String(cal.year), theme, locale: locale.code },
+      }))
+    )
   );
 
   return {
@@ -299,12 +320,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   const year = parseInt(params?.year as string, 10);
-  const theme = params?.theme as string | undefined;
+  const themeParam = params?.theme as string | undefined;
   const locale = params?.locale as string;
 
-  if (isNaN(year) || !theme || !locale) {
+  if (isNaN(year) || !themeParam || !locale || !THEMES.includes(themeParam as Theme)) {
     return { notFound: true };
   }
+  const theme = themeParam as Theme;
 
   const localeData = SupportedLocales.find((l) => l.code === locale);
   if (!localeData) {

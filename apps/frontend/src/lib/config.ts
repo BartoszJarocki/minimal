@@ -40,7 +40,7 @@ function getVisibleYears(): number[] {
 // Generate AVAILABLE_CALENDARS dynamically
 export const AVAILABLE_CALENDARS = getVisibleYears()
   .map((year) => ({
-    theme: "simple" as const,
+    theme: "editorial" as const,
     year,
     title: getTitle(year),
     description: getDescription(year),

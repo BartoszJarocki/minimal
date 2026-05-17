@@ -139,7 +139,7 @@ export default function BulletJournalHabitTrackerPage() {
               </Link>
               <span className="text-muted-foreground">|</span>
               <Link
-                href={`/calendars/${AVAILABLE_CALENDARS[0]?.year || new Date().getFullYear()}/simple`}
+                href={`/calendars/${AVAILABLE_CALENDARS[0]?.year || new Date().getFullYear()}/editorial`}
                 className="text-sm underline"
               >
                 Printable Calendars

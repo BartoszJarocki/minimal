@@ -13,7 +13,7 @@ export const Logo = ({ className }: { className?: string }) => (
       dominantBaseline="central"
       textAnchor="middle"
       fill="hsl(var(--background))"
-      style={{ fontFamily: "var(--font-sans)", fontWeight: 900, fontSize: 32 }}
+      style={{ fontFamily: "var(--font-geist-sans), sans-serif", fontWeight: 900, fontSize: 32 }}
     >
       M
     </text>

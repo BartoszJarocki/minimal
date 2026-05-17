@@ -1,5 +1,6 @@
 import { serialize, parse } from "cookie";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { Theme, THEMES } from "@minimal/config";
 
 export interface PortalSession {
   customerId: string;
@@ -11,11 +12,17 @@ export interface PortalSession {
 const COOKIE_NAME = "minimal_portal_session";
 const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-export const DOWNLOAD_FILES: Record<number, string> = {
-  2026: "calendars-2026.zip",
-  2027: "calendars-2027.zip",
-  2028: "calendars-2028.zip",
-};
+export const DOWNLOAD_YEARS = [2026, 2027, 2028] as const;
+export type DownloadYear = (typeof DOWNLOAD_YEARS)[number];
+
+export function downloadKey(theme: Theme, year: number): string {
+  return `${theme}-calendars-${year}.zip`;
+}
+
+// Flat allowlist for the /api/portal/download `file` param.
+export const ALLOWED_DOWNLOADS: string[] = DOWNLOAD_YEARS.flatMap((year) =>
+  THEMES.map((theme) => downloadKey(theme, year))
+);
 
 export function encodeSession(session: PortalSession): string {
   return Buffer.from(JSON.stringify(session)).toString("base64");

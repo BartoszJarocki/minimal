@@ -4,20 +4,12 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Analytics } from "@vercel/analytics/react";
 import { DefaultSeo } from "next-seo";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { GeistPixelSquare } from "geist/font/pixel";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../lib/query-client";
 import { SupportedLocales } from "@minimal/config";
-
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -53,7 +45,9 @@ export default function App({ Component, pageProps }: AppProps) {
           cardType: "summary_large_image",
         }}
       />
-      <main className={`${geist.variable} ${geistMono.variable} h-full w-full font-sans`}>
+      <main
+        className={`${GeistSans.variable} ${GeistMono.variable} ${GeistPixelSquare.variable} h-full w-full font-sans`}
+      >
         <Component {...pageProps} />
         <Analytics />
       </main>

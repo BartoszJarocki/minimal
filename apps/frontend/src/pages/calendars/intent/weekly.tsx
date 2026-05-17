@@ -111,7 +111,7 @@ export default function WeeklyCalendarPage({ content, currentYear }: Props) {
               {AVAILABLE_CALENDARS.map((cal) => (
                 <Link
                   key={cal.year}
-                  href={`/calendars/${cal.year}/simple`}
+                  href={`/calendars/${cal.year}/editorial`}
                   className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
                 >
                   {cal.year}
@@ -126,7 +126,7 @@ export default function WeeklyCalendarPage({ content, currentYear }: Props) {
               {FEATURED_LANGUAGES.map((lang) => (
                 <Link
                   key={lang.code}
-                  href={`/calendars/${currentYear}/simple/${lang.code}`}
+                  href={`/calendars/${currentYear}/editorial/${lang.code}`}
                   className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
                 >
                   {lang.name}

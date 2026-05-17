@@ -7,7 +7,7 @@ interface HreflangTagsProps {
 }
 
 // Use exact locale codes from SupportedLocales as hreflang values
-// These match the URL path segments: /calendars/2025/simple/en
+// These match the URL path segments: /calendars/2025/editorial/en
 export const HreflangTags = ({ year, theme }: HreflangTagsProps) => {
   // Find the default English locale code
   const defaultLocale =

@@ -22,5 +22,16 @@ module.exports = {
       destination: "/calendars/:year/:theme/:locale",
       permanent: true,
     },
+    // Legacy theme slug: /calendars/.../simple → /calendars/.../editorial
+    {
+      source: "/calendars/:year/simple",
+      destination: "/calendars/:year/editorial",
+      permanent: true,
+    },
+    {
+      source: "/calendars/:year/simple/:locale",
+      destination: "/calendars/:year/editorial/:locale",
+      permanent: true,
+    },
   ],
 };

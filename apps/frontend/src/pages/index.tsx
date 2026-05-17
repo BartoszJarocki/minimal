@@ -1,11 +1,7 @@
 import { DateTime, Settings } from "luxon";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { NextSeo } from "next-seo";
-import {
-  SimpleMonthCalendar,
-  SimpleYearCalendar,
-} from "../components/calendar/themes/Simple";
 import { CalendarStyle, WeekStartsOn } from "@minimal/config";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -26,6 +22,7 @@ import { CalendarErrorBoundary } from "../components/ErrorBoundary";
 import { SocialProof } from "../components/landing/SocialProof";
 import { ValueProp } from "../components/landing/ValueProp";
 import { PrimaryCTA } from "../components/landing/PrimaryCTA";
+import { ThemeShowcase } from "../components/landing/ThemeShowcase";
 import { FAQ } from "../components/landing/FAQ";
 import { FEATURED_LANGUAGES } from "../lib/config";
 import { OrganizationSchema, ProductSchema } from "../components/seo";
@@ -39,7 +36,9 @@ export const HABIT_TRACKERS = [
   },
 ];
 
-Settings.defaultLocale = "en-US";
+// Match the locale codes in @minimal/config (no region) so URLs we build
+// from `date.locale` (e.g. ThemeShowcase card hrefs) land on real SSG paths.
+Settings.defaultLocale = "en";
 
 // Featured year - show next year starting November
 const now = DateTime.now();
@@ -110,11 +109,12 @@ export default function Landing() {
                   AVAILABLE_CALENDARS.find(
                     (c) => c.year === featuredYear && c.isVisible
                   ) || AVAILABLE_CALENDARS.filter((c) => c.isVisible)[0];
+                const previewDate = date.set({ year: calendar.year, month: 1 });
                 return (
-                  <section className="max-w-3xl">
-                    <div className="flex flex-col gap-y-4">
+                  <>
+                    <section className="max-w-3xl space-y-4">
                       <Link
-                        href={`/calendars/${calendar.year}/${calendar.theme}`}
+                        href={`/calendars/${calendar.year}/editorial`}
                         className="underline"
                       >
                         <H2>{calendar.title} →</H2>
@@ -125,110 +125,123 @@ export default function Landing() {
                         A5 & Letter, portrait & landscape. Ink-light design,
                         generous margins.
                       </P>
+                    </section>
 
-                      <P className="max-w-3xl text-sm">
-                        Week starts on:{" "}
-                        <InlineButton
-                          onClick={() => setWeekStartsOn(7)}
-                          className={weekStartsOn === 7 ? "font-bold" : ""}
-                        >
-                          Sunday
-                        </InlineButton>
-                        {" / "}
-                        <InlineButton
-                          onClick={() => setWeekStartsOn(1)}
-                          className={weekStartsOn === 1 ? "font-bold" : ""}
-                        >
-                          Monday
-                        </InlineButton>
-                      </P>
+                    {/* Full-Container spec sheet — no rules; whitespace + */}
+                    {/* mono-caps register groups the rows. Aligned to the */}
+                    {/* same width as the cards below for a coherent spread. */}
+                    <dl className="mt-2 space-y-3">
+                      <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 sm:flex-nowrap">
+                        <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground sm:w-32 sm:shrink-0">
+                          Week starts
+                        </dt>
+                        <dd className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
+                          <InlineButton
+                            onClick={() => setWeekStartsOn(7)}
+                            className={
+                              weekStartsOn === 7
+                                ? "font-semibold text-foreground no-underline"
+                                : ""
+                            }
+                          >
+                            Sunday
+                          </InlineButton>
+                          <InlineButton
+                            onClick={() => setWeekStartsOn(1)}
+                            className={
+                              weekStartsOn === 1
+                                ? "font-semibold text-foreground no-underline"
+                                : ""
+                            }
+                          >
+                            Monday
+                          </InlineButton>
+                        </dd>
+                      </div>
 
-                      <P className="max-w-3xl text-sm">
-                        Style:{" "}
-                        <InlineButton
-                          onClick={() => setStyle("default")}
-                          className={style === "default" ? "font-bold" : ""}
-                        >
-                          Simple
-                        </InlineButton>
-                        {" / "}
-                        <InlineButton
-                          onClick={() => setStyle("frame")}
-                          className={style === "frame" ? "font-bold" : ""}
-                        >
-                          With Grid
-                        </InlineButton>
-                      </P>
+                      <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 sm:flex-nowrap">
+                        <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground sm:w-32 sm:shrink-0">
+                          Style
+                        </dt>
+                        <dd className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
+                          <InlineButton
+                            onClick={() => setStyle("default")}
+                            className={
+                              style === "default"
+                                ? "font-semibold text-foreground no-underline"
+                                : ""
+                            }
+                          >
+                            Clean
+                          </InlineButton>
+                          <InlineButton
+                            onClick={() => setStyle("frame")}
+                            className={
+                              style === "frame"
+                                ? "font-semibold text-foreground no-underline"
+                                : ""
+                            }
+                          >
+                            With Grid
+                          </InlineButton>
+                        </dd>
+                      </div>
 
-                      <P className="max-w-3xl text-sm">
-                        Localized for {SupportedLocales.length} languages:{" "}
-                        {(showAllLanguages
-                          ? SupportedLocales
-                          : SupportedLocales.filter((l) =>
-                              FEATURED_LANGUAGES.some((f) => f.code === l.code)
-                            )
-                        )
-                          .map((locale) => (
-                            <InlineButton
-                              key={locale.code}
-                              onClick={() => {
-                                setDate(
-                                  date.reconfigure({
-                                    locale: locale.code,
-                                    outputCalendar: locale.outputCalendar,
-                                  })
-                                );
-                                setWeekStartsOn(locale.weekStartsOn);
-                              }}
-                            >
-                              {locale.englishName}
-                            </InlineButton>
-                          ))
-                          .reduce(joinComponents, [])}
-                        {!showAllLanguages && (
-                          <>
-                            {", "}
+                      <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 sm:flex-nowrap">
+                        <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground sm:w-32 sm:shrink-0">
+                          Language
+                        </dt>
+                        <dd className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
+                          {(showAllLanguages
+                            ? SupportedLocales
+                            : SupportedLocales.filter((l) =>
+                                FEATURED_LANGUAGES.some(
+                                  (f) => f.code === l.code
+                                )
+                              )
+                          ).map((locale) => {
+                            const isActive = date.locale === locale.code;
+                            return (
+                              <InlineButton
+                                key={locale.code}
+                                onClick={() => {
+                                  setDate(
+                                    date.reconfigure({
+                                      locale: locale.code,
+                                      outputCalendar: locale.outputCalendar,
+                                    })
+                                  );
+                                  setWeekStartsOn(locale.weekStartsOn);
+                                }}
+                                className={
+                                  isActive
+                                    ? "font-semibold text-foreground no-underline"
+                                    : ""
+                                }
+                              >
+                                {locale.englishName}
+                              </InlineButton>
+                            );
+                          })}
+                          {!showAllLanguages && (
                             <InlineButton
                               onClick={() => setShowAllLanguages(true)}
+                              className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground/70 no-underline hover:text-foreground"
                             >
-                              +
-                              {SupportedLocales.length -
-                                FEATURED_LANGUAGES.length}{" "}
-                              more
+                              + {SupportedLocales.length - FEATURED_LANGUAGES.length} more
                             </InlineButton>
-                          </>
-                        )}
-                      </P>
-                    </div>
-
-                    <div className="-mx-2 overflow-x-auto px-2">
-                      <div className="flex gap-4 py-4">
-                        <ScaledPreview format="a4" orientation="portrait">
-                          <CalendarErrorBoundary>
-                            <SimpleMonthCalendar
-                              date={date.set({ year: calendar.year, month: 1 })}
-                              orientation="portrait"
-                              size="a4"
-                              weekStartsOn={weekStartsOn}
-                              style={style}
-                            />
-                          </CalendarErrorBoundary>
-                        </ScaledPreview>
-
-                        <ScaledPreview format="a4" orientation="portrait">
-                          <CalendarErrorBoundary>
-                            <SimpleYearCalendar
-                              date={date.set({ year: calendar.year, month: 1 })}
-                              orientation="portrait"
-                              size="a4"
-                              weekStartsOn={weekStartsOn}
-                              style={style}
-                            />
-                          </CalendarErrorBoundary>
-                        </ScaledPreview>
+                          )}
+                        </dd>
                       </div>
-                    </div>
-                  </section>
+                    </dl>
+
+                    <ThemeShowcase
+                      date={previewDate}
+                      weekStartsOn={weekStartsOn}
+                      style={style}
+                      compact
+                    />
+                  </>
                 );
               })()}
 
@@ -337,6 +350,30 @@ export default function Landing() {
                     className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
                   >
                     Monthly
+                  </Link>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">Theme</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/calendars/theme/editorial"
+                    className="rounded bg-muted px-3 py-1 text-sm hover:bg-muted/80"
+                  >
+                    Editorial
+                  </Link>
+                  <Link
+                    href="/calendars/theme/mono"
+                    className="rounded bg-muted px-3 py-1 text-sm font-mono hover:bg-muted/80"
+                  >
+                    Mono
+                  </Link>
+                  <Link
+                    href="/calendars/theme/pixel"
+                    className="rounded bg-muted px-3 py-1 text-sm font-pixel hover:bg-muted/80"
+                  >
+                    Pixel
                   </Link>
                 </div>
               </div>

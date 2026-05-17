@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSessionFromRequest, DOWNLOAD_FILES } from "../../../lib/portal";
+import { getSessionFromRequest, ALLOWED_DOWNLOADS } from "../../../lib/portal";
 import { getDownloadUrl } from "../../../lib/r2";
 
 export default async function handler(
@@ -20,8 +20,7 @@ export default async function handler(
     return res.status(400).json({ error: "File parameter required" });
   }
 
-  const allowedFiles = Object.values(DOWNLOAD_FILES);
-  if (!allowedFiles.includes(file)) {
+  if (!ALLOWED_DOWNLOADS.includes(file)) {
     return res.status(400).json({ error: "Invalid file" });
   }
 
