@@ -50,7 +50,7 @@ export default function Portal({ session }: Props) {
   if (sessionLogin.isPending) {
     return (
       <Container>
-        <main className="flex min-h-[50vh] items-center justify-center px-4 md:px-8">
+        <main className="flex min-h-[50vh] items-center justify-center">
           <p className="text-muted-foreground">Setting up your account...</p>
         </main>
       </Container>
@@ -66,7 +66,7 @@ export default function Portal({ session }: Props) {
       />
 
       <Container>
-        <main className="px-4 md:px-8">
+        <main>
           <div className="pb-12">
             <Header hideAccountLink />
           </div>

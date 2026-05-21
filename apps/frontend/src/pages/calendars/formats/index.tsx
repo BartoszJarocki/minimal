@@ -92,7 +92,7 @@ export default function FormatsHub() {
       <FAQSchema items={FAQ_ITEMS} />
 
       <Container>
-        <main className="px-4 md:px-8">
+        <main>
           <section className="max-w-3xl space-y-6 pb-12">
             <H1>{title}</H1>
             <P>{description}</P>
