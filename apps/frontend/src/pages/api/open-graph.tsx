@@ -184,7 +184,18 @@ export default async function OpenGraphImageHandler(req: NextRequest) {
             </div>
           </div>
 
-          <div />
+          {/* Value strip — clarifies the unusual "buy once, get every future
+              year" model rather than relying on the word "lifetime". */}
+          <div tw="flex flex-col">
+            <div tw="h-px w-full bg-[#1f1f1f]/15" />
+            <div
+              tw="flex items-center justify-between mt-5 text-base text-[#1f1f1f]/60"
+              style={{ fontFamily: "GeistMono", letterSpacing: "0.14em" }}
+            >
+              <div>USEMINIMAL.COM</div>
+              <div>$19 ONCE · EVERY FUTURE YEAR INCLUDED</div>
+            </div>
+          </div>
         </div>
       ),
       { width: 1200, height: 630, fonts }
