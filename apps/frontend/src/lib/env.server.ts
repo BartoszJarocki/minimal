@@ -1,4 +1,8 @@
-import "server-only";
+// NOTE: do NOT add `import "server-only"` here. This module is imported by
+// Pages Router API routes (pages/api/portal/*), and the server-only package's
+// RSC detection misfires in that bundling context — it throws "This module
+// cannot be imported from a Client Component module" and 500s the route.
+// These getters are only ever called from server code anyway.
 
 function required(name: string): string {
   const value = process.env[name];
