@@ -279,26 +279,42 @@ async function renderOne({
     theme,
   });
 
-  await page.setViewport(viewportFor(format, orientation));
-  // 'load' fires once the page (and its CSS/JS) has finished loading; the
-  // explicit selector + fonts.ready waits below cover the real paint signal.
-  // 'networkidle0' was over-cautious — Next dev's HMR websocket prevents it
-  // from ever firing, and even in prod it adds ~500ms per render.
-  await page.goto(url, { waitUntil: 'load' });
-  await page.waitForSelector('[role="grid"]', { visible: true });
-  await page.evaluate(() => document.fonts.ready);
-  await page.pdf({
-    format: format as PaperFormat,
-    path: path.join(paths.pdfDir, files.pdf),
-    landscape: orientation === 'landscape',
-    pageRanges: '1-1',
-    printBackground: true,
+  // Retry the page work — a single transient timeout (server briefly choked
+  // under concurrent load) must not abort a multi-hour run.
+  await withRetry(3, async () => {
+    await page.setViewport(viewportFor(format, orientation));
+    // 'load' fires once the page (and its CSS/JS) has finished loading; the
+    // explicit selector + fonts.ready waits below cover the real paint signal.
+    await page.goto(url, { waitUntil: 'load' });
+    await page.waitForSelector('[role="grid"]', { visible: true });
+    await page.evaluate(() => document.fonts.ready);
+    await page.pdf({
+      format: format as PaperFormat,
+      path: path.join(paths.pdfDir, files.pdf),
+      landscape: orientation === 'landscape',
+      pageRanges: '1-1',
+      printBackground: true,
+    });
+    await page.screenshot({
+      path: path.join(paths.previewDir, files.preview),
+      fullPage: false,
+      omitBackground: false,
+    });
   });
-  await page.screenshot({
-    path: path.join(paths.previewDir, files.preview),
-    fullPage: false,
-    omitBackground: false,
-  });
+}
+
+async function withRetry<T>(attempts: number, fn: () => Promise<T>): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 1; i <= attempts; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      console.warn(`  render attempt ${i}/${attempts} failed: ${(err as Error).message}`);
+      if (i < attempts) await new Promise((r) => setTimeout(r, 1500 * i));
+    }
+  }
+  throw lastErr;
 }
 
 interface BatchArgs {
@@ -325,27 +341,35 @@ async function newPage(browser: Browser) {
   return page;
 }
 
+// Concurrent puppeteer pages per combo. 12-wide overwhelmed the Next SSR
+// server (60s navigation timeouts); 4 keeps it responsive while staying
+// parallel enough to be fast.
+const MONTH_CONCURRENCY = 4;
+
 async function renderMonthly({ browser, ...rest }: BatchArgs) {
   const months = Info.months('long', { locale: rest.locale.code });
-  await Promise.all(
-    months.map(async (monthName, i) => {
-      const page = await newPage(browser);
-      try {
-        for (const orientation of ['portrait', 'landscape'] as const) {
-          await renderOne({
-            page,
-            ...rest,
-            month: i + 1,
-            monthName,
-            type: 'month',
-            orientation,
-          });
+  for (let start = 0; start < months.length; start += MONTH_CONCURRENCY) {
+    const chunk = months.slice(start, start + MONTH_CONCURRENCY);
+    await Promise.all(
+      chunk.map(async (monthName, j) => {
+        const page = await newPage(browser);
+        try {
+          for (const orientation of ['portrait', 'landscape'] as const) {
+            await renderOne({
+              page,
+              ...rest,
+              month: start + j + 1,
+              monthName,
+              type: 'month',
+              orientation,
+            });
+          }
+        } finally {
+          await page.close();
         }
-      } finally {
-        await page.close();
-      }
-    })
-  );
+      })
+    );
+  }
 }
 
 async function renderYearly({ browser, ...rest }: BatchArgs) {
@@ -450,6 +474,8 @@ async function runGenerate({
     return;
   }
 
+  const failures: string[] = [];
+
   for (const theme of themes) {
     const themeDir = path.join(baseDir, theme);
     await fs.promises.rm(themeDir, { recursive: true, force: true });
@@ -463,11 +489,10 @@ async function runGenerate({
         for (const locale of locales) {
           for (const weekStartsOn of WEEK_STARTS_OPTIONS) {
             for (const style of CALENDAR_STYLES) {
-              console.log(
-                `Generating [${theme}, ${year}, ${locale.englishName}, ${format}, ${weekStartLabel(
-                  weekStartsOn
-                )}, ${styleLabel(style)}]`
-              );
+              const label = `[${theme}, ${year}, ${locale.englishName}, ${format}, ${weekStartLabel(
+                weekStartsOn
+              )}, ${styleLabel(style)}]`;
+              console.log(`Generating ${label}`);
               const batch: BatchArgs = {
                 browser,
                 baseDir,
@@ -478,7 +503,14 @@ async function runGenerate({
                 weekStartsOn,
                 style,
               };
-              await Promise.all([renderMonthly(batch), renderYearly(batch)]);
+              // One bad combo (after retries) must not abort the whole run.
+              // Log it, keep going, surface the tally at the end.
+              try {
+                await Promise.all([renderMonthly(batch), renderYearly(batch)]);
+              } catch (err) {
+                failures.push(label);
+                console.error(`FAILED ${label}: ${(err as Error).message}`);
+              }
             }
           }
         }
@@ -489,14 +521,25 @@ async function runGenerate({
 
       await createCombinedYearZip(baseDir, theme, year, formats);
       await browser.close();
+
+      // Upload this theme's combined zip immediately so a crash in a later
+      // theme doesn't lose the ones already done.
+      if (mode === 'generate-and-upload') {
+        const zipName = `${theme}-calendars-${year}.zip`;
+        const zipPath = path.join(baseDir, theme, 'dist', zipName);
+        if (fs.existsSync(zipPath)) {
+          await uploadToR2(zipPath, zipName);
+        }
+      }
+      if (withGumroadUpload) {
+        await uploadYearZipsToGumroad(baseDir, [theme], [year]);
+      }
     }
   }
 
-  if (mode === 'generate-and-upload') {
-    await uploadYearZips(baseDir, themes, years);
-  }
-  if (withGumroadUpload) {
-    await uploadYearZipsToGumroad(baseDir, themes, years);
+  if (failures.length > 0) {
+    console.warn(`\nCompleted with ${failures.length} failed combo(s):`);
+    failures.forEach((f) => console.warn(`  - ${f}`));
   }
 
   console.log('Generation complete!');

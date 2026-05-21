@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { NextSeo } from "next-seo";
 import { Container } from "../components/Container";
 import { Footer } from "../components/Footer";
@@ -20,18 +20,32 @@ interface Props {
 export default function Portal({ session }: Props) {
   const router = useRouter();
   const sessionLogin = useSessionLogin();
+  // Auto-login from a Polar checkout redirect must run exactly once. The
+  // mutation object's identity changes on every state transition, and
+  // `session` stays null until the cookie is set + page reloads — so without
+  // this guard the effect re-fires `mutate` forever and the spinner never
+  // settles ("Setting up your account..." hangs).
+  const attemptedRef = useRef(false);
 
   useEffect(() => {
+    if (!router.isReady || attemptedRef.current) return;
     const { success, customer_session_token } = router.query;
 
-    if (success === "true" && customer_session_token && !session) {
-      sessionLogin.mutate(customer_session_token as string, {
+    if (
+      success === "true" &&
+      typeof customer_session_token === "string" &&
+      !session
+    ) {
+      attemptedRef.current = true;
+      sessionLogin.mutate(customer_session_token, {
         onSuccess: () => {
           window.location.href = "/portal";
         },
+        // On failure, fall through to the manual license form below — the
+        // customer also received a license key by email.
       });
     }
-  }, [router.query, session, sessionLogin]);
+  }, [router.isReady, router.query, session, sessionLogin]);
 
   if (sessionLogin.isPending) {
     return (
@@ -57,7 +71,20 @@ export default function Portal({ session }: Props) {
             <Header hideAccountLink />
           </div>
 
-          {session ? <PortalContent session={session} /> : <LicenseForm />}
+          {session ? (
+            <PortalContent session={session} />
+          ) : (
+            <div className="space-y-6">
+              {sessionLogin.isError && (
+                <p className="max-w-md text-sm text-muted-foreground">
+                  We couldn&apos;t sign you in automatically. Enter the license
+                  key from your purchase email below — it&apos;s also in your
+                  Polar receipt.
+                </p>
+              )}
+              <LicenseForm />
+            </div>
+          )}
         </main>
         <Footer />
       </Container>

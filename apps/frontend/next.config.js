@@ -22,14 +22,16 @@ module.exports = {
       destination: "/calendars/:year/:theme/:locale",
       permanent: true,
     },
-    // Legacy theme slug: /calendars/.../simple → /calendars/.../editorial
+    // Legacy theme slug: /calendars/<year>/simple → /calendars/<year>/editorial.
+    // Constrain :year to 4 digits so this doesn't swallow sibling routes like
+    // /calendars/style/simple (where :year would otherwise match "style").
     {
-      source: "/calendars/:year/simple",
+      source: "/calendars/:year(\\d{4})/simple",
       destination: "/calendars/:year/editorial",
       permanent: true,
     },
     {
-      source: "/calendars/:year/simple/:locale",
+      source: "/calendars/:year(\\d{4})/simple/:locale",
       destination: "/calendars/:year/editorial/:locale",
       permanent: true,
     },
